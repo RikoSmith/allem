@@ -7,3 +7,23 @@ Created:November 2014
 License: Creative Commons Attribution 3.0 License (https://creativecommons.org/licenses/by/3.0/)
 File Description: Place here your custom CSS styles
 */
+
+.section-image{
+  width: 90%;
+}
+
+.worker{
+  height:400px;
+  width: 100%;
+  margin: 0px;
+  padding: 0px;
+  background-color: #ccc;
+}
+
+.navbar-nav > li > a {
+  font-size: 15px !important;
+}
+
+.email-success {
+  display: none;
+}
