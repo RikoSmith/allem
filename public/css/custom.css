@@ -35,3 +35,12 @@ File Description: Place here your custom CSS styles
 .login-button:hover {
   color: #55acee !important;
 }
+
+.media-heading {
+  font-size: 23px;
+  margin-bottom: 15px;
+}
+
+.media-body {
+  width: 100%;
+}
