@@ -6,7 +6,7 @@ router.get('/', function (req, res) {
   res.render('error')
 })
 
-router.get('/rikosmith', function (req, res) {
+router.get('/test', function (req, res) {
   res.render('index')
 })
 
