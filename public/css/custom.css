@@ -27,3 +27,11 @@ File Description: Place here your custom CSS styles
 .email-success {
   display: none;
 }
+
+.login-button {
+  color: #32fb95 !important;
+}
+
+.login-button:hover {
+  color: #55acee !important;
+}
