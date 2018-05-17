@@ -8,10 +8,35 @@
  */
 
 $(document).ready(function () {
+
   $('.email-submit').click(function () {
     var button = $('.email-success')
     setTimeout(function () {
       button.css('display', 'block')
     }, 2000)
   })
+
+
+
+
+  $('#gtco-counter').waypoint(function(){
+    $('.js-counter').countTo({
+        from: 1,
+        to: 2500,
+        speed: 3000,
+        refreshInterval: 50,
+        formatter: function (value, options) {
+          return value.toFixed(options.decimals);
+        },
+        onUpdate: function (value) {
+          console.debug(this);
+        },
+        onComplete: function (value) {
+          console.debug(this);
+        }
+      });
+    },{offset: '100%'});
+
+
+
 })
