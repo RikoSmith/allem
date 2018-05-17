@@ -17,25 +17,33 @@ $(document).ready(function () {
   })
 
 
+  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
+     $('.js-counter').text('2500');
+  }else{
+      $('#gtco-counter').waypoint(function(){
 
 
-  $('#gtco-counter').waypoint(function(){
-    $('.js-counter').countTo({
-        from: 1,
-        to: 2500,
-        speed: 3000,
-        refreshInterval: 50,
-        formatter: function (value, options) {
-          return value.toFixed(options.decimals);
-        },
-        onUpdate: function (value) {
-          console.debug(this);
-        },
-        onComplete: function (value) {
-          console.debug(this);
-        }
-      });
-    },{offset: '100%'});
+          $('.to-do').countTo({
+              from: 1,
+              to: 2500,
+              speed: 3000,
+              refreshInterval: 50,
+              formatter: function (value, options) {
+                return value.toFixed(options.decimals);
+              },
+              onUpdate: function (value) {
+                console.debug(this);
+              },
+              onComplete: function (value) {
+                console.debug(this);
+              }
+          });
+
+          $('.to-do').removeClass('to-do');
+      },{offset: '100%'});
+  }
+
+
 
 
 
