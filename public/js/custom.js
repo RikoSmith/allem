@@ -17,15 +17,17 @@ $(document).ready(function () {
   })
 
 
+  var counterArray = [1000, 1500, 2000, 2500];
+
   if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
      $('.js-counter').text('2500');
   }else{
+
       $('#gtco-counter').waypoint(function(){
 
-
-          $('.to-do').countTo({
+          $('.c-first').countTo({
               from: 1,
-              to: 2500,
+              to: counterArray[0],
               speed: 3000,
               refreshInterval: 50,
               formatter: function (value, options) {
@@ -39,7 +41,59 @@ $(document).ready(function () {
               }
           });
 
-          $('.to-do').removeClass('to-do');
+          $('.c-first').removeClass('c-first');
+
+          $('.c-second').countTo({
+              from: 1,
+              to: counterArray[1],
+              speed: 3000,
+              refreshInterval: 50,
+              formatter: function (value, options) {
+                return value.toFixed(options.decimals);
+              },
+              onUpdate: function (value) {
+                console.debug(this);
+              },
+              onComplete: function (value) {
+                console.debug(this);
+              }
+          });
+          $('.c-second').removeClass('c-second');
+
+          $('.c-third').countTo({
+              from: 1,
+              to: counterArray[2],
+              speed: 3000,
+              refreshInterval: 50,
+              formatter: function (value, options) {
+                return value.toFixed(options.decimals);
+              },
+              onUpdate: function (value) {
+                console.debug(this);
+              },
+              onComplete: function (value) {
+                console.debug(this);
+              }
+          });
+          $('.c-third').removeClass('c-third');
+
+          $('.c-fourth').countTo({
+              from: 1,
+              to: counterArray[3],
+              speed: 3000,
+              refreshInterval: 50,
+              formatter: function (value, options) {
+                return value.toFixed(options.decimals);
+              },
+              onUpdate: function (value) {
+                console.debug(this);
+              },
+              onComplete: function (value) {
+                console.debug(this);
+              }
+          });
+          $('.c-fourth').removeClass('c-fourth');
+
       },{offset: '100%'});
   }
 
