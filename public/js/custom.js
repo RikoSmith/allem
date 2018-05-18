@@ -17,7 +17,7 @@ $(document).ready(function () {
   })
 
 
-  var counterArray = [1000, 1500, 2000, 2500];
+  var counterArray = [57, 116, 1572, 412745];
 
   if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
      $('.js-counter').text('2500');
