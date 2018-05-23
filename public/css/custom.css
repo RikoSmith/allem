@@ -141,3 +141,8 @@ File Description: Place here your custom CSS styles
 .bg-image-3 {
     background: url(../images/bg-image-3.jpg) 50% 0px no-repeat;
 }
+
+
+.media .fa{
+  margin-top:5px; 
+}
