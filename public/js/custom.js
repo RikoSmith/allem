@@ -98,6 +98,14 @@ $(document).ready(function () {
   }
 
 
+  $('.gallery a').lightBox();
+
+
+  $('.gallery').slick({
+    infinite: true,
+    slidesToShow: 3,
+    slidesToScroll: 1
+  });
 
 
 

@@ -144,5 +144,10 @@ File Description: Place here your custom CSS styles
 
 
 .media .fa{
-  margin-top:5px; 
+  margin-top:5px;
+}
+
+
+.gallery img {
+  padding: 40px;
 }
