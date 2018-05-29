@@ -10,4 +10,16 @@ router.get('/test', function (req, res) {
   res.render('index')
 })
 
+router.get('/ru', function (req, res) {
+  res.render('index')
+})
+
+router.get('/en', function (req, res) {
+  res.render('index')
+})
+
+router.get('/kz', function (req, res) {
+  res.render('index')
+})
+
 module.exports = router
