@@ -37,10 +37,10 @@ router.get('/db', function (req, res) {
     const db = client.db(dbName);
     const collection = db.collection('lang');
 
-    collection.find({}).toArray(function(err, docs) {
+    collection.find({"lang": "ru"}).toArray(function(err, docs) {
       assert.equal(err, null);
 
-      res.send(docs);
+      res.render('dbtest', {data: docs});
 
     });
 

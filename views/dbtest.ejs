@@ -1,0 +1,635 @@
+<!DOCTYPE html>
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+<% var fields = data[0].fields;%>
+	<head>
+		<meta charset="utf-8">
+		<title><%= fields.html_title %></title>
+		<!-- Mobile Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="images/favicon.ico">
+
+		<!-- Web Fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Raleway:700,400,300' rel='stylesheet' type='text/css'>
+
+		<!-- Bootstrap core CSS -->
+		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+
+		<!-- Font Awesome CSS -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+		<!-- Plugins -->
+		<link href="css/animations.css" rel="stylesheet">
+
+		<!-- Worthy core CSS file -->
+		<link href="css/style.css" rel="stylesheet">
+
+		<!-- lIGHTBOX css -->
+		<link href="css/jquery.lightbox.css" rel="stylesheet">
+
+		<!-- Carousel-->
+		<link rel="stylesheet" type="text/css" href="slick/slick.css"/>
+		<link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/>
+
+		<!-- Custom css -->
+		<link href="css/custom.css" rel="stylesheet">
+	</head>
+
+	<body class="no-trans">
+		<!-- scrollToTop -->
+		<!-- ================ -->
+		<div class="scrollToTop"><i class="icon-up-open-big"></i></div>
+
+		<!-- header start -->
+		<!-- ================ -->
+		<header class="header fixed clearfix navbar navbar-fixed-top">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4">
+
+						<!-- header-left start -->
+						<!-- ================ -->
+						<div class="header-left clearfix">
+
+							<!-- logo -->
+							<div class="logo smooth-scroll">
+								<a href="#banner"><img id="logo" src="images/logo.png" alt="Worthy" style="height:60px;"></a>
+							</div>
+
+							<!-- name-and-slogan -->
+							<div class="site-name-and-slogan smooth-scroll">
+								<div class="site-name"><a href="#banner">Allem</a></div>
+								<div class="site-slogan">engineering company</div>
+							</div>
+
+						</div>
+						<!-- header-left end -->
+
+					</div>
+					<div class="col-md-8">
+
+						<!-- header-right start -->
+						<!-- ================ -->
+						<div class="header-right clearfix">
+
+							<!-- main-navigation start -->
+							<!-- ================ -->
+							<div class="main-navigation animated">
+
+								<!-- navbar start -->
+								<!-- ================ -->
+								<nav class="navbar navbar-default" role="navigation">
+									<div class="container-fluid">
+
+										<!-- Toggle get grouped for better mobile display -->
+										<div class="navbar-header">
+											<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+												<span class="sr-only">Toggle navigation</span>
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+											</button>
+										</div>
+
+										<!-- Collect the nav links, forms, and other content for toggling -->
+										<div class="collapse navbar-collapse scrollspy smooth-scroll" id="navbar-collapse-1">
+											<ul class="nav navbar-nav navbar-right">
+												<li class="active"><a href="#banner"><%= fields.menu.main %></a></li>
+												<li><a href="#about"><%= fields.menu.about %></a></li>
+												<li><a href="#services"><%= fields.menu.services %></a></li>
+												<!--<li><a href="#people">СОТРУДНИКИ</a></li>-->
+												<li><a href="#clients"><%= fields.menu.feedback %></a></li>
+												<li><a href="#contact"><%= fields.menu.contacts %></a></li>
+												<li><a class="login-button" href="http://mail.allem.kz"><%= fields.sign_in %></a></li>
+											</ul>
+										</div>
+
+									</div>
+								</nav>
+								<!-- navbar end -->
+
+							</div>
+							<!-- main-navigation end -->
+
+						</div>
+						<!-- header-right end -->
+
+					</div>
+				</div>
+			</div>
+		</header>
+		<!-- header end -->
+
+		<!-- banner start -->
+		<!-- ================ -->
+		<div id="banner" class="banner">
+			<div class="banner-image"></div>
+			<div class="banner-caption">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 object-non-visible" data-animation-effect="fadeIn">
+							<h1 class="text-center"><%- fields.main_header %></h1>
+							<p class="lead text-center"><%= fields.main_header_sub %></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- banner end -->
+
+		<!-- section start -->
+		<!-- ================ -->
+		<div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 id="about" class="title text-center"><%= fields.about_header %></h1>
+						<p class="lead text-center"><%= fields.about_header_sub %></p>
+						<div class="space"></div>
+						<div class="row">
+							<div class="col-md-6">
+								<img  class="section-image" src="images/section-image-1.png" alt="">
+								<div class="space"></div>
+							</div>
+							<div class="col-md-6">
+								<p><%= fields.about_text_1 %></p>
+								<p><%= fields.about_list_header %></p>
+								<ul class="list-unstyled">
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i><%= fields.about_list.item_1 %></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i><%= fields.about_list.item_2 %></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i><%= fields.about_list.item_3 %></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i><%= fields.about_list.item_4 %></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i><%= fields.about_list.item_5 %></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i><%= fields.about_list.item_6 %></li>
+								</ul>
+							</div>
+						</div>
+						<div class="space"></div>
+						<div class="row">
+							<div class="col-md-6">
+								<h2><%= fields.about_text_2_header %></h2>
+								<p><%= fields.about_text_2 %></p>
+							</div>
+							<div class="col-md-6">
+								<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+									<div class="panel panel-default">
+										<div class="panel-heading" role="tab" id="headingOne">
+											<h4 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+													<%= fields.about_question_1 %>
+												</a>
+											</h4>
+										</div>
+										<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+											<div class="panel-body">
+												<%= fields.about_answer_1 %>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- section end -->
+
+		<!-- section start -->
+		<!-- ================ -->
+		<div class="section translucent-bg bg-image-1 blue">
+			<div class="container object-non-visible" data-animation-effect="fadeIn">
+				<h1 id="services"  class="text-center title"><%= fields.services_header %></h1>
+				<div class="space"></div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="media">
+							<div class="media-body text-right">
+								<h4 class="media-heading"><%= fields.services_1_header %></h4>
+								<p>
+									<%- fields.services_1 %>
+								</p>
+							</div>
+							<div class="media-right">
+								<i class="fa fa-paint-brush"></i>
+							</div>
+						</div>
+						<div class="media">
+							<div class="media-body text-right">
+								<h4 class="media-heading"><%= fields.services_2_header %></h4>
+								<p><%- fields.services_2 %></p>
+							</div>
+							<div class="media-right">
+								<i class="fa fa-cogs"></i>
+							</div>
+						</div>
+						<div class="media">
+							<div class="media-body text-right">
+								<h4 class="media-heading"><%= fields.services_3_header %> </h4>
+								<p>
+									<%- fields.services_3 %>
+								</p>
+							</div>
+							<div class="media-right">
+								<i class="fa fa-desktop"></i>
+							</div>
+						</div>
+						<div class="media">
+							<div class="media-body text-right">
+								<h4 class="media-heading">Услуги по разработке и составлению смет в программе АВС-4</h4>
+								<p>
+									На строительные работы -<br>
+									На ремонтно-строительные работы -<br>
+									На монтажные работы -<br>
+									Составление дефектных актов -<br>
+									Составление актов выполненных работ -<br>
+								</p>
+							</div>
+							<div class="media-right">
+								<i class="fa fa-paperclip"></i>
+							</div>
+						</div>
+					</div>
+					<div class="space visible-xs"></div>
+					<div class="col-sm-6">
+						<div class="media">
+							<div class="media-left">
+								<i class="fa fa-plug"></i>
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading"><%= fields.services_4_header %></h4>
+								<p>
+									<%- fields.services_4 %>
+								</p>
+							</div>
+						</div>
+						<div class="media">
+							<div class="media-left">
+								<i class="fa fa-bolt"></i>
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading"><%= fields.services_5_header %></h4>
+								<p>
+									<%- fields.services_5 %>
+								</p>
+							</div>
+						</div>
+						<div class="media">
+							<div class="media-left">
+								<i class="fa fa-shield-alt"></i>
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading"><%= fields.services_6_header %></h4>
+								<p>
+									<%- fields.services_6 %>
+								</p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- section end -->
+
+		<!-- section start -->
+		<!-- ================ -->
+		<!--<div class="section">
+			<div class="container">
+				<h1 class="text-center title" id="people">Сотрудники</h1>
+				<div class="space"></div>
+				<div class="row">
+						<div class="col-md-4">
+							<div class="worker"></div>
+						</div>
+						<div class="col-md-4">
+							<div class="worker"></div>
+						</div>
+						<div class="col-md-4">
+							<div class="worker"></div>
+						</div>
+				</div>
+			</div>
+		</div>-->
+		<!-- section end -->
+
+		<!-- section start -->
+		<!-- ================ -->
+		<!--<div class="default-bg space blue">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2">
+						<h1 class="text-center">Let's Work Together!</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+		-->
+		<!-- section end -->
+
+
+		<!-- section start -->
+		<!-- ================ -->
+		<div class="section translucent-bg bg-image-2 pb-clear">
+			<div class="container object-non-visible" data-animation-effect="fadeIn">
+				<h1 id="clients" class="title text-center"><%= fields.feedback_header %></h1>
+				<div class="space"></div>
+				<div class="row">
+					<div class="col-md-4">
+						<div class="media testimonial">
+							<div class="media-left">
+								<img src="images/testimonial-2.png" alt="">
+							</div>
+							<div class="media-body">
+								<h3 class="media-heading">Быстрое реагирование!</h3>
+								<blockquote>
+									<p>На протяжении всего времени нашего плодотворного сотрудничества, ТОО «Allem» добросовестно и ответственно исполняло все условленные договоренности. Несомненным плюсом является быстрое реагирование. </p>
+									<footer>Данияр Камбышев, директор <cite title="Source Title">ТОО "Krause-Pro"</cite></footer>
+								</blockquote>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="media testimonial">
+							<div class="media-left">
+								<img src="images/testimonial-1.png" alt="">
+							</div>
+							<div class="media-body">
+								<h3 class="media-heading">Качественный результат!</h3>
+								<blockquote>
+									<p>Театр «Астана Балет» выражает благодарность за чуткое, профессиональное отношение, эффективную помощь в решении всех возникающих вопросов, а также восхищается оперативностью работников и качественным результатом проделанной работы.</p>
+									<footer>Руководство <cite title="Source Title">«Астана Балет»</cite></footer>
+								</blockquote>
+							</div>
+						</div>
+					</div>
+					<div class="col-md-4">
+						<div class="media testimonial">
+							<div class="media-left">
+								<img src="images/testimonial-3.png" alt="">
+							</div>
+							<div class="media-body">
+								<h3 class="media-heading">Качественные услуги!</h3>
+								<blockquote>
+									<p>На всем протяжении сотрудничества между ТОО «Allem» и ТОО «Divo Svet» образовались стабильные, партнерские отношения. На настоящий момент мы остаемся довольны качеством получаемых услуг.</p>
+									<footer>Руководство <cite title="Source Title">ТОО "Divo Svet"</cite></footer>
+								</blockquote>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+
+		<div class="section translucent-bg bg-image-1 blue">
+			<div class="container object-non-visible" data-animation-effect="fadeIn">
+				<h1 id="services"  class="text-center title">Наши Услуги</h1>
+				<div class="space"></div>
+				<div class="row">
+					<div class="gallery">
+						<div>
+							<a href="/images/civil.png" title="Image 1">
+								<img src="/images/civil.png">
+							</a>
+						</div>
+						<div>
+							<a href="/images/promteh.png" title="Image 1">
+								<img src="/images/promteh.png">
+							</a>
+						</div>
+						<div>
+							<a href="/images/theater.png" title="Image 1">
+								<img src="/images/theater.png">
+							</a>
+						</div>
+						<div>
+							<a href="/images/fondballet.png" title="Image 1">
+								<img src="/images/fondballet.png">
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+			<!-- Counter -->
+			<!--<div id="gtco-counter" class="gtco-section section translucent-bg bg-image-3 blue">
+				<div class="gtco-container container">
+
+					<div class="row">
+
+						<div class="col-md-3 col-sm-6 animate-box" data-animate-effect="fadeInUp">
+							<div class="feature-center">
+								<span class="counter js-counter to-do c-first" data-from="0" data-to="57" data-speed="5000" data-refresh-interval="50">1</span>
+								<span class="counter-label">инженерных систем обслуживается</span>
+
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6 animate-box" data-animate-effect="fadeInUp">
+							<div class="feature-center">
+								<span class="counter js-counter to-do c-second" data-from="0" data-to="57" data-speed="5000" data-refresh-interval="50">1</span>
+								<span class="counter-label">объектов обслуживается ремонтно-строительным отделом</span>
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6 animate-box" data-animate-effect="fadeInUp">
+							<div class="feature-center">
+								<span class="counter js-counter to-do c-third" data-from="0" data-to="12402" data-speed="5000" data-refresh-interval="50">1</span>
+								<span class="counter-label">датчиков настроено</span>
+							</div>
+						</div>
+						<div class="col-md-3 col-sm-6 animate-box" data-animate-effect="fadeInUp">
+							<div class="feature-center">
+								<span class="counter js-counter to-do c-fourth" data-from="0" data-to="12202" data-speed="5000" data-refresh-interval="50">1</span>
+								<span class="counter-label">кв. м площади обслужано клининговым отделом</span>
+
+							</div>
+						</div>
+
+					</div>
+				</div>
+			</div>-->
+			<!-- section start -->
+			<!-- ================ -->
+			<!-- <div class="translucent-bg blue">
+				<div class="container">
+					<div class="list-horizontal">
+						<div class="row">
+							<div class="col-xs-2">
+								<div class="list-horizontal-item">
+									<img src="images/client-1.png" alt="client">
+								</div>
+							</div>
+							<div class="col-xs-2">
+								<div class="list-horizontal-item">
+									<img src="images/client-2.png" alt="client">
+								</div>
+							</div>
+							<div class="col-xs-2">
+								<div class="list-horizontal-item">
+									<img src="images/client-3.png" alt="client">
+								</div>
+							</div>
+							<div class="col-xs-2">
+								<div class="list-horizontal-item">
+									<img src="images/client-4.png" alt="client">
+								</div>
+							</div>
+							<div class="col-xs-2">
+								<div class="list-horizontal-item">
+									<img src="images/client-5.png" alt="client">
+								</div>
+							</div>
+							<div class="col-xs-2">
+								<div class="list-horizontal-item">
+									<img src="images/client-6.png" alt="client">
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			 section end
+		</div> -->
+		<!-- section end -->
+
+
+
+		<!-- section start -->
+		<!-- ================ -->
+		<!-- <div class="default-bg space">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-8 col-md-offset-2">
+						<h1 class="text-center">10000+ Happy Clients!</h1>
+					</div>
+				</div>
+			</div>
+		</div>
+	-->
+		<!-- section end -->
+
+
+
+		<!-- footer start -->
+		<!-- ================ -->
+		<footer id="footer">
+
+			<!-- .footer start -->
+			<!-- ================ -->
+			<div class="footer section">
+				<div class="container">
+					<h1 class="title text-center" id="contact"><%= fields.contact_header %></h1>
+					<div class="space"></div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="footer-content">
+								<p class="large"><%= fields.contact_text %></p>
+								<ul class="list-icons">
+									<li><i class="fa fa-building pr-10"></i><%= fields.contact_company %></li>
+									<li><i class="fa fa-map-marker pr-10"></i><%= fields.contact_address %></li>
+									<li><i class="fa fa-phone pr-10"></i><%= fields.contact_phone %></li>
+									<li><i class="fas fa-envelope-open pr-10"></i><%= fields.contact_mail %></li>
+								</ul>
+								<!--<ul class="social-links">
+									<li class="facebook"><a target="_blank" href="https://www.facebook.com/"><i class="fab fa-facebook-f"></i></a></li>
+									<li class="twitter"><a target="_blank" href="https://twitter.com/HtmlcoderMe"><i class="fab fa-twitter"></i></a></li>
+									<li class="googleplus"><a target="_blank" href="http://plus.google.com"><i class="fab fa-google-plus"></i></a></li>
+									<li class="skype"><a target="_blank" href="http://www.skype.com"><i class="fab fa-skype"></i></a></li>
+									<li class="linkedin"><a target="_blank" href="http://www.linkedin.com"><i class="fab fa-linkedin"></i></a></li>
+									<li class="youtube"><a target="_blank" href="http://www.youtube.com"><i class="fab fa-youtube"></i></a></li>
+									<li class="flickr"><a target="_blank" href="http://www.flickr.com"><i class="fab fa-flickr"></i></a></li>
+									<li class="pinterest"><a target="_blank" href="http://www.pinterest.com"><i class="fab fa-pinterest"></i></a></li>
+								</ul>-->
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="footer-content">
+								<div class="email-success">
+									<p>Сообщение принято.</p>
+								</div>
+								<form role="form" id="gform" action="https://script.google.com/macros/s/AKfycbxZpkNOh16i8mpjLyFwWni_8vhYAg7sDLr_Ew-f/exec">
+									<div class="form-group has-feedback">
+										<label class="sr-only" for="name2"><%= fields.message_name %></label>
+										<input type="text" class="form-control" id="name2" placeholder="Имя" name="name" required>
+										<i class="fa fa-user form-control-feedback"></i>
+									</div>
+									<div class="form-group has-feedback">
+										<label class="sr-only" for="email2"><%= fields.message_email %></label>
+										<input type="email" class="form-control" id="email2" placeholder="Электронный адрес" name="email" required>
+										<i class="fa fa-envelope form-control-feedback"></i>
+									</div>
+									<div class="form-group has-feedback">
+										<label class="sr-only" for="message2"><%= fields.message_text %></label>
+										<textarea class="form-control" rows="8" id="message2" placeholder="Сообщение" name="message" required></textarea>
+										<i class="fa fa-pencil form-control-feedback"></i>
+									</div>
+									<input type="submit" value="<%= fields.message_send %>" class="btn btn-default email-submit">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- .footer end -->
+
+			<!-- .subfooter start -->
+			<!-- ================ -->
+			<div class="subfooter">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<p class="text-center">Copyright © 2018 ТОО "Allem"</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- .subfooter end -->
+
+		</footer>
+		<!-- footer end -->
+
+		<!-- JavaScript files placed at the end of the document so the pages load faster
+		================================================== -->
+		<!-- Jquery and Bootstap core js files -->
+		<script type="text/javascript" src="plugins/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.5/waypoints.min.js"></script>
+		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+
+		<!-- Modernizr javascript -->
+		<script type="text/javascript" src="plugins/modernizr.js"></script>
+
+		<!-- Isotope javascript -->
+		<script type="text/javascript" src="plugins/isotope/isotope.pkgd.min.js"></script>
+
+		<!-- Backstretch javascript -->
+		<script type="text/javascript" src="plugins/jquery.backstretch.min.js"></script>
+
+		<!-- Appear javascript -->
+		<script type="text/javascript" src="plugins/jquery.appear.js"></script>
+
+		<!-- Initialization of Plugins -->
+		<script type="text/javascript" src="js/template.js"></script>
+
+		<!-- Counter -->
+		<script type="text/javascript" src="js/jquery.countTo.js"></script>
+
+		<!-- Jquery Lightbox -->
+		<script type="text/javascript" src="js/jquery.lightbox.min.js"></script>
+
+		<!-- Slick Carousel-->
+		<script type="text/javascript" src="slick/slick.min.js"></script>
+
+		<!-- Custom Scripts -->
+		<script type="text/javascript" src="js/custom.js"></script>
+
+		<!-- Email Handler -->
+		<script data-cfasync="false" type="text/javascript"
+		src="https://cdn.rawgit.com/dwyl/learn-to-send-email-via-google-script-html-no-server/master/form-submission-handler.js"></script>
+
+	</body>
+</html>
