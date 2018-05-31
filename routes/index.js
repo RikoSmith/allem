@@ -11,6 +11,11 @@ router.get('/', function (req, res) {
   res.render('error')
 })
 
+router.get('/mindmap', function (req, res) {
+  res.render('map')
+})
+
+
 router.get('/test', function (req, res) {
   res.render('index')
 })
