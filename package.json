@@ -16,5 +16,8 @@
     "morgan": "~1.0.0",
     "nodemon": "^1.17.4",
     "static-favicon": "~1.0.0"
+  },
+  "devDependencies": {
+    "excel-as-json": "^2.0.2"
   }
 }

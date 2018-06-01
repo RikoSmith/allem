@@ -32,6 +32,9 @@ router.get('/kz', function (req, res) {
   res.render('index')
 })
 
+
+//convert-excel-to-json --config='{"sourceFile": "workers.xlsx", "outputJSON": true, "columnToKey": {"A": "lastname", "B": "name", "C": "middlename", "D": "birthdate", "E": "id", "F": "position", "G": "phone", "H": "address", "I": "address_current", "J": "department", "K": "dep_name"}}'
+
 router.get('/db', function (req, res) {
   var testdb = "null";
 
@@ -40,14 +43,7 @@ router.get('/db', function (req, res) {
     console.log("Connected successfully to server");
 
     const db = client.db(dbName);
-    const collection = db.collection('lang');
-
-    collection.find({}).toArray(function(err, docs) {
-      assert.equal(err, null);
-
-      res.send(docs);
-
-    });
+    const collection = db.collection('members');
 
     client.close();
   });
