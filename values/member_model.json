@@ -1,0 +1,19 @@
+{
+    "lastname": "Мусин",
+    "name": "Поладбек",
+    "middlename": "Мустажапович",
+    "birthdate": "01.06.1973",
+    "id": 730601301999,
+    "position": "Главный специалист юридической и кадровой работе",
+    "phone": 87054611699,
+    "address": "Пр. Улы Дала 9",
+    "address_current": "Пр. Улы Дала 9",
+    "department": "АДМИНИСТРАТИВНО-УПРАВЛЕНЧЕСКИЙ ПЕРСОНАЛ",
+    "dep_name": "head",
+    "heducation": "ЗКГУ 1994",
+    "mstatus": "женат",
+    "children": 1,
+    "is_active": true,
+    "job_start": "03-01-2018",
+    "job_end": "-"
+}
