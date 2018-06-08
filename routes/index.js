@@ -11,7 +11,7 @@ router.get('/', function (req, res) {
   res.render('index')
 })
 
-router.get('/mindmap', function (req, res) {
+router.get('/maptest', function (req, res) {
   res.render('sb-admin/map')
 })
 
