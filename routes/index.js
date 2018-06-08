@@ -8,7 +8,7 @@ const dbName = 'allemdb';
 
 /* GET home page. */
 router.get('/', function (req, res) {
-  res.render('error')
+  res.render('index')
 })
 
 router.get('/mindmap', function (req, res) {
