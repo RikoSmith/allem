@@ -12,7 +12,7 @@ router.get('/', function (req, res) {
 })
 
 router.get('/mindmap', function (req, res) {
-  res.render('map')
+  res.render('sb-admin/map')
 })
 
 
