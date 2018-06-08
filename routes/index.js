@@ -1,22 +1,15 @@
 var express = require('express')
-var router = express.Router()
+var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+
+
 
 const url = 'mongodb://admin:Zxc159Zxc159@ds139690.mlab.com:39690/allemdb';
 const dbName = 'allemdb';
 
-/* GET home page. */
+/* GET home page. Only public pages -------------------------------------------------------------------------*/
 router.get('/', function (req, res) {
-  res.render('index')
-})
-
-router.get('/maptest', function (req, res) {
-  res.render('sb-admin/map')
-})
-
-
-router.get('/test', function (req, res) {
   res.render('index')
 })
 
@@ -31,6 +24,49 @@ router.get('/en', function (req, res) {
 router.get('/kz', function (req, res) {
   res.render('index')
 })
+
+
+/* Pages that are restricted -------------------------------------------------------------------------------*/
+
+/* Middleware function that checks authorization status*/
+function checkSignIn(req, res){
+   if(req.session.user){
+      next();     //If session exists, proceed to page
+   } else {
+      var err = new Error("Not logged in!");
+      console.log(req.session.user);
+      next(err);  //Error, trying to access unauthorized page!
+   }
+}
+
+
+router.get('/maptest', function (req, res) {
+  res.render('sb-admin/map')
+})
+
+
+router.get('/test', function (req, res) {
+  res.render('index')
+})
+
+
+router.get('/login', function(req, res){
+   res.render('sb-admin/login');
+});
+
+router.post('/login', function(req, res){
+   console.log(Users);
+   if(!req.body.id || !req.body.password){
+      res.render('sb-admin/login', {message: "Please enter both id and password"});
+   } else {
+       if("admin" === req.body.id && "Zxc159Zxc159" === req.body.password){
+          req.session.user = user;
+          res.redirect('/protected_page');
+       }
+      res.render('sb-admin/login', {message: "Invalid credentials!"});
+   }
+});
+
 
 
 //convert-excel-to-json --config='{"sourceFile": "workers.xlsx", "outputJSON": true, "columnToKey": {"A": "lastname", "B": "name", "C": "middlename", "D": "birthdate", "E": "id", "F": "position", "G": "phone", "H": "address", "I": "address_current", "J": "department", "K": "dep_name"}}'

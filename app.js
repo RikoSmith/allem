@@ -4,6 +4,7 @@ var favicon = require('static-favicon')
 var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
+var session = require('express-session');
 
 var routes = require('./routes/index')
 var users = require('./routes/members')
@@ -20,6 +21,14 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded())
 app.use(cookieParser())
+app.use(session(
+  {
+    secret: "AJFN7 58DK7 F9GOR 7854R",
+    proxy: true,
+    resave: true,
+    saveUninitialized: true
+  }
+));
 app.use(express.static(path.join(__dirname, 'public')))
 
 app.use('/', routes)
@@ -29,7 +38,8 @@ app.use('/admin', admin)
 /// catch 404 and forwarding to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found')
-  err.status = 404
+  err.status = 404;
+  console.log(err);
   next(err)
 })
 
