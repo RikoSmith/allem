@@ -63,7 +63,6 @@ router.post('/login', function(req, res){
 //convert-excel-to-json --config='{"sourceFile": "workers.xlsx", "outputJSON": true, "columnToKey": {"A": "lastname", "B": "name", "C": "middlename", "D": "birthdate", "E": "id", "F": "position", "G": "phone", "H": "address", "I": "address_current", "J": "department", "K": "dep_name"}}'
 
 router.get('/db', function (req, res) {
-  var testdb = "null";
 
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
