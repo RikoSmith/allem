@@ -25,47 +25,38 @@ router.get('/kz', function (req, res) {
   res.render('index')
 })
 
-
-/* Pages that are restricted -------------------------------------------------------------------------------*/
-
-/* Middleware function that checks authorization status*/
-function checkSignIn(req, res){
-   if(req.session.user){
-      next();     //If session exists, proceed to page
-   } else {
-      var err = new Error("Not logged in!");
-      console.log(req.session.user);
-      next(err);  //Error, trying to access unauthorized page!
-   }
-}
-
-
-router.get('/maptest', function (req, res) {
-  res.render('sb-admin/map')
-})
-
-
-router.get('/test', function (req, res) {
-  res.render('index')
-})
-
-
 router.get('/login', function(req, res){
-   res.render('sb-admin/login');
+   res.render('sb-admin/login.ejs', {message: ""});
 });
+
+router.get('/logout', function(req, res){
+  req.session.destroy();
+  res.redirect('/login');
+});
+
 
 router.post('/login', function(req, res){
-   console.log(Users);
    if(!req.body.id || !req.body.password){
-      res.render('sb-admin/login', {message: "Please enter both id and password"});
+      res.render('sb-admin/login', {message: "Пожалуйста, заполните все поля"});
+      console.log(req.body.id);
    } else {
        if("admin" === req.body.id && "Zxc159Zxc159" === req.body.password){
-          req.session.user = user;
-          res.redirect('/protected_page');
+         req.session.username = req.body.id;
+         req.session.logged = true;
+         console.log("Return to: " + req.return_url);
+         if(req.session.return_url){
+           var redTo = req.session.return_url;
+           req.session.return_url = "/";
+           res.redirect(redTo);
+         }else {
+           res.redirect('/');
+         }
        }
-      res.render('sb-admin/login', {message: "Invalid credentials!"});
+      res.render('sb-admin/login', {message: "Неправильные данные"});
    }
 });
+/* Pages that are restricted -------------------------------------------------------------------------------*/
+
 
 
 

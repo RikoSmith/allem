@@ -3,8 +3,26 @@
  * Copyright 2013-2016 Start Bootstrap
  * Licensed under MIT (https://github.com/BlackrockDigital/startbootstrap/blob/gh-pages/LICENSE)
  */
+
+
+
+ .logout_button {
+   font-size: 15px;
+   vertical-align: middle;
+ }
+
+ .logout_div {
+   padding: 10px;
+   padding-right: 25px;
+   text-align: center;
+   vertical-align: middle;
+ }
+
+
+
+
 body {
-  background-color: #272727;
+  background-color: #494949;
 }
 #wrapper {
   width: 100%;
