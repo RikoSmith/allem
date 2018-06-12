@@ -43,6 +43,27 @@
    margin-right: auto;
  }
 
+ .member_delo{
+   font-size: 12px;
+ }
+
+ .change_profile_button{
+   width: 80%;
+    margin-left: auto;
+    margin-right: auto;
+    margin-bottom: 10px;
+ }
+
+ .delete_member_button{
+   margin-left: auto;
+   margin-right: auto;
+   width: 60%;
+ }
+
+ #settings .panel-body > p {
+   font-size: 12px;
+ }
+
 
 
 

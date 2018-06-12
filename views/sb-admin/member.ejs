@@ -42,7 +42,7 @@
                     <div class="col-md-8">
                       <div class="panel panel-default">
                           <div class="panel-heading">
-                              Информация
+                              Информация <a href="#"><span class="member_delo">[личное дело]</span></a>
                           </div>
                           <!-- /.panel-heading -->
                           <div class="panel-body">
@@ -52,7 +52,7 @@
                                   </li>
                                   <li><a href="#profile" data-toggle="tab">Личные</a>
                                   </li>
-                                  <li><a href="#messages" data-toggle="tab">Дело сотрудника</a>
+                                  <li><a href="#messages" data-toggle="tab">Образование</a>
                                   </li>
                                   <li><a href="#settings" data-toggle="tab">Настройки</a>
                                   </li>
@@ -147,18 +147,143 @@
                                     </div>
                                   </div>
                                   <div class="tab-pane fade" id="messages">
-                                      <h4>Личное дело: </h4>
-                                      <p><% if (member.delo) { %> <%= member.delo %> <%} else { %> Нет данных <%}%></p>
+                                    <br>
+                                    <h4>Личные данные сотрудника:</h4>
+                                    <br>
+                                    <div class="table-responsive info_table">
+                                      <table class="table table-hover">
+                                          <tbody>
+                                              <tr>
+                                                  <td class="info_header">Среднее образование:</td>
+                                                  <td><% if (member.s_ed) { %> <%= member.s_ed %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Высшее образование образование:</td>
+                                                  <td><% if (member.h_ed) { %> <%= member.h_ed %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">ВУЗ:</td>
+                                                  <td><% if (member.institute) { %> <%= member.institute %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Специальность:</td>
+                                                  <td><% if (member.specialty) { %> <%= member.specialty %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Год окончания:</td>
+                                                  <td><% if (member.ed_finish) { %> <%= member.ed_finish %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
                                   </div>
                                   <div class="tab-pane fade" id="settings">
                                       <h4>Изменение данных: </h4>
-                                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                      <div class="col-md-6">
+                                          <div class="panel panel-primary">
+                                              <div class="panel-heading">
+                                                  Изменить Основные данные
+                                              </div>
+                                              <div class="panel-body">
+                                                  <p>Изменить данные, которые указаны во вкладке "Основные". После изменения данные сохраняются в БД перезаписывая старые данные.</p>
+                                              </div>
+                                              <button type="button" class="btn btn-outline btn-primary btn-lg btn-block change_profile_button" data-toggle="modal" data-target="#osnov_modal">Изменить</button>
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="panel panel-primary">
+                                              <div class="panel-heading">
+                                                  Изменить Личные данные
+                                              </div>
+                                              <div class="panel-body">
+                                                  <p>Изменить данные, которые указаны во вкладке "Личные". После изменения данные сохраняются в БД перезаписывая старые данные.</p>
+                                              </div>
+                                              <button type="button" class="btn btn-outline btn-primary btn-lg btn-block change_profile_button">Изменить</button>
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="panel panel-primary">
+                                              <div class="panel-heading">
+                                                  Изменить Образование
+                                              </div>
+                                              <div class="panel-body">
+                                                  <p>Изменить данные, которые указаны во вкладке "Образование". После изменения данные сохраняются в БД перезаписывая старые данные.</p>
+                                              </div>
+                                              <button type="button" class="btn btn-outline btn-primary btn-lg btn-block change_profile_button">Изменить</button>
+                                          </div>
+                                      </div>
+                                      <div class="col-md-6">
+                                          <div class="panel panel-warning">
+                                              <div class="panel-heading">
+                                                  Убрать сотрудника из штата
+                                              </div>
+                                              <div class="panel-body">
+                                                  <p>При выборе этой настройки данные сотрудника остаются в архиве, но не будет указан в списке сотрудников. Выбирайте эту настройку если сотрудник уволился.</p>
+                                              </div>
+                                              <button type="button" class="btn btn-outline btn-primary btn-lg btn-block change_profile_button">Изменить</button>
+                                            </div>
+                                      </div>
+                                      <button type="button" class="btn btn-danger btn-lg delete_member_button btn-block">Удалить сотрудника из БД</button>
                                   </div>
                               </div>
                           </div>
                           <!-- /.panel-body -->
                       </div>
                     <!-- /.panel -->
+                    <!-- MODALS -->
+                    <!-- Modal for Основные -->
+                    <div class="modal fade" id="osnov_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Основные данные</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="container-fluid">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <form role="form" method="POST" action="/editMain">
+                                    <div class="form-group">
+                                        <label>Фамилия</label>
+                                        <input class="form-control" value="Afvb">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Имя</label>
+                                        <input class="form-control" value="Afvb">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Отчество</label>
+                                        <input class="form-control" value="Afvb">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Должность</label>
+                                        <input class="form-control" value="Afvb">
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Отдел</label>
+                                        <select class="form-control">
+                                            <option>1</option>
+                                            <option selected="selected">2</option>
+                                            <option>3</option>
+                                            <option>4</option>
+                                            <option>5</option>
+                                        </select>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">Отмена</button>
+                            <button type="button" class="btn btn-primary">Сохранить</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
                   </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -172,6 +297,19 @@
     <!-- /#wrapper -->
 
     <%- include('_bottom-body-requires') %>
+    <script type="text/javascript">
+      $('#osnov_modal').modal({
+          backdrop: 'static',
+          keyboard: false
+      });
+
+      $('#osnov_modal').css('display', 'none');
+
+
+      $('.modal-backdrop').css('display', 'none');
+      $('.change_profile_button').trigger('click');
+
+    </script>
 
 </body>
 
