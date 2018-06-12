@@ -29,6 +29,20 @@
    font-size: 15px;
  }
 
+ .user_image {
+   width: 100%;
+ }
+
+ .info_header{
+   font-weight: bold;
+ }
+
+ .info_table{
+   width: 90%;
+   margin-left: auto;
+   margin-right: auto;
+ }
+
 
 
 

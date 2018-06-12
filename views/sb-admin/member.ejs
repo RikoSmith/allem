@@ -1,178 +1,178 @@
 <!DOCTYPE html>
-<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
-<!--[if !IE]><!-->
 <html lang="en">
-<!--<![endif]-->
-	<head>
-		<meta charset="utf-8">
-		<title>ТОО "Allem" - предоставление административных услуг</title>
-		<!-- Mobile Meta -->
-		<meta name="viewport" content="width=device-width, initial-scale=1.0">
-		<meta name="yandex-verification" content="1f99fa0fe11f2ce4" />
 
-		<!-- Favicon -->
-		<link rel="shortcut icon" href="images/favicon.ico">
+<head>
 
-		<!-- Web Fonts -->
-		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
-		<link href='http://fonts.googleapis.com/css?family=Raleway:700,400,300' rel='stylesheet' type='text/css'>
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
 
-		<!-- Bootstrap core CSS -->
-		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+    <title>Данные сотрудника - Панель администратора</title>
 
-		<!-- Font Awesome CSS -->
-		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+    <%- include('_top-head-requires') %>
 
-		<!-- Plugins -->
-		<link href="css/animations.css" rel="stylesheet">
+    </head>
 
-		<!-- Worthy core CSS file -->
-		<link href="css/style.css" rel="stylesheet">
+    <body>
 
-		<!-- lIGHTBOX css -->
-		<link href="css/jquery.lightbox.css" rel="stylesheet">
+    <div id="wrapper">
 
-		<!-- Carousel-->
-		<link rel="stylesheet" type="text/css" href="slick/slick.css"/>
-		<link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/>
+        <!-- Navigation -->
+        <%- include('_nav-top-side') %>
 
-		<!-- Custom css -->
-		<link href="css/custom.css" rel="stylesheet">
-	</head>
+        <!-- Page Content -->
+        <div id="page-wrapper">
+            <div class="container-fluid">
+                <div class="row">
+                    <div class="col-lg-12">
+                        <h1 class="page-header">Сотрудник</h1>
+                    </div>
+                    <div class="col-md-4">
+                    <div class="panel panel-default">
+                        <div class="panel-heading">
+                            Изображение
+                        </div>
+                        <div class="panel-body">
+                            <img class="user_image" src="<% if (member.image) { %>../../images/members/<%= member.image %>.jpg <%} else { %> http://via.placeholder.com/750x900 <%}%>">
+                        </div>
+                      </div>
+                    </div>
+                    <div class="col-md-8">
+                      <div class="panel panel-default">
+                          <div class="panel-heading">
+                              Информация
+                          </div>
+                          <!-- /.panel-heading -->
+                          <div class="panel-body">
+                              <!-- Nav tabs -->
+                              <ul class="nav nav-tabs">
+                                  <li class="active"><a href="#home" data-toggle="tab">Основные</a>
+                                  </li>
+                                  <li><a href="#profile" data-toggle="tab">Личные</a>
+                                  </li>
+                                  <li><a href="#messages" data-toggle="tab">Дело сотрудника</a>
+                                  </li>
+                                  <li><a href="#settings" data-toggle="tab">Настройки</a>
+                                  </li>
+                              </ul>
 
-	<body class="no-trans">
-		<!-- scrollToTop -->
-		<!-- ================ -->
-		<div class="scrollToTop"><i class="icon-up-open-big"></i></div>
-
-		<!-- header start -->
-		<!-- ================ -->
-		<header class="header fixed clearfix navbar navbar-fixed-top">
-			<div class="container">
-				<div class="row">
-					<div class="col-md-4">
-
-						<!-- header-left start -->
-						<!-- ================ -->
-						<div class="header-left clearfix">
-
-							<!-- logo -->
-							<div class="logo smooth-scroll">
-								<a href="#banner"><img id="logo" src="images/logo.png" alt="Worthy" style="height:60px;"></a>
-							</div>
-
-							<!-- name-and-slogan -->
-							<div class="site-name-and-slogan smooth-scroll">
-								<div class="site-name"><a href="#banner">Allem</a></div>
-								<div class="site-slogan">engineering company</div>
-							</div>
-
-						</div>
-						<!-- header-left end -->
-
-					</div>
-					<div class="col-md-8">
-
-						<!-- header-right start -->
-						<!-- ================ -->
-						<div class="header-right clearfix">
-
-							<!-- main-navigation start -->
-							<!-- ================ -->
-							<div class="main-navigation animated">
-
-								<!-- navbar start -->
-								<!-- ================ -->
-								<nav class="navbar navbar-default" role="navigation">
-									<div class="container-fluid">
-
-										<!-- Toggle get grouped for better mobile display -->
-										<div class="navbar-header">
-											<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
-												<span class="sr-only">Toggle navigation</span>
-												<span class="icon-bar"></span>
-												<span class="icon-bar"></span>
-												<span class="icon-bar"></span>
-											</button>
-										</div>
-
-										<!-- Collect the nav links, forms, and other content for toggling -->
-										<div class="collapse navbar-collapse scrollspy smooth-scroll" id="navbar-collapse-1">
-											<ul class="nav navbar-nav navbar-right">
-												<li class="active"><a href="#banner">ГЛАВНАЯ</a></li>
-												<li><a href="#about">О НАС</a></li>
-												<li><a href="#services">УСЛУГИ</a></li>
-												<!--<li><a href="#people">СОТРУДНИКИ</a></li>-->
-												<li><a href="#clients">ПАРТНЁРЫ</a></li>
-												<li><a href="#contact">КОНТАКТЫ</a></li>
-												<li><a class="login-button" href="http://mail.allem.kz">ВОЙТИ</a></li>
-											</ul>
-										</div>
-
-									</div>
-								</nav>
-								<!-- navbar end -->
-
-							</div>
-							<!-- main-navigation end -->
-
-						</div>
-						<!-- header-right end -->
-
-					</div>
-				</div>
-			</div>
-		</header>
-		<!-- header end -->
-
-    <div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
-      <div class="container">
-        <div class="row">
-          <div class="col-md-12">
-          </div>
+                              <!-- Tab panes -->
+                              <div class="tab-content">
+                                  <div class="tab-pane fade in active " id="home">
+                                    <br>
+                                    <h4>Основные данные сотрудника:</h4>
+                                    <br>
+                                    <div class="table-responsive info_table" >
+                                      <table class="table table-hover">
+                                          <tbody>
+                                              <tr>
+                                                  <td class="info_header">Фамилия:</td>
+                                                  <td><% if (member.lastname) { %> <%= member.lastname %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Имя:</td>
+                                                  <td><% if (member.name) { %> <%= member.name %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Отчество:</td>
+                                                  <td><% if (member.middlename) { %> <%= member.middlename %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Должность:</td>
+                                                  <td><% if (member.position) { %> <%= member.position %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Департамент:</td>
+                                                  <td><% if (member.department) { %> <%= member.department %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">В штате:</td>
+                                                  <td><% if (member.is_active) { %> <%= member.is_active %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Начало сотрудничества:</td>
+                                                  <td><% if (member.start_date) { %> <%= member.start_date %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Конец сотрудничества:</td>
+                                                  <td><% if (member.end_date) { %> <%= member.end_date %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                  <div class="tab-pane fade" id="profile">
+                                    <br>
+                                    <h4>Личные данные сотрудника:</h4>
+                                    <br>
+                                    <div class="table-responsive info_table">
+                                      <table class="table table-hover">
+                                          <tbody>
+                                              <tr>
+                                                  <td class="info_header">ИИН:</td>
+                                                  <td><% if (member.id) { %> <%= member.id %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Дата рождения:</td>
+                                                  <td><% if (member.birthdate) { %> <%= member.birthdate %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Телефон:</td>
+                                                  <td><% if (member.phone) { %> <%= member.phone %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Адрес прописки:</td>
+                                                  <td><% if (member.address) { %> <%= member.address %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Адрес проживания:</td>
+                                                  <td><% if (member.address_current) { %> <%= member.address_current %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Семейное положение:</td>
+                                                  <td><% if (member.family_status) { %> <%= member.family_status %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Наличие детей:</td>
+                                                  <td><% if (member.children) { %> <%= member.children %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Дети моложе 18:</td>
+                                                  <td><% if (member.children_18) { %> <%= member.children_18 %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                        </tbody>
+                                      </table>
+                                    </div>
+                                  </div>
+                                  <div class="tab-pane fade" id="messages">
+                                      <h4>Личное дело: </h4>
+                                      <p><% if (member.delo) { %> <%= member.delo %> <%} else { %> Нет данных <%}%></p>
+                                  </div>
+                                  <div class="tab-pane fade" id="settings">
+                                      <h4>Изменение данных: </h4>
+                                      <p>Lorem ipsum dolor sit amet, consectetur adipisicing elit, sed do eiusmod tempor incididunt ut labore et dolore magna aliqua. Ut enim ad minim veniam, quis nostrud exercitation ullamco laboris nisi ut aliquip ex ea commodo consequat. Duis aute irure dolor in reprehenderit in voluptate velit esse cillum dolore eu fugiat nulla pariatur. Excepteur sint occaecat cupidatat non proident, sunt in culpa qui officia deserunt mollit anim id est laborum.</p>
+                                  </div>
+                              </div>
+                          </div>
+                          <!-- /.panel-body -->
+                      </div>
+                    <!-- /.panel -->
+                  </div>
+                    <!-- /.col-lg-12 -->
+                </div>
+                <!-- /.row -->
+            </div>
+            <!-- /.container-fluid -->
         </div>
-      </div>
+        <!-- /#page-wrapper -->
+
     </div>
+    <!-- /#wrapper -->
 
-		<!-- footer start -->
-		<footer id="footer">
-			<div class="subfooter">
-				<div class="container">
-					<div class="row">
-						<div class="col-md-12">
-							<p class="text-center">Copyright © 2018 ТОО "Allem"</p>
-						</div>
-					</div>
-				</div>
-			</div>
-		</footer>
-		<!-- footer end -->
+    <%- include('_bottom-body-requires') %>
 
-		<!-- JavaScript files placed at the end of the document so the pages load faster
-		================================================== -->
-		<!-- Jquery and Bootstap core js files -->
-		<script type="text/javascript" src="plugins/jquery.min.js"></script>
-		<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.5/waypoints.min.js"></script>
-		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+</body>
 
-		<!-- Modernizr javascript -->
-		<script type="text/javascript" src="plugins/modernizr.js"></script>
-
-		<!-- Isotope javascript -->
-		<script type="text/javascript" src="plugins/isotope/isotope.pkgd.min.js"></script>
-
-		<!-- Backstretch javascript -->
-		<script type="text/javascript" src="plugins/jquery.backstretch.min.js"></script>
-
-		<!-- Appear javascript -->
-		<script type="text/javascript" src="plugins/jquery.appear.js"></script>
-
-		<!-- Initialization of Plugins -->
-		<script type="text/javascript" src="js/template.js"></script>
-
-		<!-- Custom Scripts -->
-		<script type="text/javascript" src="js/custom.js"></script>
-
-
-	</body>
 </html>
