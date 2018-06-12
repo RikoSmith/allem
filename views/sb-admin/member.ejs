@@ -213,7 +213,7 @@
                                               <div class="panel-body">
                                                   <p>Изменить данные, которые указаны во вкладке "Образование". После изменения данные сохраняются в БД перезаписывая старые данные.</p>
                                               </div>
-                                              <button type="button" class="btn btn-outline btn-primary btn-lg btn-block change_profile_button">Изменить</button>
+                                              <button type="button" class="btn btn-outline btn-primary btn-lg btn-block change_profile_button" data-toggle="modal" data-target="#edu_modal">Изменить</button>
                                           </div>
                                       </div>
                                       <div class="col-md-6">
@@ -224,7 +224,7 @@
                                               <div class="panel-body">
                                                   <p>При выборе этой настройки данные сотрудника остаются в архиве, но не будет указан в списке сотрудников. Выбирайте эту настройку если сотрудник уволился.</p>
                                               </div>
-                                              <button type="button" class="btn btn-outline btn-primary btn-lg btn-block change_profile_button">Изменить</button>
+                                              <button type="button" class="btn btn-outline btn-primary btn-lg btn-block change_profile_button">Убрать</button>
                                             </div>
                                       </div>
                                       <button type="button" class="btn btn-danger btn-lg delete_member_button btn-block">Удалить сотрудника из БД</button>
@@ -376,8 +376,59 @@
                       </div>
                     </div>
 
+
+
+                    <!-- Modal for Личные -->
+                    <div class="modal fade" id="edu_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Образование</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="container-fluid">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <form role="form" method="POST" action="../editMemberEdu" id="edu_form">
+                                    <input type="hidden" name="member_id" value="<%= member._id %>">
+                                    <div class="form-group">
+                                        <label>Среднее образование</label>
+                                        <input class="form-control" name="s_ed" value="<% if (member.s_ed) { %><%= member.s_ed %><%} else { %> - <%}%>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Высшее образование</label>
+                                        <input class="form-control" name="h_ed" value="<% if (member.h_ed) { %><%= member.h_ed %><%} else { %> - <%}%>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ВУЗ</label>
+                                        <input class="form-control" name="institute" value="<% if (member.institute) { %><%= member.institute %><%} else { %> - <%}%>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Специальность</label>
+                                        <input class="form-control" name="specialty" value="<% if (member.specialty) { %><%= member.specialty %><%} else { %> - <%}%>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Год окончания</label>
+                                        <input class="form-control" type="number" name="ed_finish" value="<% if (member.ed_finish) { %><%= member.ed_finish %><%} else { %> - <%}%>" required>
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">Отмена</button>
+                            <button type="submit" form="edu_form" class="btn btn-primary">Сохранить</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
-                    <!-- /.col-lg-12 -->
+                  <!-- /.col-lg-12 -->
                 </div>
                 <!-- /.row -->
             </div>
@@ -403,6 +454,13 @@
       });
 
       $('#lich_modal').css('display', 'none');
+
+      $('#edu_modal').modal({
+          backdrop: 'static',
+          keyboard: false
+      });
+
+      $('#edu_modal').css('display', 'none');
 
 
       $('.modal-backdrop').css('display', 'none');

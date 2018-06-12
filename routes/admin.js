@@ -178,8 +178,43 @@ router.post('/editMemberPrivate', function (req, res) {
 
     });
   });
+})
 
 
+
+router.post('/editMemberEdu', function (req, res) {
+  console.log(req.body);
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
+
+    var newValues = { $set: {} };
+    var prevDoc = null;
+    const db = client.db(dbName);
+    const collection = db.collection('members');
+    var data = collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, doc) {
+      if (err) {
+        throw err;
+        res.send("Ошибка с соединением с БД");
+      }
+
+      if(req.body.s_ed) newValues.$set.s_ed = req.body.s_ed;
+      if(req.body.h_ed) newValues.$set.h_ed = req.body.h_ed;
+      if(req.body.institute) newValues.$set.institute = req.body.institute;
+      if(req.body.specialty) newValues.$set.specialty = req.body.specialty;
+      if(req.body.ed_finish) newValues.$set.ed_finish = req.body.ed_finish;
+      
+      console.log(newValues);
+      if(newValues.$set){
+        collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
+          if (err) throw err;
+          console.log("1 document updated " + response);
+          res.send("Данные успешно изменены");
+          client.close();
+        });
+      }
+
+    });
+  });
 })
 
 
