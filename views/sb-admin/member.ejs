@@ -111,6 +111,10 @@
                                       <table class="table table-hover">
                                           <tbody>
                                               <tr>
+                                                  <td class="info_header">Пол:</td>
+                                                  <td><% if (member.sex) { %> <%= member.sex %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
                                                   <td class="info_header">ИИН:</td>
                                                   <td><% if (member.id) { %> <%= member.id %> <%} else { %> - <%}%></td>
                                               </tr>
@@ -198,7 +202,7 @@
                                               <div class="panel-body">
                                                   <p>Изменить данные, которые указаны во вкладке "Личные". После изменения данные сохраняются в БД перезаписывая старые данные.</p>
                                               </div>
-                                              <button type="button" class="btn btn-outline btn-primary btn-lg btn-block change_profile_button">Изменить</button>
+                                              <button type="button" class="btn btn-outline btn-primary btn-lg btn-block change_profile_button" data-toggle="modal" data-target="#lich_modal">Изменить</button>
                                           </div>
                                       </div>
                                       <div class="col-md-6">
@@ -245,32 +249,46 @@
                             <div class="container-fluid">
                               <div class="row">
                                 <div class="col-md-12">
-                                  <form role="form" method="POST" action="/editMain">
+                                  <form role="form" method="POST" action="../editMember" id="osnov_form">
+                                    <input type="hidden" name="member_id" value="<%= member._id %>">
                                     <div class="form-group">
                                         <label>Фамилия</label>
-                                        <input class="form-control" value="Afvb">
+                                        <input class="form-control" name="lastname" value="<% if (member.lastname) { %><%= member.lastname %><%} else { %> - <%}%>" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Имя</label>
-                                        <input class="form-control" value="Afvb">
+                                        <input class="form-control" name="name" value="<% if (member.name) { %><%= member.name %><%} else { %> - <%}%>" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Отчество</label>
-                                        <input class="form-control" value="Afvb">
+                                        <input class="form-control" name="middlename" value="<% if (member.middlename) { %><%= member.middlename %><%} else { %> - <%}%>">
                                     </div>
                                     <div class="form-group">
                                         <label>Должность</label>
-                                        <input class="form-control" value="Afvb">
+                                        <input class="form-control" name="position" value="<% if (member.position) { %><%= member.position %><%} else { %> - <%}%>" required>
                                     </div>
                                     <div class="form-group">
                                         <label>Отдел</label>
-                                        <select class="form-control">
-                                            <option>1</option>
-                                            <option selected="selected">2</option>
-                                            <option>3</option>
-                                            <option>4</option>
-                                            <option>5</option>
+                                        <select class="form-control" name="department" required>
+                                            <option <% if (member.dep_name === "head") { %> selected="selected" <%}%> >Административно-управленческий персонал</option>
+                                            <option <% if (member.dep_name === "head_service") { %> selected="selected" <%}%> >Административно – хозяйственная служба</option>
+                                            <option <% if (member.dep_name === "prop_head") { %> selected="selected" <%}%> >Административно – хозяйственный отдел</option>
+                                            <option <% if (member.dep_name === "remont") { %> selected="selected" <%}%> >Ремонтно – строительный отдел</option>
+                                            <option <% if (member.dep_name === "supply") { %> selected="selected" <%}%> >Отдел материально – технического снабжения</option>
+                                            <option <% if (member.dep_name === "energy") { %> selected="selected" <%}%> >Отдел энергетики</option>
+                                            <option <% if (member.dep_name === "esystem") { %> selected="selected" <%}%> >Отдел по эксплуатации инженерных систем</option>
+                                            <option <% if (member.dep_name === "safety") { %> selected="selected" <%}%> >Отдел ГО, ЧС, охраны труда и техники безопасности</option>
+                                            <option <% if (member.dep_name === "security") { %> selected="selected" <%}%> >Отдел безопасности</option>
+                                            <option <% if (member.dep_name === "kipia") { %> selected="selected" <%}%> >Отдел слаботочных систем и КИПиА</option>
                                         </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Начало сотрудничества</label>
+                                        <input type="date" class="form-control" name="start_date" value="<% if (member.start_date) { %><%= member.start_date %><%} else { %> - <%}%>" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Конец сотрудничества</label>
+                                        <input type="date" class="form-control" name="end_date" value="<% if (member.end_date) { %><%= member.end_date %><%} else { %> - <%}%>" >
                                     </div>
                                   </form>
                                 </div>
@@ -279,11 +297,85 @@
                           </div>
                           <div class="modal-footer">
                             <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">Отмена</button>
-                            <button type="button" class="btn btn-primary">Сохранить</button>
+                            <button type="submit" form="osnov_form" class="btn btn-primary">Сохранить</button>
                           </div>
                         </div>
                       </div>
                     </div>
+
+                    <!-- Modal for Личные -->
+                    <div class="modal fade" id="lich_modal" tabindex="-1" role="dialog" aria-labelledby="exampleModalCenterTitle" aria-hidden="true">
+                      <div class="modal-dialog modal-dialog-centered" role="document">
+                        <div class="modal-content">
+                          <div class="modal-header">
+                            <h5 class="modal-title" id="exampleModalLongTitle">Личные данные</h5>
+                            <button type="button" class="close" data-dismiss="modal" aria-label="Закрыть">
+                              <span aria-hidden="true">&times;</span>
+                            </button>
+                          </div>
+                          <div class="modal-body">
+                            <div class="container-fluid">
+                              <div class="row">
+                                <div class="col-md-12">
+                                  <form role="form" method="POST" action="../editMemberPrivate" id="lich_form">
+                                    <input type="hidden" name="member_id" value="<%= member._id %>">
+                                    <div class="form-group">
+                                        <label>Пол</label>
+                                        <select class="form-control" name="sex" required>
+                                            <option <% if (member.sex === "М") { %> selected="selected" <%}%> >М</option>
+                                            <option <% if (member.sex === "Ж") { %> selected="selected" <%}%> >Ж</option>
+                                            <option <% if (member.sex === "Другой") { %> selected="selected" <%}%> >Другой</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>ИИН</label>
+                                        <input class="form-control" type="number" name="id" value="<% if (member.id) { %><%= member.id %><%} else { %> - <%}%>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Дата Рождения</label>
+                                        <input class="form-control" type="date" name="birthdate" value="<% if (member.birthdate) { %><%= member.birthdate %><%} else { %> - <%}%>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Телефон</label>
+                                        <input class="form-control" name="phone" value="<% if (member.phone) { %><%= member.phone %><%} else { %> - <%}%>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Адрес прописки</label>
+                                        <input class="form-control" name="address" value="<% if (member.address) { %><%= member.address %><%} else { %> - <%}%>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Адрес проживания</label>
+                                        <input class="form-control" name="address_current" value="<% if (member.address_current) { %><%= member.address_current %><%} else { %> - <%}%>" required>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Семейное положение</label>
+                                        <select class="form-control" name="family_status" >
+                                            <option <% if (member.family_status === "Женат") { %> selected="selected" <%}%> >Женат</option>
+                                            <option <% if (member.family_status === "Замужем") { %> selected="selected" <%}%> >Замужем</option>
+                                            <option <% if (member.family_status === "Нет") { %> selected="selected" <%}%> >Нет</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Наличие детей</label>
+                                        <input class="form-control" type="number" name="children" value="<% if (member.children) { %><%= member.children %><%} else { %>9999<%}%>" >
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Дети младше 18</label>
+                                        <input class="form-control" type="number" name="children_18" value="<% if (member.children_18) { %><%= member.children_18 %><%} else { %>9999<%}%>" >
+                                    </div>
+                                  </form>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                          <div class="modal-footer">
+                            <button type="button" class="btn btn-secondary btn-danger" data-dismiss="modal">Отмена</button>
+                            <button type="submit" form="lich_form" class="btn btn-primary">Сохранить</button>
+                          </div>
+                        </div>
+                      </div>
+                    </div>
+
                   </div>
                     <!-- /.col-lg-12 -->
                 </div>
@@ -304,6 +396,13 @@
       });
 
       $('#osnov_modal').css('display', 'none');
+
+      $('#lich_modal').modal({
+          backdrop: 'static',
+          keyboard: false
+      });
+
+      $('#lich_modal').css('display', 'none');
 
 
       $('.modal-backdrop').css('display', 'none');
