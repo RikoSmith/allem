@@ -48,7 +48,7 @@ router.get('/members', function (req, res) {
 })
 
 
-router.get('/maptest', checkSignIn, function (req, res) {
+router.get('/maptest',  function (req, res) {
   res.render('sb-admin/map')
 })
 
@@ -202,7 +202,7 @@ router.post('/editMemberEdu', function (req, res) {
       if(req.body.institute) newValues.$set.institute = req.body.institute;
       if(req.body.specialty) newValues.$set.specialty = req.body.specialty;
       if(req.body.ed_finish) newValues.$set.ed_finish = req.body.ed_finish;
-      
+
       console.log(newValues);
       if(newValues.$set){
         collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
@@ -216,6 +216,43 @@ router.post('/editMemberEdu', function (req, res) {
     });
   });
 })
+
+
+router.post('/editMemberShtat', function (req, res) {
+  console.log(req.body);
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
+
+    var newValues = { $set: {} };
+    var prevDoc = null;
+    const db = client.db(dbName);
+    const collection = db.collection('members');
+    var data = collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, doc) {
+      if (err) {
+        throw err;
+        res.send("Ошибка с соединением с БД");
+      }
+
+      if(doc.is_active === "Да"){
+        newValues.$set.is_active = "Нет"
+      }else{
+        newValues.$set.is_active = "Да"
+      }
+
+      console.log(newValues);
+      if(newValues.$set){
+        collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
+          if (err) throw err;
+          console.log("1 document updated " + response);
+          res.send("Данные успешно изменены");
+          client.close();
+        });
+      }
+
+    });
+  });
+})
+
 
 
 
