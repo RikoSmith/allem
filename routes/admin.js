@@ -37,13 +37,28 @@ router.get('/members', function (req, res) {
     const collection = db.collection('members');
     var data = collection.find({}).toArray(function(err, result) {
       if (err) throw err;
-      console.log(result);
+      //console.log(result);
       res.render('sb-admin/tables', {members: result});
       client.close();
     });
 
 
 
+  });
+})
+
+router.get('/departments', function (req, res) {
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
+
+    const db = client.db(dbName);
+    const collection = db.collection('members');
+    var data = collection.find({}).toArray(function(err, result) {
+      if (err) throw err;
+      //console.log(result);
+      res.render('sb-admin/departments', {members: result});
+      client.close();
+    });
   });
 })
 
@@ -63,10 +78,6 @@ router.get('/map', function (req, res) {
 })
 
 
-router.get('/member', function (req, res) {
-  res.render('sb-admin/member')
-})
-
 router.get('/member/:member_id', function (req, res) {
 
   MongoClient.connect(url, function(err, client) {
@@ -76,7 +87,7 @@ router.get('/member/:member_id', function (req, res) {
     const collection = db.collection('members');
     var data = collection.findOne({"_id": new ObjectId(req.params.member_id)}, function(err, doc) {
       if (err) throw err;
-      console.log(doc);
+      //console.log(doc);
       res.render('sb-admin/member', {member: doc});
       client.close();
     });
@@ -87,7 +98,7 @@ router.get('/member/:member_id', function (req, res) {
 
 
 router.post('/editMember', function (req, res) {
-  console.log(req.body);
+  //console.log(req.body);
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
 
@@ -116,7 +127,7 @@ router.post('/editMember', function (req, res) {
           res.send("Ошибка! Даты введены неправильно. Отмена всех изменении");
         }
       }
-      console.log(newValues);
+      //console.log(newValues);
       if(newValues.$set){
         collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
@@ -135,7 +146,7 @@ router.post('/editMember', function (req, res) {
 
 
 router.post('/editMemberPrivate', function (req, res) {
-  console.log(req.body);
+  //console.log(req.body);
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
 
@@ -166,7 +177,7 @@ router.post('/editMemberPrivate', function (req, res) {
           res.send("Ошибка! Неправильно введен число детей");
         }
       }
-      console.log(newValues);
+      //console.log(newValues);
       if(newValues.$set){
         collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
@@ -183,7 +194,7 @@ router.post('/editMemberPrivate', function (req, res) {
 
 
 router.post('/editMemberEdu', function (req, res) {
-  console.log(req.body);
+  //console.log(req.body);
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
 
@@ -203,7 +214,7 @@ router.post('/editMemberEdu', function (req, res) {
       if(req.body.specialty) newValues.$set.specialty = req.body.specialty;
       if(req.body.ed_finish) newValues.$set.ed_finish = req.body.ed_finish;
 
-      console.log(newValues);
+      //console.log(newValues);
       if(newValues.$set){
         collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
@@ -219,7 +230,7 @@ router.post('/editMemberEdu', function (req, res) {
 
 
 router.post('/editMemberShtat', function (req, res) {
-  console.log(req.body);
+  //console.log(req.body);
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
 
@@ -239,7 +250,7 @@ router.post('/editMemberShtat', function (req, res) {
         newValues.$set.is_active = "Да"
       }
 
-      console.log(newValues);
+      //console.log(newValues);
       if(newValues.$set){
         collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
