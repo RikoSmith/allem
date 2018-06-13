@@ -40,7 +40,8 @@ router.post('/login', function(req, res){
       res.render('sb-admin/login', {message: "Пожалуйста, заполните все поля"});
       console.log(req.body.id);
    } else {
-       if( ("admin" === req.body.id && "Zxc159Zxc159" === req.body.password) || ("kadr" === req.body.id && "Qwerty123" === req.body.password)){
+       if( ("admin" === req.body.id && "Zxc159Zxc159" === req.body.password) || ("kadr" === req.body.id && "Qwerty123" === req.body.password)
+     || ("boss" === req.body.id && "Qwerty123654789" === req.body.password)){
          req.session.username = req.body.id;
          req.session.logged = true;
          console.log("Return to: " + req.return_url);
