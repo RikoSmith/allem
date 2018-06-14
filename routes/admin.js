@@ -39,7 +39,7 @@ function updateStatus(req, res, next){
             if(members[i].status_end_date){
 
             }else{
-              if(newValues.$set.status !== "На работе")newValues.$set.status = "На работе";
+              if(members[i].status !== "На работе") newValues.$set.status = "На работе";
             }
           }
         }
