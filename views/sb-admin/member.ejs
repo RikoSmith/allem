@@ -92,6 +92,22 @@
                                                   <td><% if (member.is_active) { %> <%= member.is_active %> <%} else { %> - <%}%></td>
                                               </tr>
                                               <tr>
+                                                  <td class="info_header">Статус:</td>
+                                                  <td><% if (member.status) { %> <%= member.status %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Статус до:</td>
+                                                  <td><% if (member.status_end_date) { %> <%= member.status_end_date %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Отпуск с:</td>
+                                                  <td><% if (member.holiday_start) { %> <%= member.holiday_start %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
+                                                  <td class="info_header">Отпуск до:</td>
+                                                  <td><% if (member.holiday_end) { %> <%= member.holiday_end %> <%} else { %> - <%}%></td>
+                                              </tr>
+                                              <tr>
                                                   <td class="info_header">Начало сотрудничества:</td>
                                                   <td><% if (member.start_date) { %> <%= member.start_date %> <%} else { %> - <%}%></td>
                                               </tr>
@@ -290,6 +306,26 @@
                                             <option <% if (member.dep_name === "security") { %> selected="selected" <%}%> >Отдел безопасности</option>
                                             <option <% if (member.dep_name === "kipia") { %> selected="selected" <%}%> >Отдел слаботочных систем и КИПиА</option>
                                         </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Статус</label>
+                                        <select class="form-control" name="status" id="status_select" required <% if (member.status === "В отпуске") { %> disabled <%}%> >
+                                            <option id="work" <% if (member.status === "На работе") { %> selected="selected" <%}%> >На работе</option>
+                                            <% if (member.status === "В отпуске") { %><option id="holiday"  selected="selected">В отпуске</option><%}%>
+                                            <option id="dekret" <% if (member.status === "В декрете") { %> selected="selected" <%}%> >В декрете</option>
+                                            <option id="ill" <% if (member.status === "На больничных") { %> selected="selected" <%}%> >На больничных</option>
+                                            <option id="trip" <% if (member.status === "В командировке") { %> selected="selected" <%}%> >В командировке</option>
+                                        </select>
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Декрет/командировка/больничная до</label>
+                                        <input id="status_end_date" type="date" class="form-control" name="status_end_date" value="<% if (member.status_end_date) { %><%= member.status_end_date %><%} else { %> - <%}%>" <% if ((member.status === "На работе") || (member.status === "В отпуске")) { %> disabled <%}%> >
+                                    </div>
+                                    <div class="form-group">
+                                        <label>Отпуск с</label>
+                                        <input  type="date" class="form-control" name="holiday_start" value="<% if (member.holiday_start) { %><%= member.holiday_start %><%} else { %> - <%}%>" >
+                                        <label>Отпуск до</label>
+                                        <input  type="date" class="form-control" name="holiday_end" value="<% if (member.holiday_end) { %><%= member.holiday_end %><%} else { %> - <%}%>" >
                                     </div>
                                     <div class="form-group">
                                         <label>Начало сотрудничества</label>
@@ -516,6 +552,28 @@
 
       $('.modal-backdrop').css('display', 'none');
       $('.change_profile_button').trigger('click');
+
+      var id = $('#status_select').find("option:selected").attr("id");
+      if(id == 'work'){
+          $("#status_end_date").attr("disabled", "");
+      }
+
+      $("#status_select").change(function(){
+        var id = $(this).find("option:selected").attr("id");
+
+        switch (id){
+          case "work":
+            $("#status_end_date").attr("disabled", "");
+            $("#status_end_date").removeAttr("required");
+            break;
+          default:
+            $("#status_end_date").removeAttr("disabled");
+            $("#status_end_date").attr("required", "");
+            break;
+        }
+      });
+
+      $("body").removeAttr("style");
 
     </script>
 
