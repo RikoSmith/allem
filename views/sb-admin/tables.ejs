@@ -53,6 +53,7 @@
                                         <th>Должность</th>
                                         <th>ИИН</th>
                                         <th>Телефон</th>
+                                        <th>Статус</th>
                                         <th>Действия</th>
                                     </tr>
                                 </thead>
@@ -67,6 +68,7 @@
                                             <td><%= members[i].position %></td>
                                             <td><%= members[i].id %></td>
                                             <td><%= members[i].phone %></td>
+                                            <td><%= members[i].status %></td>
                                             <td><a href="../../admin/member/<%= members[i]._id %>">Подробнее...</a></td>
                                         </tr>
                                       <% } %>
