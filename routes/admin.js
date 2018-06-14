@@ -110,6 +110,21 @@ router.get('/departments', function (req, res) {
   });
 })
 
+router.get('/handbook', function (req, res) {
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
+
+    const db = client.db(dbName);
+    const collection = db.collection('members');
+    var data = collection.find({}).toArray(function(err, result) {
+      if (err) throw err;
+      //console.log(result);
+      res.render('sb-admin/help', {members: result});
+      client.close();
+    });
+  });
+})
+
 
 router.get('/maptest',  function (req, res) {
   res.render('sb-admin/map')
