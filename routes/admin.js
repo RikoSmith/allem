@@ -25,7 +25,7 @@ function updateStatus(req, res, next){
 
         if(members[i].status_end_date){
           console.log("end date has");
-          if(dates.compare(new Date(members[i].status_end_date), now) >= 0){
+          if(dates.compare(new Date(members[i].status_end_date), now) < 0){
             if(members[i].status !== "На работе") newValues.$set.status = "На работе";
           }else{
             newValues.$set.status = null;
