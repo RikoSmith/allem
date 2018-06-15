@@ -1,0 +1,97 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+
+    <meta charset="utf-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta name="description" content="">
+    <meta name="author" content="">
+
+    <title>Регистрация пользователя - Панель администратора</title>
+
+    <%- include('_top-head-requires') %>
+
+</head>
+
+<body>
+
+    <div class="container">
+        <div class="row">
+            <div class="col-md-4 col-md-offset-4">
+                <div class="login-panel panel panel-default">
+                    <div class="panel-heading">
+                        <h3 class="panel-title">Регистрация</h3>
+                    </div>
+                    <div class="panel-body">
+                        <form role="form" action="../admin/signup" method="POST">
+                            <fieldset>
+                                <div class="form-group"  >
+                                    <input class="form-control" placeholder="Имя" name="name" type="text" required>
+                                </div>
+                                <div class="form-group"  >
+                                    <input class="form-control" placeholder="Фамилия" name="lastname" type="text" required>
+                                </div>
+                                <div class="form-group"  >
+                                    <input class="form-control" placeholder="Отдел (на англ)" name="group" type="text" required>
+                                </div>
+                                <div class="form-group">
+                                  <label>Разрешение просмотра сотрудников</label>
+                                  <select multiple="" name="permission_members" class="form-control">
+                                    <option selected="selected">0</option>
+                                    <option selected="selected">1</option>
+                                    <option>head</option>
+                                    <option>head_service</option>
+                                    <option>prop_head</option>
+                                    <option>remont</option>
+                                    <option>supply</option>
+                                    <option>energy</option>
+                                    <option>esystem</option>
+                                    <option>safety</option>
+                                    <option>security</option>
+                                    <option>kipia</option>
+                                  </select>
+                                </div>
+                                <div class="form-group">
+                                  <label>Разрешение панелей</label>
+                                  <select multiple="" name="permission" class="form-control">
+                                    <option selected="selected">0</option>
+                                    <option selected="selected">1</option>
+                                    <option>general</option>
+                                    <option selected="selected">members</option>
+                                    <option selected="selected">departments</option>
+                                    <option>map</option>
+                                    <option selected="selected">files</option>
+                                    <option selected="selected">handbook</option>
+                                    <option selected="selected">add_member</option>
+                                    <option selected="selected">add_user</option>
+                                  </select>
+                                </div>
+                                <div class="form-group"  >
+                                    <input class="form-control" placeholder="Ник" name="id" type="text" required>
+                                </div>
+                                <div class="form-group"  >
+                                    <input class="form-control" placeholder="Почта" name="email" type="email" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Пароль" name="password" type="password" value="" required>
+                                </div>
+                                <div class="form-group">
+                                    <input class="form-control" placeholder="Повтор пароля" name="password2" type="password" value="" required>
+                                </div>
+                                <!-- Change this to a button or input when using this as a form -->
+                                <input type="submit" class="btn btn-lg btn-success btn-block" value="Зарегестрироваться">
+                            </fieldset>
+                        </form>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <%- include('_bottom-body-requires') %>
+
+</body>
+
+</html>

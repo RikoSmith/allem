@@ -151,3 +151,31 @@ File Description: Place here your custom CSS styles
 .gallery img {
   padding: 40px;
 }
+
+
+
+abbr {
+  border-bottom: 0px !important;
+  cursor: pointer !important;
+  text-decoration-line: none !important;
+  color: #0768ff;
+  font-weight: bold;
+  text-decoration: underline !important;
+}
+
+abbr::after{
+  content: "*";
+}
+
+abbr:hover{
+  color: #555555;
+  font-weight: 400;
+}
+
+.media abbr {
+  color: #ffffff;
+}
+
+.media abbr:hover {
+  color: #CCCCCC;
+}

@@ -4,11 +4,20 @@ const dates =   require('../lib/dates');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 var ObjectId = require('mongodb').ObjectID;
+var bcrypt = require('bcrypt');
+const saltRounds = 10;
 
 
 
 const url = 'mongodb://admin:Zxc159Zxc159@ds139690.mlab.com:39690/allemdb';
 const dbName = 'allemdb';
+
+function permissionCheck(perm){
+  return permissionCheck[perm] || (permissionCheck[perm] = function(req, res, next) {
+    if (req.session.user.permission.indexOf(perm) >= 0) next();
+    else res.render("sb-admin/denied");
+  })
+}
 
 function updateStatus(req, res, next){
   MongoClient.connect(url, function(err, client) {
@@ -73,11 +82,11 @@ function checkSignIn(req, res, next){
 router.use(checkSignIn);
 
 /* GET users listing. */
-router.get('/', function (req, res) {
+router.get('/', permissionCheck('general'), function (req, res) {
   res.render('sb-admin/index');
 })
 
-router.get('/members', updateStatus, function (req, res) {
+router.get('/members', permissionCheck('members'), updateStatus, function (req, res) {
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
 
@@ -89,13 +98,54 @@ router.get('/members', updateStatus, function (req, res) {
       res.render('sb-admin/tables', {members: result});
       client.close();
     });
-
-
-
   });
 })
 
-router.get('/departments', function (req, res) {
+router.get('/addAdminUser', permissionCheck('add_user'), function (req, res) {
+  res.render('sb-admin/signup');
+})
+
+router.post('/signup', permissionCheck('add_user'), function (req, res) {
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
+
+    console.log(req.body);
+    const db = client.db(dbName);
+    const collection = db.collection('users');
+    collection.findOne({$or: [{"id": req.params.id },{ "email": req.body.email }]}, function(err, doc) {
+      if (err) throw err;
+      if(doc){
+        res.send('There is already user registered with such username or email.')
+      }else{
+        if(req.body.password !== req.body.password2) res.send("Passwords does not match")
+
+        bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+          var newUser = {};
+          newUser.name = req.body.name;
+          newUser.lastname = req.body.lastname;
+          newUser.group = req.body.group;
+          newUser.id = req.body.id;
+          newUser.email = req.body.email;
+          newUser.password = hash;
+          newUser.permission = req.body.permission;
+          newUser.permission_members = req.body.permission_members;
+          try {
+             collection.insertOne(newUser);
+          } catch (e) {
+             res.send(e);
+          }
+          res.send('New user added')
+          client.close();
+        });
+
+      }
+    });
+  });
+})
+
+
+
+router.get('/departments', permissionCheck('departments'), function (req, res) {
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
 
@@ -110,7 +160,7 @@ router.get('/departments', function (req, res) {
   });
 })
 
-router.get('/handbook', function (req, res) {
+router.get('/handbook', permissionCheck('handbook'), function (req, res) {
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
 
@@ -136,12 +186,12 @@ router.get('/test', function (req, res) {
 })
 
 
-router.get('/map', function (req, res) {
+router.get('/map', permissionCheck('map'), function (req, res) {
   res.render('sb-admin/map_view')
 })
 
 
-router.get('/member/:member_id', updateStatus, function (req, res) {
+router.get('/member/:member_id', permissionCheck('members'), updateStatus, function (req, res) {
 
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
@@ -151,6 +201,8 @@ router.get('/member/:member_id', updateStatus, function (req, res) {
     var data = collection.findOne({"_id": new ObjectId(req.params.member_id)}, function(err, doc) {
       if (err) throw err;
       //console.log(doc);
+
+      if (req.session.user.permission_members.indexOf(doc.dep_name) < 0) res.render('sb-admin/denied');
       res.render('sb-admin/member', {member: doc});
       client.close();
     });
@@ -160,7 +212,7 @@ router.get('/member/:member_id', updateStatus, function (req, res) {
 })
 
 
-router.post('/editMember', function (req, res, next) {
+router.post('/editMember', permissionCheck('members'), function (req, res, next) {
   console.log(req.body);
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);

@@ -2,6 +2,7 @@ var express = require('express')
 var router = express.Router();
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+var bcrypt = require('bcrypt');
 
 
 
@@ -40,20 +41,36 @@ router.post('/login', function(req, res){
       res.render('sb-admin/login', {message: "Пожалуйста, заполните все поля"});
       console.log(req.body.id);
    } else {
-       if( ("admin" === req.body.id && "Zxc159Zxc159" === req.body.password) || ("kadr" === req.body.id && "Qwerty123" === req.body.password)
-     || ("boss" === req.body.id && "Qwerty123654789" === req.body.password)){
-         req.session.username = req.body.id;
-         req.session.logged = true;
-         console.log("Return to: " + req.return_url);
-         if(req.session.return_url){
-           var redTo = req.session.return_url;
-           req.session.return_url = "/";
-           res.redirect(redTo);
-         }else {
-           res.redirect('/');
+     MongoClient.connect(url, function(err, client) {
+       assert.equal(null, err);
+
+       console.log(req.body);
+       const db = client.db(dbName);
+       const collection = db.collection('users');
+       collection.findOne({"id": req.body.id }, function(err, doc) {
+         if (err) throw err;
+         console.log(doc);
+         if(doc){
+           bcrypt.compare(req.body.password, doc.password, function(err, response) {
+              if(response){
+                req.session.user = doc;
+                req.session.logged = true;
+                if(req.session.return_url){
+                 var redTo = req.session.return_url;
+                 req.session.return_url = "/";
+                 res.redirect(redTo);
+                 }else {
+                   res.redirect('/');
+                 }
+              }else{
+                res.render('sb-admin/login', {message: "Неверный пароль"});
+              }
+          });
+         }else{
+           res.render('sb-admin/login', {message: "Неправильное имя пользователя"});
          }
-       }
-      res.render('sb-admin/login', {message: "Неправильные данные"});
+       });
+     });
    }
 });
 /* Pages that are restricted -------------------------------------------------------------------------------*/
