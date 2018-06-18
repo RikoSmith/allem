@@ -83,19 +83,23 @@ router.use(checkSignIn);
 
 /* GET users listing. */
 router.get('/', permissionCheck('general'), function (req, res) {
-  res.render('sb-admin/index');
+  res.render('sb-admin/index', {user: req.session.user});
 })
 
 router.get('/members', permissionCheck('members'), updateStatus, function (req, res) {
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
 
+    var filter = null;
+    if(req.query.filter){
+      filter = req.query.filter;
+    }
     const db = client.db(dbName);
     const collection = db.collection('members');
-    var data = collection.find({}).toArray(function(err, result) {
+    var data = collection.find({}).sort({lastname: 1}).toArray(function(err, result) {
       if (err) throw err;
       //console.log(result);
-      res.render('sb-admin/tables', {members: result});
+      res.render('sb-admin/tables', {members: result, user: req.session.user, filter: filter});
       client.close();
     });
   });
@@ -150,12 +154,22 @@ router.get('/departments', permissionCheck('departments'), function (req, res) {
     assert.equal(null, err);
 
     const db = client.db(dbName);
-    const collection = db.collection('members');
-    var data = collection.find({}).toArray(function(err, result) {
+    const collection = db.collection('departments');
+    const collection2 = db.collection('members');
+    var data = collection.find({}).sort({dep_name: 1}).toArray(function(err, result) {
       if (err) throw err;
       //console.log(result);
-      res.render('sb-admin/departments', {members: result});
-      client.close();
+      var promises = 0;
+      for(let i=0; i<result.length; i++){
+        collection2.findOne({"_id": new ObjectId(result[i].head_id)}, function(err, doc) {
+          result[i].head_info = doc;
+          promises++;
+          if(promises === result.length){
+            res.render('sb-admin/departments', {deps: result, user: req.session.user});
+            client.close();
+          }
+        })
+      }
     });
   });
 })
@@ -169,7 +183,7 @@ router.get('/handbook', permissionCheck('handbook'), function (req, res) {
     var data = collection.find({}).toArray(function(err, result) {
       if (err) throw err;
       //console.log(result);
-      res.render('sb-admin/help', {members: result});
+      res.render('sb-admin/help' , {user: req.session.user});
       client.close();
     });
   });
@@ -187,7 +201,7 @@ router.get('/test', function (req, res) {
 
 
 router.get('/map', permissionCheck('map'), function (req, res) {
-  res.render('sb-admin/map_view')
+  res.render('sb-admin/map_view' , {user: req.session.user})
 })
 
 
@@ -203,7 +217,7 @@ router.get('/member/:member_id', permissionCheck('members'), updateStatus, funct
       //console.log(doc);
 
       if (req.session.user.permission_members.indexOf(doc.dep_name) < 0) res.render('sb-admin/denied');
-      res.render('sb-admin/member', {member: doc});
+      res.render('sb-admin/member', {member: doc, user: req.session.user});
       client.close();
     });
 
@@ -417,6 +431,40 @@ router.post('/editMemberShtat', function (req, res) {
         });
       }
 
+    });
+  });
+})
+
+
+router.get('/update', updateStatus, function (req, res) {
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
+
+    var filter = null;
+    if(req.query.filter){
+      filter = req.query.filter;
+    }
+    const db = client.db(dbName);
+    const departments = db.collection('departments');
+    const members = db.collection('members');
+    var data = departments.find({}).toArray(function(err, result) {
+      if (err) throw err;
+      //console.log(result);
+      var prom = 0;
+      for(let i = 0; i<result.length; i++){
+          members.find({"dep_name": result[i].dep_name}).toArray(function(err, ress) {
+            var newValues = { $set: {member_count: ress.length}};
+            console.log(result[i].dep_name + " | " + ress.length);
+            departments.updateOne({"_id": new ObjectId(result[i]._id)}, newValues, function(err, response) {
+              if (err) throw err;
+              prom++;
+              if(prom === result.length){
+                res.send("Данные успешно изменены");
+                client.close();
+              }
+            });
+          })
+      }
     });
   });
 })

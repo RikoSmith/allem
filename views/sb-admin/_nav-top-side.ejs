@@ -9,9 +9,8 @@
         <a class="navbar-brand" href="/">Панель Allem</a>
     </div>
     <div class="navbar-right logout_div">
-      <a class="logout_button"  href="../logout">
-        <i class="fa fa-user fa-fw"></i>Выход
-      </a>
+      <p>Вы вошли как <%= user.name + " " + user.lastname%> <a class="logout_button"  href="../logout"><i class="fa fa-user fa-fw"></i>Выход</a></p>
+
     </div>
     <!-- /.navbar-header -->
     <!-- /.navbar-top-links -->
@@ -20,7 +19,7 @@
         <div class="sidebar-nav navbar-collapse">
             <ul class="nav" id="side-menu">
                 <li>
-                    <a href="../../admin"><i class="fa fa-home fa-fw"></i> Общее</a>
+                    <a href="../../admin"><i class="fa fa-home fa-fw"></i> Общее (мониторинг)</a>
                 </li>
                 <li>
                     <a href="../../admin/members"><i class="fa fa-user fa-fw"></i> Сотрудники</a>
@@ -32,7 +31,7 @@
                     <a href="../../admin/map"><i class="fa fa-sitemap fa-fw"></i> Карта организации</a>
                 </li>
                 <li>
-                    <a href="https://cloud.mail.ru/home/ALLEM/"><i class="fa fa-folder fa-fw"></i> Файлы</a>
+                    <a href="https://cloud.mail.ru/home/"><i class="fa fa-folder fa-fw"></i> Файлы</a>
                 </li>
                 <li>
                     <a href="../../admin/handbook"><i class="fa fa-question fa-fw"></i> Справочник</a>

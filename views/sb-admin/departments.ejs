@@ -31,6 +31,81 @@
                     </div>
                     <!-- /.col-lg-12 -->
                 </div>
+                <div class="row">
+
+                  <div class="col-lg-12">
+                    <div class="panel-group" id="accordion">
+                      <%var first = 0;%>
+                    <% for(var i = 0; i < deps.length; i++){ %>
+                      <%if(!user.permission_members.includes(deps[i].dep_name)) continue; %>
+
+                      <div class="panel panel-primary">
+                        <div class="panel-heading dep_name">
+                          <h4 class="panel-title">
+                            <a data-toggle="collapse" data-parent="#accordion" href="#collapse_<%= deps[i].dep_name%>" aria-expanded="false" class="collapsed"><% if (deps[i].name) { %><%= deps[i].name%><%} else { %>Засекреченный отдел<%}%></a>
+                          </h4>
+                        </div>
+                        <div id="collapse_<%= deps[i].dep_name%>" class="panel-collapse collapse <%if (first == 0){%>in<% first++;}%>">
+                          <div class="panel-body">
+                            <div class="row">
+                              <div class="col-md-3">
+                                <div class="panel panel-default">
+                                  <div class="panel-body">
+                                      <img class="dep_image" src="<% if (deps[i].image) { %>../../images/departments/<%= deps[i].image %>.png <%} else { %> http://via.placeholder.com/512x512 <%}%>">
+                                  </div>
+                                  <div class="panel-footer">
+                                      <%= deps[i].dep_name%>
+                                  </div>
+                                </div>
+                              </div>
+                              <div class="col-md-9">
+                                <h4>Данные отдела:</h4>
+                                <div class="table-responsive dep_table" >
+                                  <table class="table table-hover">
+                                      <tbody>
+                                          <tr>
+                                              <td class="info_header">Название отдела:</td>
+                                              <td><% if (deps[i].name) { %> <%= deps[i].name %> <%} else { %> - <%}%></td>
+                                          </tr>
+                                          <tr>
+                                              <td class="info_header">Руководитель:</td>
+                                              <td><% if (deps[i].head_info) { %>
+                                                  <img class="dep_head_image" src="<% if (deps[i].head_info.image) { %>../../images/members_small/<%= deps[i].head_info.image %>.jpg <%} else { %> http://via.placeholder.com/100x120 <%}%>">
+                                                  <a href="../../admin/member/<%=deps[i].head_id%>"><%= deps[i].head_info.name + " " + deps[i].head_info.lastname %></a>
+                                                <%} else { %> - <%}%></td>
+                                          </tr>
+                                          <tr>
+                                              <td class="info_header">Штат:</td>
+                                              <td><% if (deps[i].member_count) { %> <a href="../../admin/members?filter=<%= deps[i].dep_name%>"><%= deps[i].member_count %> сотрудиков</a> <%} else { %> - <%}%> </td>
+                                          </tr>
+                                          <tr>
+                                              <td class="info_header">Кабинет:</td>
+                                              <td><% if (deps[i].room) { %> <%= deps[i].room %> <%} else { %> - <%}%></td>
+                                          </tr>
+                                          <tr>
+                                              <td class="info_header">Внутренний номер:</td>
+                                              <td><% if (deps[i].internal_phone) { %> <%= deps[i].internal_phone %> <%} else { %> - <%}%></td>
+                                          </tr>
+                                          <tr>
+                                              <td class="info_header">Городской номер:</td>
+                                              <td><% if (deps[i].external_phone) { %> <%= deps[i].external_phone %> <%} else { %> - <%}%></td>
+                                          </tr>
+                                    </tbody>
+                                  </table>
+                                  <a href="<% if (deps[i].folder_url_dep) { %> <%= deps[i].folder_url_dep %> <%} else { %>#<%}%>"> <button type="button" class="btn btn-outline btn-primary btn-lg dep_button">Файлы отдела</button></a>
+                                  <a href="<% if (deps[i].folder_url_members) { %> <%= deps[i].folder_url_members %> <%} else { %>#<%}%>"><button type="button" class="btn btn-outline btn-primary btn-lg dep_button">Файлы сотрудиков отдела</button></a>
+                                </div>
+                              </div>
+                            </div>
+                          </div>
+                        </div>
+                      </div>
+                    <% } %>
+                    </div>
+                  </div>
+
+                    <!-- /.col-lg-12 -->
+                </div>
                 <!-- /.row -->
             </div>
             <!-- /.container-fluid -->

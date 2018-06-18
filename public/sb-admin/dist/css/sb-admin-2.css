@@ -16,6 +16,7 @@
    padding-right: 25px;
    text-align: center;
    vertical-align: middle;
+   width: auto;
    margin-right: 0px !important;
  }
 
@@ -48,9 +49,9 @@
  }
 
  .change_profile_button{
-   width: 80%;
-    margin-left: auto;
-    margin-right: auto;
+     width: 80%;
+      margin-left: auto;
+      margin-right: auto;
     margin-bottom: 10px;
  }
 
@@ -63,6 +64,25 @@
  #settings .panel-body > p {
    font-size: 12px;
  }
+
+ .dep_image{
+   width: 100%;
+ }
+
+ .dep_name{
+   text-transform: uppercase;
+ }
+
+ .dep_head_image{
+   width:50px;
+   margin-right: 10px;
+ }
+
+.dep_button{
+  width: 45%;
+  margin: 10px;
+}
+
 
 
 

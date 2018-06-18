@@ -1,0 +1,82 @@
+[
+  {
+        "name": "Административно-управленческий персонал",
+        "dep_name": "head",
+        "member_count": 7,
+        "head_id": "5b112816ab756517805c86a2",
+        "room": "-",
+        "folder_url": "https://cloud.mail.ru/home/%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE-%D1%83%D0%BF%D1%80%D0%B0%D0%B2%D0%BB%D0%B5%D0%BD%D1%87%D0%B5%D1%81%D0%BA%D0%B8%D0%B9%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB"
+  },
+  {
+        "name": "Административно-хозяйственная служба",
+        "dep_name": "head_service",
+        "member_count": 4,
+        "head_id": "5b112816ab756517805c86a7",
+        "room": "-",
+        "folder_url": "https://cloud.mail.ru/home/%D0%A1%D0%BB%D1%83%D0%B6%D0%B1%D0%B0%20-%20%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE-%D1%85%D0%BE%D0%B7%D1%8F%D0%B9%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D0%B0%D1%8F"
+  },
+  {
+        "name": "Административно-хозяйственный отдел",
+        "dep_name": "prop_head",
+        "member_count": 16,
+        "head_id": "5b112816ab756517805c86ab",
+        "room": "-",
+        "folder_url": "https://cloud.mail.ru/home/%D0%90%D0%B4%D0%BC%D0%B8%D0%BD%D0%B8%D1%81%D1%82%D1%80%D0%B0%D1%82%D0%B8%D0%B2%D0%BD%D0%BE-%D1%85%D0%BE%D0%B7%D1%8F%D0%B9%D1%81%D1%82%D0%B2%D0%B5%D0%BD%D0%BD%D1%8B%D0%B9%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB/"
+  },
+  {
+        "name": "Ремонтно-строительный отдел",
+        "dep_name": "remont",
+        "member_count": 6,
+        "head_id": "5b112816ab756517805c86bb",
+        "room": "-",
+        "folder_url": "https://cloud.mail.ru/home/%D0%A0%D0%B5%D0%BC%D0%BE%D0%BD%D1%82%D0%BD%D0%BE-%D1%81%D1%82%D1%80%D0%BE%D0%B8%D1%82%D0%B5%D0%BB%D1%8C%D0%BD%D1%8B%D0%B9%20%D0%BE%D1%82%D0%B4%D0%B5%D0%BB/"
+  },
+  {
+        "name": "Отдел материально – технического снабжения",
+        "dep_name": "supply",
+        "member_count": 6,
+        "head_id": "5b112816ab756517805c86c1",
+        "room": "-",
+        "folder_url": "https://cloud.mail.ru/home/%D0%9E%D1%82%D0%B4%D0%B5%D0%BB%20%D0%BC%D0%B0%D1%82%D0%B5%D1%80%D0%B8%D0%B0%D0%BB%D1%8C%D0%BD%D0%BE%20%E2%80%93%20%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D1%87%D0%B5%D1%81%D0%BA%D0%BE%D0%B3%D0%BE%20%D1%81%D0%BD%D0%B0%D0%B1%D0%B6%D0%B5%D0%BD%D0%B8%D1%8F/"
+  },
+  {
+        "name": "Отдел энергетики",
+        "dep_name": "energy",
+        "member_count": 7,
+        "head_id": "5b112816ab756517805c86c4",
+        "room": "-",
+        "folder_url": "https://cloud.mail.ru/home/%D0%9E%D1%82%D0%B4%D0%B5%D0%BB%20%D1%8D%D0%BD%D0%B5%D1%80%D0%B3%D0%B5%D1%82%D0%B8%D0%BA%D0%B8"
+  },
+  {
+        "name": "Отдел по эксплуатации инженерных систем",
+        "dep_name": "esystem",
+        "member_count": 13,
+        "head_id": "5b112816ab756517805c86cb",
+        "room": "-",
+        "folder_url": "https://cloud.mail.ru/home/%D0%9E%D1%82%D0%B4%D0%B5%D0%BB%20%D0%BF%D0%BE%20%D1%8D%D0%BA%D1%81%D0%BF%D0%BB%D1%83%D0%B0%D1%82%D0%B0%D1%86%D0%B8%D0%B8%20%D0%B8%D0%BD%D0%B6%D0%B5%D0%BD%D0%B5%D1%80%D0%BD%D1%8B%D1%85%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC"
+  },
+  {
+        "name": "Отдел ГО, ЧС, охраны труда и техники безопасности",
+        "dep_name": "safety",
+        "member_count": 1,
+        "head_id": "5b112816ab756517805c86d8",
+        "room": "-",
+        "folder_url": "https://cloud.mail.ru/home/%D0%9E%D1%82%D0%B4%D0%B5%D0%BB%20%D0%93%D0%9E%2C%20%D0%A7%D0%A1%2C%20%D0%BE%D1%85%D1%80%D0%B0%D0%BD%D1%8B%20%D1%82%D1%80%D1%83%D0%B4%D0%B0%20%D0%B8%20%D1%82%D0%B5%D1%85%D0%BD%D0%B8%D0%BA%D0%B8%20%D0%B1%D0%B5%D0%B7%D0%BE%D0%BF%D0%B0%D1%81%D0%BD%D0%BE%D1%81%D1%82%D0%B8"
+  },
+  {
+        "name": "Отдел безопасности",
+        "dep_name": "security",
+        "member_count": 2,
+        "head_id": "5b112816ab756517805c86d9",
+        "room": "-",
+        "folder_url": "https://cloud.mail.ru/home/%D0%9E%D1%82%D0%B4%D0%B5%D0%BB%20%D0%B1%D0%B5%D0%B7%D0%BE%D0%BF%D0%B0%D1%81%D0%BD%D0%BE%D1%81%D1%82%D0%B8"
+  },
+  {
+        "name": "Отдел слаботочных систем и КИПиА",
+        "dep_name": "kipia",
+        "member_count": 15,
+        "head_id": "5b112816ab756517805c86db",
+        "room": "448",
+        "folder_url": "https://cloud.mail.ru/home/%D0%9E%D1%82%D0%B4%D0%B5%D0%BB%20%D1%81%D0%BB%D0%B0%D0%B1%D0%BE%D1%82%D0%BE%D1%87%D0%BD%D1%8B%D1%85%20%D1%81%D0%B8%D1%81%D1%82%D0%B5%D0%BC%20%D0%B8%20%D0%9A%D0%98%D0%9F%D0%B8%D0%90"
+  },
+]
