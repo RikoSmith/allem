@@ -191,7 +191,11 @@ router.get('/handbook', permissionCheck('handbook'), function (req, res) {
 
 
 router.get('/maptest',  function (req, res) {
-  res.render('sb-admin/map')
+  res.render('sb-admin/map.ejs')
+})
+
+router.get('/maptest2',  function (req, res) {
+  res.render('sb-admin/map.ejs')
 })
 
 

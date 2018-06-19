@@ -42,7 +42,7 @@
                     <div class="col-md-8">
                       <div class="panel panel-default">
                           <div class="panel-heading">
-                              Информация <a href="#"><span class="member_delo">[личное дело]</span></a>
+                              Информация <a href="<% if (member.delo_url) { %> <%= member.delo_url %> <%} else { %> - <%}%>"><span class="member_delo">[личное дело]</span></a> <a href="<% if (member.folder_url) { %> <%= member.folder_url %> <%} else { %> - <%}%>"><span class="member_delo">[папка сотрудника]</span></a>
                           </div>
                           <!-- /.panel-heading -->
                           <div class="panel-body">
