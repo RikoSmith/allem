@@ -194,11 +194,6 @@ router.get('/maptest',  function (req, res) {
   res.render('sb-admin/map.ejs')
 })
 
-router.get('/maptest2',  function (req, res) {
-  res.render('sb-admin/map.ejs')
-})
-
-
 router.get('/test', function (req, res) {
   res.render('index')
 })
