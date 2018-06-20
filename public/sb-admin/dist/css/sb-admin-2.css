@@ -83,6 +83,28 @@
   margin: 10px;
 }
 
+.passive_member{
+  background-color: #ffc5c5 !important;
+}
+
+.holiday_member{
+    background-color: #fff1bd !important;
+}
+
+.trip_member{
+  background-color: #e9ffde !important;
+}
+
+.dekret_member{
+  background-color: #c8e5ff !important;
+}
+
+.ill_member{
+  background-color: #eed7ff !important;
+}
+
+
+
 
 
 

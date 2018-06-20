@@ -1,0 +1,16 @@
+{
+    "type": "member_edit",
+    "edit_type": "Основные",
+    "object": {
+        "name": "Raiymbek",
+        "lastname": "Mustazhapov",
+        "username": "admin"
+    },
+    "subject": {
+        "name": "Galiev",
+        "lastname": "Amanzhol",
+        "id": "5ad545as5d5as4d54a5s5d"
+    },
+    "timestamp": "2018-06-20",
+    "text": "Raiymbek Mustazhapov изменил(а) данные 'Основные' Galiev Amanzhol"
+}

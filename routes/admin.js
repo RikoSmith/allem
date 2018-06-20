@@ -15,7 +15,7 @@ const dbName = 'allemdb';
 function permissionCheck(perm){
   return permissionCheck[perm] || (permissionCheck[perm] = function(req, res, next) {
     if (req.session.user.permission.indexOf(perm) >= 0) next();
-    else res.render("sb-admin/denied");
+    else res.render("sb-admin/denied", {user: req.session.user});
   })
 }
 
@@ -83,7 +83,35 @@ router.use(checkSignIn);
 
 /* GET users listing. */
 router.get('/', permissionCheck('general'), function (req, res) {
-  res.render('sb-admin/index', {user: req.session.user});
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
+
+    const db = client.db(dbName);
+    const collection = db.collection('history');
+    var data = collection.find({}).sort({timestamp: -1}).toArray(function(err, result) {
+      if (err) throw err;
+      //console.log(result);
+
+      res.render('sb-admin/index', {history: result, user: req.session.user});
+      client.close();
+    });
+  });
+})
+
+router.get('/notifications', permissionCheck('general'), function (req, res) {
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
+
+    const db = client.db(dbName);
+    const collection = db.collection('history');
+    var data = collection.find({}).sort({timestamp: -1}).toArray(function(err, result) {
+      if (err) throw err;
+      //console.log(result);
+
+      res.render('sb-admin/notifications', {history: result, user: req.session.user});
+      client.close();
+    });
+  });
 })
 
 router.get('/members', permissionCheck('members'), updateStatus, function (req, res) {
@@ -234,6 +262,7 @@ router.post('/editMember', permissionCheck('members'), function (req, res, next)
     var prevDoc = null;
     const db = client.db(dbName);
     const collection = db.collection('members');
+    const history = db.collection('history');
     var data = collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, doc) {
       if (err) throw err;
 
@@ -246,16 +275,18 @@ router.post('/editMember', permissionCheck('members'), function (req, res, next)
       if(req.body.start_date && req.body.end_date){
         var start = new Date(req.body.start_date);
         var end = new Date(req.body.end_date);
+        var now = new Date();
 
 
         if(dates.compare(start, end) > 0){
 
           newValues.$set.start_date = req.body.start_date;
           newValues.$set.end_date = req.body.end_date;
+          if(dates.compare(end, now) < 0) newValues.$set.status = "На работе";
         }else{
           res.status(400);
           newValues = {};
-          res.send("Ошибка! Даты срока сотрудничества введены неправильно. Отмена всех изменении");
+          res.send('Ошибка! Даты срока сотрудничества введены неправильно. Отмена всех изменении <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
         }
       }
 
@@ -275,7 +306,7 @@ router.post('/editMember', permissionCheck('members'), function (req, res, next)
           }else {
             res.status(400);
             newValues = {};
-            res.send("Ошибка! Даты срока статуса введены неправильно. Отмена всех изменении");
+            res.send('Ошибка! Даты срока статуса введены неправильно. Отмена всех изменении <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
           }
         }
 
@@ -284,8 +315,8 @@ router.post('/editMember', permissionCheck('members'), function (req, res, next)
       if(req.body.holiday_start && req.body.holiday_end){
         var h_start = new Date(req.body.holiday_start);
         var h_end = new Date(req.body.holiday_end);
-        console.log("Start: " + h_start);
-        console.log("End: " + h_end);
+        //console.log("Start: " + h_start);
+        //console.log("End: " + h_end);
 
         if(dates.compare(h_start, h_end) < 0){
           newValues.$set.holiday_start = req.body.holiday_start;
@@ -293,7 +324,7 @@ router.post('/editMember', permissionCheck('members'), function (req, res, next)
         }else{
           res.status(400);
           newValues = {};
-          res.send("Ошибка! Даты срока отпуска введены неправильно. Отмена всех изменении");
+          res.send('Ошибка! Даты срока отпуска введены неправильно. Отмена всех изменении <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
         }
       }
 
@@ -303,8 +334,25 @@ router.post('/editMember', permissionCheck('members'), function (req, res, next)
         collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
           console.log("1 document updated " + response);
-          res.send("Данные успешно изменены");
-          client.close();
+
+          collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
+            var event = {};
+            event.object = {};
+            event.subject = {};
+            event.type = "member_edit";
+            event.edit_type = "Основные";
+            event.object.name = req.session.user.name;
+            event.object.lastname = req.session.user.lastname;
+            event.object.username = req.session.user.id;
+            event.subject.name = m_res.name;
+            event.subject.lastname = m_res.lastname;
+            event.subject.id = m_res._id;
+            event.timestamp = new Date();
+            event.text = req.session.user.name + " " + req.session.user.lastname + " изменил(а) данные '" + event.edit_type + "'" + ' <a href="../../admin/member/'+ event.subject.id+ '">' + event.subject.name + " " + event.subject.lastname+ "</a>"
+            history.insertOne(event);
+            res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
+            client.close();
+          })
         });
       }
 
@@ -324,10 +372,11 @@ router.post('/editMemberPrivate', function (req, res) {
     var prevDoc = null;
     const db = client.db(dbName);
     const collection = db.collection('members');
+    const history = db.collection('history');
     var data = collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, doc) {
       if (err) {
         throw err;
-        res.send("Ошибка с соединением с БД");
+        res.send('Ошибка с соединением с БД <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
       }
 
       if(req.body.sex) newValues.$set.sex = req.body.sex;
@@ -344,7 +393,7 @@ router.post('/editMemberPrivate', function (req, res) {
         }else{
           res.status(400);
           newValues = {};
-          res.send("Ошибка! Неправильно введен число детей");
+          res.send('Ошибка! Неправильно введен число детей <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
         }
       }
       //console.log(newValues);
@@ -352,8 +401,27 @@ router.post('/editMemberPrivate', function (req, res) {
         collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
           console.log("1 document updated " + response);
-          res.send("Данные успешно изменены");
-          client.close();
+
+          collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
+            var event = {};
+            event.object = {};
+            event.subject = {};
+            event.type = "member_edit";
+            event.edit_type = "Личные";
+            event.object.name = req.session.user.name;
+            event.object.lastname = req.session.user.lastname;
+            event.object.username = req.session.user.id;
+            event.subject.name = m_res.name;
+            event.subject.lastname = m_res.lastname;
+            event.subject.id = m_res._id;
+            event.timestamp = new Date();
+            event.text = req.session.user.name + " " + req.session.user.lastname + " изменил(а) данные '" + event.edit_type + "'" + ' <a href="../../admin/member/'+ event.subject.id + '">' + event.subject.name + " " + event.subject.lastname+ "</a>"
+            history.insertOne(event);
+            res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
+            client.close();
+          })
+
+
         });
       }
 
@@ -372,10 +440,11 @@ router.post('/editMemberEdu', function (req, res) {
     var prevDoc = null;
     const db = client.db(dbName);
     const collection = db.collection('members');
+    const history = db.collection('history');
     var data = collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, doc) {
       if (err) {
         throw err;
-        res.send("Ошибка с соединением с БД");
+        res.send('Ошибка с соединением с БД <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
       }
 
       if(req.body.s_ed) newValues.$set.s_ed = req.body.s_ed;
@@ -389,8 +458,25 @@ router.post('/editMemberEdu', function (req, res) {
         collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
           console.log("1 document updated " + response);
-          res.send("Данные успешно изменены");
-          client.close();
+
+          collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
+            var event = {};
+            event.object = {};
+            event.subject = {};
+            event.type = "member_edit";
+            event.edit_type = "Образование";
+            event.object.name = req.session.user.name;
+            event.object.lastname = req.session.user.lastname;
+            event.object.username = req.session.user.id;
+            event.subject.name = m_res.name;
+            event.subject.lastname = m_res.lastname;
+            event.subject.id = m_res._id;
+            event.timestamp = new Date();
+            event.text = req.session.user.name + " " + req.session.user.lastname + " изменил(а) данные '" + event.edit_type + "'" + ' <a href="../../admin/member/'+ event.subject.id + '">' + event.subject.name + " " + event.subject.lastname+ "</a>"
+            history.insertOne(event);
+            res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
+            client.close();
+          })
         });
       }
 
@@ -408,10 +494,11 @@ router.post('/editMemberShtat', function (req, res) {
     var prevDoc = null;
     const db = client.db(dbName);
     const collection = db.collection('members');
+    const history = db.collection('history');
     var data = collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, doc) {
       if (err) {
         throw err;
-        res.send("Ошибка с соединением с БД");
+        res.send('Ошибка с соединением с БД <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
       }
 
       if(doc.is_active === "Да"){
@@ -425,8 +512,30 @@ router.post('/editMemberShtat', function (req, res) {
         collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
           console.log("1 document updated " + response);
-          res.send("Данные успешно изменены");
-          client.close();
+          collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
+            var event = {};
+            event.object = {};
+            event.subject = {};
+            event.type = "member_edit";
+            event.edit_type = "Штат";
+            event.object.name = req.session.user.name;
+            event.object.lastname = req.session.user.lastname;
+            event.object.username = req.session.user.id;
+            event.subject.name = m_res.name;
+            event.subject.lastname = m_res.lastname;
+            event.subject.id = m_res._id;
+            event.timestamp = new Date();
+            console.log(newValues.$set);
+            if(newValues.$set.is_active == "Нет"){
+              event.text = req.session.user.name + " " + req.session.user.lastname + " убрал(а) из штата " + ' <a href="../../admin/member/'+ event.subject.id + '">' + event.subject.name + " " + event.subject.lastname + "</a>"
+            }else{
+              event.text = req.session.user.name + " " + req.session.user.lastname + " добавил(а) в штат " + ' <a href="../../admin/member/'+ event.subject.id + '">' + event.subject.name + " " + event.subject.lastname + "</a>"
+            }
+
+            history.insertOne(event);
+            res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
+            client.close();
+          })
         });
       }
 

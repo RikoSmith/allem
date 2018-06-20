@@ -235,7 +235,11 @@
                                       <div class="col-md-6">
                                           <div class="panel panel-warning">
                                               <div class="panel-heading">
+                                                <% if (member.is_active == "Да"){ %>
                                                   Убрать сотрудника из штата
+                                                <% } else {%>
+                                                  Добавить сотрудника в штат
+                                                <% }%>
                                               </div>
                                               <div class="panel-body">
                                                 <% if (member.is_active == "Да"){ %>

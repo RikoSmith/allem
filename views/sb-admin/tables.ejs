@@ -43,7 +43,7 @@
                         </div>
                         <!-- /.panel-heading -->
                         <div class="panel-body">
-                            <table width="100%" class="table table-striped" id="dataTables-example">
+                            <table width="100%" class="table" id="dataTables-example">
                                 <thead>
                                     <tr>
                                         <th>Фото</th>
@@ -64,7 +64,16 @@
                                           if( filter !== members[i].dep_name) continue;
                                         } %>
                                         <% if(!user.permission_members.includes(members[i].dep_name)) continue;%>
-                                        <tr class="">
+                                        <tr class="
+                                        <% if(members[i].is_active == "Нет"){%>
+                                          passive_member
+                                        <%} else{%>
+                                          <% if (members[i].status === "В отпуске") { %> holiday_member <%}%>
+                                          <% if (members[i].status === "В декрете") { %> dekret_member <%}%>
+                                          <% if (members[i].status === "На больничных") { %> ill_member <%}%>
+                                          <% if (members[i].status === "В командировке") { %> trip_member <%}%>
+                                        <%}%>
+                                        ">
                                             <td><img src="../images/members_small/<%= members[i].image %>.jpg" height="50"></td>
                                             <td><%= members[i].lastname %></td>
                                             <td><%= members[i].name %></td>
