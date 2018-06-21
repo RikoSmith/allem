@@ -4,16 +4,16 @@ const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
 var bcrypt = require('bcrypt');
 
-
-
+//MongoDB Credentials. Extremly confidential information! Don't share this url with anyone!
 const url = 'mongodb://admin:Zxc159Zxc159@ds139690.mlab.com:39690/allemdb';
 const dbName = 'allemdb';
 
-/* GET home page. Only public pages -------------------------------------------------------------------------*/
+/* GET home page. Below are only public pages -------------------------------------------------------------------------*/
 router.get('/', function (req, res) {
   res.render('index')
 })
 
+//Multilanguage pages
 router.get('/ru', function (req, res) {
   res.render('index')
 })
@@ -35,7 +35,7 @@ router.get('/logout', function(req, res){
   res.redirect('/login');
 });
 
-
+//Login checking
 router.post('/login', function(req, res){
    if(!req.body.id || !req.body.password){
       res.render('sb-admin/login', {message: "Пожалуйста, заполните все поля"});
@@ -73,14 +73,5 @@ router.post('/login', function(req, res){
      });
    }
 });
-/* Pages that are restricted -------------------------------------------------------------------------------*/
-
-
-
-
-//convert-excel-to-json --config='{"sourceFile": "workers.xlsx", "outputJSON": true, "columnToKey": {"A": "lastname", "B": "name", "C": "middlename", "D": "birthdate", "E": "id", "F": "position", "G": "phone", "H": "address", "I": "address_current", "J": "department", "K": "dep_name"}}'
-
-
-
 
 module.exports = router

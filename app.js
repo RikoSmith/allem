@@ -10,9 +10,11 @@ var routes = require('./routes/index')
 var users = require('./routes/members')
 var admin = require('./routes/admin')
 
+//Создаем приложение Express
+//Creating the Express app
 var app = express()
 
-// view engine setup
+//Setting view engine to ejs
 app.set('views', path.join(__dirname, 'views'))
 app.set('view engine', 'ejs')
 
@@ -21,6 +23,8 @@ app.use(logger('dev'))
 app.use(bodyParser.json())
 app.use(bodyParser.urlencoded())
 app.use(cookieParser())
+
+//Session configuration
 app.use(session(
   {
     secret: "AJFN7 58DK7 F9GOR 7854R",
@@ -29,13 +33,16 @@ app.use(session(
     saveUninitialized: true
   }
 ));
+
+//Setting folder for static serve files
 app.use(express.static(path.join(__dirname, 'public')))
 
-app.use('/', routes)
-app.use('/members', users)
-app.use('/admin', admin)
+//Setting routes configuration files
+app.use('/', routes)          //root routing goes to routes routes/index.js
+app.use('/members', users)    //all /member/.. goes to routes/members.js
+app.use('/admin', admin)      // all /admin/.. goes to routes/admin.js
 
-/// catch 404 and forwarding to error handler
+/// if all above routes does not catch any matching urls -> catch 404 and forwarding to error handler
 app.use(function (req, res, next) {
   var err = new Error('Not Found')
   err.status = 404;
