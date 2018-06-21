@@ -207,11 +207,11 @@ router.get('/handbook', permissionCheck('handbook'), function (req, res) {
     assert.equal(null, err);
 
     const db = client.db(dbName);
-    const collection = db.collection('members');
+    const collection = db.collection('handbook');
     var data = collection.find({}).toArray(function(err, result) {
       if (err) throw err;
       //console.log(result);
-      res.render('sb-admin/help' , {user: req.session.user});
+      res.render('sb-admin/help' , {handbook: result, user: req.session.user});
       client.close();
     });
   });
