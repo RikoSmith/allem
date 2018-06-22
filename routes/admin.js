@@ -3,6 +3,7 @@ var router = express.Router();
 const dates =   require('../lib/dates');
 const MongoClient = require('mongodb').MongoClient;
 const assert = require('assert');
+const axios = require('axios');
 var ObjectId = require('mongodb').ObjectID;
 var bcrypt = require('bcrypt');
 const saltRounds = 10;
@@ -563,5 +564,40 @@ router.get('/update', updateStatus, function (req, res) {
     });
   });
 })
+
+router.get('/updateHandbook', permissionCheck('general'), function (req, res) {
+  axios.get('http://10.0.40.112/book/api/departments')
+  .then(function (response) {
+    response = response.data;
+    console.log(response);
+    MongoClient.connect(url, function(err, client) {
+      assert.equal(null, err);
+
+      const db = client.db(dbName);
+      const collection = db.collection('handbook');
+      var promises = 0;
+      for(let i=0; i < response.length; i++){
+        //console.log("Res: " + response[i])
+        collection.replaceOne({"Id": response[i].Id}, response[i], function(err, doc) {
+          if (err) {
+            collection.insertOne(response[i])
+          }
+          promises++;
+          if(promises === response.length){
+            res.send("Данные успешно изменены");
+            client.close();
+          }
+        })
+      }
+    });
+  })
+  .catch(function (error) {
+    console.log(error);
+  });
+
+
+
+})
+
 
 module.exports = router

@@ -60,8 +60,10 @@
                                 <tbody>
                                     <% if (handbook) { %>
                                       <% for(var i=0; i < handbook.length; i++){
+                                            if(!handbook[i].ShowInDirectory) continue;
                                             var dep = handbook[i].Name;
                                             for(var j = 0; j <  handbook[i].Users.length; j++){
+                                              if(!handbook[i].Users[j].ShowInDirectory) continue;
                                               %>
                                               <tr class="">
                                                   <td><%= handbook[i].Users[j].SurName %></td>
@@ -117,7 +119,7 @@
               url: "http://cdn.datatables.net/plug-ins/1.10.18/i18n/Russian.json",
               dom: 'Bfrtip',
               buttons: [
-                'copyHtml5', 'pdfHtml5', 'csvHtml5', 
+                'copyHtml5', 'pdfHtml5', 'csvHtml5',
                 {extent: "excelHtml5", text: "<span class='glyphicon glyphicon-th-list'></span> Excel HTML5 Export"},
               ]
             }
