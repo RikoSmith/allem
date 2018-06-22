@@ -1,0 +1,445 @@
+<!DOCTYPE html>
+<!--[if IE 9]> <html lang="en" class="ie9"> <![endif]-->
+<!--[if !IE]><!-->
+<html lang="en">
+<!--<![endif]-->
+	<head>
+		<meta charset="utf-8">
+		<title><%if(lang.fields.html_title){%><%- lang.fields.html_title %><%}else{%>UNDEFINED<%}%></title>
+		<!-- Mobile Meta -->
+		<meta name="viewport" content="width=device-width, initial-scale=1.0">
+		<meta name="yandex-verification" content="1f99fa0fe11f2ce4" />
+
+		<!-- Favicon -->
+		<link rel="shortcut icon" href="images/favicon.ico">
+
+		<!-- Web Fonts -->
+		<link href='http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext' rel='stylesheet' type='text/css'>
+		<link href='http://fonts.googleapis.com/css?family=Raleway:700,400,300' rel='stylesheet' type='text/css'>
+
+		<!-- Bootstrap core CSS -->
+		<link href="bootstrap/css/bootstrap.css" rel="stylesheet">
+
+		<!-- Font Awesome CSS -->
+		<link rel="stylesheet" href="https://use.fontawesome.com/releases/v5.0.13/css/all.css" integrity="sha384-DNOHZ68U8hZfKXOrtjWvjxusGo9WQnrNx2sqG0tfsghAvtVlRW3tvkXWZh58N9jp" crossorigin="anonymous">
+
+		<!-- Plugins -->
+		<link href="css/animations.css" rel="stylesheet">
+
+		<!-- Worthy core CSS file -->
+		<link href="css/style.css" rel="stylesheet">
+
+		<!-- lIGHTBOX css -->
+		<link href="css/jquery.lightbox.css" rel="stylesheet">
+
+		<!-- Carousel-->
+		<link rel="stylesheet" type="text/css" href="slick/slick.css"/>
+		<link rel="stylesheet" type="text/css" href="slick/slick-theme.css"/>
+
+		<!-- Custom css -->
+		<link href="css/custom.css" rel="stylesheet">
+	</head>
+
+	<body class="no-trans">
+		<!-- scrollToTop -->
+		<!-- ================ -->
+		<div class="scrollToTop"><i class="icon-up-open-big"></i></div>
+
+		<!-- header start -->
+		<!-- ================ -->
+		<header class="header fixed clearfix navbar navbar-fixed-top">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-4">
+
+						<!-- header-left start -->
+						<!-- ================ -->
+						<div class="header-left clearfix">
+
+							<!-- logo -->
+							<div class="logo smooth-scroll">
+								<a href="#banner"><img id="logo" src="images/logo.png" alt="Worthy" style="height:60px;"></a>
+							</div>
+
+							<!-- name-and-slogan -->
+							<div class="site-name-and-slogan smooth-scroll">
+								<!--<div class="site-name"><a href="#banner">Allem</a></div>
+								<div class="site-slogan">engineering company</div>-->
+							</div>
+
+						</div>
+						<!-- header-left end -->
+
+					</div>
+					<div class="col-md-8">
+
+						<!-- header-right start -->
+						<!-- ================ -->
+						<div class="header-right clearfix">
+
+							<!-- main-navigation start -->
+							<!-- ================ -->
+							<div class="main-navigation animated">
+
+								<!-- navbar start -->
+								<!-- ================ -->
+								<nav class="navbar navbar-default" role="navigation">
+									<div class="container-fluid">
+
+										<!-- Toggle get grouped for better mobile display -->
+										<div class="navbar-header">
+											<button type="button" class="navbar-toggle" data-toggle="collapse" data-target="#navbar-collapse-1">
+												<span class="sr-only">Toggle navigation</span>
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+												<span class="icon-bar"></span>
+											</button>
+										</div>
+
+										<!-- Collect the nav links, forms, and other content for toggling -->
+										<div class="collapse navbar-collapse scrollspy smooth-scroll" id="navbar-collapse-1">
+											<ul class="nav navbar-nav navbar-right">
+												<li class="active"><a href="#banner"><%if(lang.fields.menu){%><%- lang.fields.menu.main %><%}else{%>UNDEFINED<%}%></a></li>
+												<li><a href="#about"><%if(lang.fields.menu){%><%- lang.fields.menu.about %><%}else{%>UNDEFINED<%}%></a></li>
+												<li><a href="#services"><%if(lang.fields.menu){%><%- lang.fields.menu.services %><%}else{%>UNDEFINED<%}%></a></li>
+												<!--<li><a href="#people">СОТРУДНИКИ</a></li>-->
+												<li><a href="#partners"><%if(lang.fields.menu){%><%- lang.fields.menu.feedback %><%}else{%>UNDEFINED<%}%></a></li>
+												<li><a href="#contact"><%if(lang.fields.menu){%><%- lang.fields.menu.contacts %><%}else{%>UNDEFINED<%}%></a></li>
+												<li><a class="login-button" href="http://mail.allem.kz"><%if(lang.fields.sign_in){%><%- lang.fields.sign_in %><%}else{%>UNDEFINED<%}%></a></li>
+											</ul>
+										</div>
+
+									</div>
+								</nav>
+								<!-- navbar end -->
+
+							</div>
+							<!-- main-navigation end -->
+
+						</div>
+						<!-- header-right end -->
+
+					</div>
+				</div>
+			</div>
+		</header>
+		<!-- header end -->
+
+		<!-- banner start -->
+		<!-- ================ -->
+		<div id="banner" class="banner">
+			<div class="banner-image"></div>
+			<div class="banner-caption">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-8 col-md-offset-2 object-non-visible" data-animation-effect="fadeIn">
+							<h1 class="text-center"><%if(lang.fields.main_header){%><%- lang.fields.main_header %><%}else{%>UNDEFINED<%}%></h1>
+							<p class="lead text-center"><%if(lang.fields.main_header_sub){%><%- lang.fields.main_header_sub %><%}else{%>UNDEFINED<%}%></p>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- banner end -->
+
+		<!-- section start -->
+		<!-- ================ -->
+		<div class="section clearfix object-non-visible" data-animation-effect="fadeIn">
+			<div class="container">
+				<div class="row">
+					<div class="col-md-12">
+						<h1 id="about" class="title text-center"><%if(lang.fields.about_header){%><%- lang.fields.about_header %><%}else{%>UNDEFINED<%}%></h1>
+						<p class="lead text-center"><%if(lang.fields.about_header_sub){%><%- lang.fields.about_header_sub %><%}else{%>UNDEFINED<%}%></p>
+						<div class="space"></div>
+						<div class="row">
+							<div class="col-md-6">
+								<img  class="section-image" src="images/section-image-1.png" alt="">
+								<div class="space"></div>
+							</div>
+							<div class="col-md-6">
+								<p><%if(lang.fields.about_text_1){%><%- lang.fields.about_text_1 %><%}else{%>UNDEFINED<%}%></p>
+								<p><%if(lang.fields.about_list_header){%><%- lang.fields.about_list_header %><%}else{%>UNDEFINED<%}%></p>
+								<ul class="list-unstyled">
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i> <%if(lang.fields.about_list){%><%- lang.fields.about_list.item_1 %><%}else{%>UNDEFINED<%}%></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i> <%if(lang.fields.about_list){%><%- lang.fields.about_list.item_2 %><%}else{%>UNDEFINED<%}%></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i> <%if(lang.fields.about_list){%><%- lang.fields.about_list.item_3 %><%}else{%>UNDEFINED<%}%></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i> <%if(lang.fields.about_list){%><%- lang.fields.about_list.item_4 %><%}else{%>UNDEFINED<%}%></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i> <%if(lang.fields.about_list){%><%- lang.fields.about_list.item_5 %><%}else{%>UNDEFINED<%}%></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i> <%if(lang.fields.about_list){%><%- lang.fields.about_list.item_6 %><%}else{%>UNDEFINED<%}%></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i> <%if(lang.fields.about_list){%><%- lang.fields.about_list.item_7 %><%}else{%>UNDEFINED<%}%></li>
+									<li><i class="fa fa-caret-right pr-10 text-colored"></i> <%if(lang.fields.about_list){%><%- lang.fields.about_list.item_8 %><%}else{%>UNDEFINED<%}%></li>
+								</ul>
+							</div>
+						</div>
+						<div class="space"></div>
+						<div class="row">
+							<div class="col-md-6">
+								<h2><%if(lang.fields.about_text_2_header){%><%- lang.fields.about_text_2_header %><%}else{%>UNDEFINED<%}%></h2>
+								<p><%if(lang.fields.about_text_2){%><%- lang.fields.about_text_2 %><%}else{%>UNDEFINED<%}%></p>
+							</div>
+							<div class="col-md-6">
+								<div class="panel-group" id="accordion" role="tablist" aria-multiselectable="true">
+									<div class="panel panel-default">
+										<div class="panel-heading" role="tab" id="headingOne">
+											<h4 class="panel-title">
+												<a data-toggle="collapse" data-parent="#accordion" href="#collapseOne" aria-expanded="true" aria-controls="collapseOne">
+													<%if(lang.fields.about_qestion_1){%><%- lang.fields.about_qestion_1 %><%}else{%>UNDEFINED<%}%>
+												</a>
+											</h4>
+										</div>
+										<div id="collapseOne" class="panel-collapse collapse in" role="tabpanel" aria-labelledby="headingOne">
+											<div class="panel-body">
+												<%if(lang.fields.about_answer_1){%><%- lang.fields.about_answer_1 %><%}else{%>UNDEFINED<%}%>
+											</div>
+										</div>
+									</div>
+									<div class="panel panel-default">
+										<div class="panel-heading" role="tab" id="headingTwo">
+											<h4 class="panel-title">
+												<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseTwo" aria-expanded="false" aria-controls="collapseTwo">
+														<%if(lang.fields.about_qestion_2){%><%- lang.fields.about_qestion_2 %><%}else{%>UNDEFINED<%}%>
+												</a>
+											</h4>
+										</div>
+										<div id="collapseTwo" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingTwo">
+											<div class="panel-body">
+												<%if(lang.fields.about_answer_2){%><%- lang.fields.about_answer_2 %><%}else{%>UNDEFINED<%}%>
+											</div>
+										</div>
+									</div>
+									<div class="panel panel-default">
+										<div class="panel-heading" role="tab" id="headingThree">
+											<h4 class="panel-title">
+												<a class="collapsed" data-toggle="collapse" data-parent="#accordion" href="#collapseThree" aria-expanded="false" aria-controls="collapseThree">
+													<%if(lang.fields.about_qestion_3){%><%- lang.fields.about_qestion_3 %><%}else{%>UNDEFINED<%}%>
+												</a>
+											</h4>
+										</div>
+										<div id="collapseThree" class="panel-collapse collapse" role="tabpanel" aria-labelledby="headingThree">
+											<div class="panel-body">
+												<%if(lang.fields.about_answer_3){%><%- lang.fields.about_answer_3 %><%}else{%>UNDEFINED<%}%>
+											</div>
+										</div>
+									</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- section end -->
+
+		<!-- section start -->
+		<!-- ================ -->
+		<div class="section translucent-bg bg-image-1 blue">
+			<div class="container object-non-visible" data-animation-effect="fadeIn">
+				<h1 id="services"  class="text-center title"><%if(lang.fields.services_header){%><%- lang.fields.services_header %><%}else{%>UNDEFINED<%}%></h1>
+				<div class="space"></div>
+				<div class="row">
+					<div class="col-sm-6">
+						<div class="media">
+							<div class="media-body text-right">
+								<h4 class="media-heading"><%if(lang.fields.services_1_header){%><%- lang.fields.services_1_header %><%}else{%>UNDEFINED<%}%></h4>
+								<p><%if(lang.fields.services_1){%><%- lang.fields.services_1 %><%}else{%>UNDEFINED<%}%></p>
+							</div>
+							<div class="media-right">
+								<i class="fa fa-desktop"></i>
+							</div>
+						</div>
+						<div class="media">
+							<div class="media-body text-right">
+								<h4 class="media-heading"><%if(lang.fields.services_2_header){%><%- lang.fields.services_2_header %><%}else{%>UNDEFINED<%}%></h4>
+								<p><%if(lang.fields.services_2){%><%- lang.fields.services_2 %><%}else{%>UNDEFINED<%}%></p>
+							</div>
+							<div class="media-right">
+								<i class="fa fa-sitemap"></i>
+							</div>
+						</div>
+						<div class="media">
+							<div class="media-body text-right">
+								<h4 class="media-heading"><%if(lang.fields.services_3_header){%><%- lang.fields.services_3_header %><%}else{%>UNDEFINED<%}%></h4>
+								<p><%if(lang.fields.services_3){%><%- lang.fields.services_3 %><%}else{%>UNDEFINED<%}%></p>
+							</div>
+							<div class="media-right">
+								<i class="fa fa-cogs"></i>
+							</div>
+						</div>
+						<div class="media">
+							<div class="media-body text-right">
+								<h4 class="media-heading"><%if(lang.fields.services_4_header){%><%- lang.fields.services_4_header %><%}else{%>UNDEFINED<%}%></h4>
+								<p><%if(lang.fields.services_4){%><%- lang.fields.services_4 %><%}else{%>UNDEFINED<%}%></p>
+							</div>
+							<div class="media-right">
+								<i class="fa fa-paint-brush"></i>
+							</div>
+						</div>
+						<div class="media">
+							<div class="media-body text-right">
+								<h4 class="media-heading"><%if(lang.fields.services_5_header){%><%- lang.fields.services_5_header %><%}else{%>UNDEFINED<%}%></h4>
+								<p><%if(lang.fields.services_5){%><%- lang.fields.services_5 %><%}else{%>UNDEFINED<%}%></p>
+							</div>
+							<div class="media-right">
+								<i class="fa fa-paperclip"></i>
+							</div>
+						</div>
+					</div>
+					<div class="space visible-xs"></div>
+					<div class="col-sm-6">
+						<div class="media">
+							<div class="media-left">
+								<i class="fa fa-plug"></i>
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading"><%if(lang.fields.services_6_header){%><%- lang.fields.services_6_header %><%}else{%>UNDEFINED<%}%></h4>
+								<p><%if(lang.fields.services_6){%><%- lang.fields.services_6%><%}else{%>UNDEFINED<%}%></p>
+							</div>
+						</div>
+						<div class="media">
+							<div class="media-left">
+								<i class="fa fa-bolt"></i>
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading"><%if(lang.fields.services_7_header){%><%- lang.fields.services_7_header %><%}else{%>UNDEFINED<%}%></h4>
+								<p><%if(lang.fields.services_7){%><%- lang.fields.services_7 %><%}else{%>UNDEFINED<%}%></p>
+							</div>
+						</div>
+						<div class="media">
+							<div class="media-left">
+								<i class="fa fa-shield-alt"></i>
+							</div>
+							<div class="media-body">
+								<h4 class="media-heading"><%if(lang.fields.services_8_header){%><%- lang.fields.services_8_header %><%}else{%>UNDEFINED<%}%></h4>
+								<p><%if(lang.fields.services_8){%><%- lang.fields.services_8 %><%}else{%>UNDEFINED<%}%></p>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+		<!-- section end -->
+
+		<div class="section translucent-bg bg-image-2 pb-clear">
+			<div class="container object-non-visible" data-animation-effect="fadeIn">
+				<h1 id="partners"  class="text-center title"><%if(lang.fields.feedback_header){%><%- lang.fields.feedback_header %><%}else{%>UNDEFINED<%}%></h1>
+				<div class="space"></div>
+				<div class="row">
+					<div class="gallery">
+						<div>
+							<a href="/images/civil.jpg" title="Image 1">
+								<img src="/images/civil.jpg">
+							</a>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+		<!-- footer start -->
+		<!-- ================ -->
+		<footer id="footer">
+
+			<!-- .footer start -->
+			<!-- ================ -->
+			<div class="footer section">
+				<div class="container">
+					<h1 class="title text-center" id="contact"><%if(lang.fields.contact_header){%><%- lang.fields.contact_header %><%}else{%>UNDEFINED<%}%></h1>
+					<div class="space"></div>
+					<div class="row">
+						<div class="col-sm-6">
+							<div class="footer-content">
+								<p class="large"><%if(lang.fields.contact_text){%><%- lang.fields.contact_text %><%}else{%>UNDEFINED<%}%></p>
+								<ul class="list-icons">
+									<li><i class="fa fa-building pr-10"></i><%if(lang.fields.contact_company){%><%- lang.fields.contact_company %><%}else{%>UNDEFINED<%}%></li>
+									<li><i class="fa fa-map-marker pr-10"></i><%if(lang.fields.contact_address){%><%- lang.fields.contact_address %><%}else{%>UNDEFINED<%}%></li>
+									<li><i class="fa fa-phone pr-10"></i><%if(lang.fields.contact_phone){%><%- lang.fields.contact_phone %><%}else{%>UNDEFINED<%}%></li>
+									<li><i class="fas fa-envelope-open pr-10"></i><%if(lang.fields.contact_mail){%><%- lang.fields.contact_mail %><%}else{%>UNDEFINED<%}%></li>
+								</ul>
+							</div>
+						</div>
+						<div class="col-sm-6">
+							<div class="footer-content">
+								<div class="email-success">
+									<p>Сообщение принято.</p>
+								</div>
+								<form role="form" id="gform" action="https://script.google.com/macros/s/AKfycbxZpkNOh16i8mpjLyFwWni_8vhYAg7sDLr_Ew-f/exec">
+									<div class="form-group has-feedback">
+										<label class="sr-only" for="name2"><%if(lang.fields.message_name){%><%- lang.fields.message_name %><%}else{%>UNDEFINED<%}%></label>
+										<input type="text" class="form-control" id="name2" placeholder="<%if(lang.fields.message_name){%><%- lang.fields.message_name %><%}else{%>UNDEFINED<%}%>" name="name" required>
+										<i class="fa fa-user form-control-feedback"></i>
+									</div>
+									<div class="form-group has-feedback">
+										<label class="sr-only" for="email2"><%if(lang.fields.message_email){%><%- lang.fields.message_email %><%}else{%>UNDEFINED<%}%></label>
+										<input type="email" class="form-control" id="email2" placeholder="<%if(lang.fields.message_email){%><%- lang.fields.message_email %><%}else{%>UNDEFINED<%}%>" name="email" required>
+										<i class="fa fa-envelope form-control-feedback"></i>
+									</div>
+									<div class="form-group has-feedback">
+										<label class="sr-only" for="message2"><%if(lang.fields.message_text){%><%- lang.fields.message_text %><%}else{%>UNDEFINED<%}%></label>
+										<textarea class="form-control" rows="8" id="message2" placeholder="<%if(lang.fields.message_text){%><%- lang.fields.message_text %><%}else{%>UNDEFINED<%}%>" name="message" required></textarea>
+										<i class="fa fa-pencil form-control-feedback"></i>
+									</div>
+									<input type="submit" value="<%if(lang.fields.message_send){%><%- lang.fields.message_send %><%}else{%>UNDEFINED<%}%>" class="btn btn-default email-submit">
+								</form>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- .footer end -->
+
+			<!-- .subfooter start -->
+			<!-- ================ -->
+			<div class="subfooter">
+				<div class="container">
+					<div class="row">
+						<div class="col-md-12">
+							<p class="text-center">Copyright © 2018 ТОО "Allem"</p>
+						</div>
+					</div>
+				</div>
+			</div>
+			<!-- .subfooter end -->
+
+		</footer>
+		<!-- footer end -->
+
+		<!-- JavaScript files placed at the end of the document so the pages load faster
+		================================================== -->
+		<!-- Jquery and Bootstap core js files -->
+		<script type="text/javascript" src="plugins/jquery.min.js"></script>
+		<script src="https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.5/waypoints.min.js"></script>
+		<script type="text/javascript" src="bootstrap/js/bootstrap.min.js"></script>
+
+		<!-- Modernizr javascript -->
+		<script type="text/javascript" src="plugins/modernizr.js"></script>
+
+		<!-- Isotope javascript -->
+		<script type="text/javascript" src="plugins/isotope/isotope.pkgd.min.js"></script>
+
+		<!-- Backstretch javascript -->
+		<script type="text/javascript" src="plugins/jquery.backstretch.min.js"></script>
+
+		<!-- Appear javascript -->
+		<script type="text/javascript" src="plugins/jquery.appear.js"></script>
+
+		<!-- Initialization of Plugins -->
+		<script type="text/javascript" src="js/template.js"></script>
+
+		<!-- Counter -->
+		<script type="text/javascript" src="js/jquery.countTo.js"></script>
+
+		<!-- Jquery Lightbox -->
+		<script type="text/javascript" src="js/jquery.lightbox.min.js"></script>
+
+		<!-- Slick Carousel-->
+		<script type="text/javascript" src="slick/slick.min.js"></script>
+
+		<!-- Custom Scripts -->
+		<script type="text/javascript" src="js/custom.js"></script>
+
+		<!-- Email Handler -->
+		<script data-cfasync="false" type="text/javascript"
+		src="https://cdn.rawgit.com/dwyl/learn-to-send-email-via-google-script-html-no-server/master/form-submission-handler.js"></script>
+
+	</body>
+</html>
