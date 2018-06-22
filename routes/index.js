@@ -10,7 +10,7 @@ const dbName = 'allemdb';
 
 /* GET home page. Below are only public pages -------------------------------------------------------------------------*/
 router.get('/', function (req, res) {
-  res.render('index')
+  res.redirect("/ru")
 })
 
 //Multilanguage pages
