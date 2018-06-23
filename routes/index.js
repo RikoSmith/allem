@@ -14,19 +14,22 @@ router.get('/', function (req, res) {
 })
 
 //Multilanguage pages
-router.get('/:lang', function (req, res) {
+router.get('/:lang', function (req, res, next) {
   MongoClient.connect(url, function(err, client) {
     assert.equal(null, err);
     console.log(req.params.lang);
     const db = client.db(dbName);
     const collection = db.collection('lang');
-    if( !['ru', 'en', 'kz'].includes(req.params.lang)) next()
-    collection.findOne({"lang": req.params.lang}, function(err, doc) {
-      if (err) throw err;
+    if( !['ru', 'en', 'kz'].includes(req.params.lang)) {
+      next()
+    }else{
+      collection.findOne({"lang": req.params.lang}, function(err, doc) {
+        if (err) throw err;
 
-      res.render('indexMulti', {lang: doc});
-      client.close();
-    });
+        res.render('indexMulti', {lang: doc});
+        client.close();
+      });
+    }
   });
 })
 
