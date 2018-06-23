@@ -20,6 +20,7 @@ router.get('/:lang', function (req, res) {
     console.log(req.params.lang);
     const db = client.db(dbName);
     const collection = db.collection('lang');
+    if( !['ru', 'en', 'kz'].includes(req.params.lang)) next()
     collection.findOne({"lang": req.params.lang}, function(err, doc) {
       if (err) throw err;
 
