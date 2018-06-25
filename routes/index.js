@@ -48,6 +48,9 @@ router.get('/google271501a1e8bc4a7f.html', function (req, res) {
   res.render('google271501a1e8bc4a7f')
 })
 
+router.get('/addMember', function (req, res) {
+  res.render('survey')
+})
 
 router.get('/sitemap', function (req, res) {
   res.render('sitemap')
