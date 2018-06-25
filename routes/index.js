@@ -33,8 +33,8 @@ router.get('/:lang', function (req, res, next) {
   });
 })
 
-router.get('/googlede766659e536c50e.html', function (req, res) {
-  res.render('googlede766659e536c50e')
+router.get('/google271501a1e8bc4a7f.html', function (req, res) {
+  res.render('google271501a1e8bc4a7f')
 })
 
 router.get('/en', function (req, res) {
