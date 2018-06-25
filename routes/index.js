@@ -37,12 +37,9 @@ router.get('/google271501a1e8bc4a7f.html', function (req, res) {
   res.render('google271501a1e8bc4a7f')
 })
 
-router.get('/en', function (req, res) {
-  res.render('index')
-})
 
-router.get('/kz', function (req, res) {
-  res.render('index')
+router.get('/sitemap', function (req, res) {
+  res.render('sitemap')
 })
 
 router.get('/login', function(req, res){
