@@ -179,3 +179,7 @@ abbr:hover{
 .media abbr:hover {
   color: #CCCCCC;
 }
+
+.site-name-and-slogan{
+    margin-top: 25px;
+}
