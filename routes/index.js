@@ -10,7 +10,18 @@ const dbName = 'allemdb';
 
 /* GET home page. Below are only public pages -------------------------------------------------------------------------*/
 router.get('/', function (req, res) {
-  res.redirect("/ru")
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
+    console.log(req.params.lang);
+    const db = client.db(dbName);
+    const collection = db.collection('lang');
+    collection.findOne({"lang": "ru"}, function(err, doc) {
+      if (err) throw err;
+
+      res.render('indexMulti', {lang: doc});
+      client.close();
+    });
+  });
 })
 
 //Multilanguage pages
