@@ -296,17 +296,19 @@ router.post('/editMember', permissionCheck('members'), function (req, res, next)
         var end = new Date(req.body.end_date);
         var now = new Date();
 
-        if(dates.compare(start, end) > 0){
+        if(dates.compare(start, end) < 0){
           newValues.$set.start_date = req.body.start_date;
           newValues.$set.end_date = req.body.end_date;
-          if(dates.compare(end, now) < 0) newValues.$set.status = "На работе";
+          //if(dates.compare(end, now) < 0) newValues.$set.status = "На работе";
         }else{
           res.status(400);
           newValues = {};
           res.send('Ошибка! Даты срока сотрудничества введены неправильно. Отмена всех изменении <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
         }
       }
-      if(req.body.status){
+
+      if(req.body.status && newValues.$set){
+        console.log("status exists in body");
         if(req.body.status == "На работе"){
           newValues.$set.status = req.body.status;
           newValues.$set.status_end_date = '';
