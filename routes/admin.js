@@ -9,11 +9,21 @@ var bcrypt = require('bcrypt');
 var keys = require('../config/keys');
 const saltRounds = 10;
 
+//Models
+const Member = require('../models/Member');
+
 
 //MongoDB Credentials. Extremly confidential information! Don't share this url with anyone!
 const url = keys.MONGO_URI;
 const dbName = 'allemdb';
 
+router.get('/member_test', (req, res) => {
+  Member.find().toArray((err, docs) => {
+    if(err) throw err;
+
+    res.send(docs);
+  })
+})
 //-------------------------------------MIDDLEWARE FUNCTIONS ----------------------------------------------------------------------------------------
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
