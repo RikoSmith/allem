@@ -4,7 +4,9 @@ var favicon = require('static-favicon')
 var logger = require('morgan')
 var cookieParser = require('cookie-parser')
 var bodyParser = require('body-parser')
-var session = require('express-session');
+var session = require('express-session')
+const keys = require('./config/keys')
+const mongoose = require('mongoose')
 
 var routes = require('./routes/index')
 var admin = require('./routes/admin')
@@ -37,6 +39,11 @@ app.use(session(
 //Setting folder for static serve files
 app.use(express.static(path.join(__dirname, 'public')))
 
+//Mongoose connection
+mongoose
+  .connect(keys.MONGO_URI)
+  .then(() => console.log('Mongoose connected!'))
+  .catch(err => console.log(err));
 //Setting routes configuration files
 app.use('/', routes)          //root routing goes to routes routes/index.js
 app.use('/admin', admin)      // all /admin/.. goes to routes/admin.js

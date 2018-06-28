@@ -8,6 +8,7 @@ var ObjectId = require('mongodb').ObjectID;
 var bcrypt = require('bcrypt');
 var keys = require('../config/keys');
 const saltRounds = 10;
+var mongoose = require('mongoose');
 
 //Models
 const Member = require('../models/Member');
@@ -17,13 +18,8 @@ const Member = require('../models/Member');
 const url = keys.MONGO_URI;
 const dbName = 'allemdb';
 
-router.get('/member_test', (req, res) => {
-  Member.find().toArray((err, docs) => {
-    if(err) throw err;
 
-    res.send(docs);
-  })
-})
+
 //-------------------------------------MIDDLEWARE FUNCTIONS ----------------------------------------------------------------------------------------
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
@@ -125,6 +121,8 @@ router.get('/', permissionCheck('general'), function (req, res) {
     });
   });
 })
+
+
 
 
 //All notifications page
@@ -245,24 +243,18 @@ router.get('/map', permissionCheck('map'), function (req, res) {
 //-------------------------------------MEMBERS SECTION ---------------------------------------------------------------------------------------------
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 //All members page
-router.get('/members', permissionCheck('members'), updateStatus, function (req, res) {
-  MongoClient.connect(url, function(err, client) {
-    assert.equal(null, err);
+//////////////////////////////////////////////////////
+router.get('/members', permissionCheck('members'), updateStatus, (req, res) => {
 
-    //Check if user has special permisiions/limitations to see certain member groups
-    var filter = null;
-    if(req.query.filter){
-      filter = req.query.filter;
-    }
+  var filter = null;
+  if(req.query.filter){
+    filter = req.query.filter;
+  }
 
-    const db = client.db(dbName);
-    const collection = db.collection('members');
-    var data = collection.find({}).sort({lastname: 1}).toArray(function(err, result) {
-      if (err) throw err;
+  Member.find({}, [], {sort: {lastname: 1}}, (err, result) => {
+    if (err) throw err;
 
-      res.render('sb-admin/tables', {members: result, user: req.session.user, filter: filter});
-      client.close();
-    });
+    res.render('sb-admin/tables', {members: result, user: req.session.user, filter: filter});
   });
 })
 
