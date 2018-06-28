@@ -144,17 +144,16 @@
   border: 0px !important;
 }
 
-
-
-
-
+ul.nav {
+    border-top: 1px solid #e7e7e7;
+}
 
 
 
 
 
 body {
-  background-color: #494949;
+  background-color: #f8f8f8;
 }
 #wrapper {
   width: 100%;
