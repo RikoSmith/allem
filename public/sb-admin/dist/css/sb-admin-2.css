@@ -103,6 +103,50 @@
   background-color: #eed7ff !important;
 }
 
+/******************************************************************************************
+//
+//  Custom Themes
+//
+********************************************************************************************/
+.col-lg-12 .panel-heading, .col-md-4 .panel-heading{
+  background: #1E88E5 !important;
+  border: 0px !important;
+  margin: -1px;
+  color: #ffffff !important;
+  border-radius: 0px !important;
+  height: 60px;
+  font-size: 20px;
+}
+
+.col-md-4 .panel-heading{
+  text-align: center;
+}
+
+.sorting_asc::after, .sorting::after, .sorting_desc::after {
+    content: '' !important;
+}
+
+.panel{
+  border: 1px solid #8fcbff;
+  border-radius: 0px;
+}
+
+*{
+  border-radius: 0px !important;
+}
+
+.table th{
+  font-size: 15px;
+}
+
+.login_button{
+  background-color: #1e88e5 !important;
+  border: 0px !important;
+}
+
+
+
+
 
 
 
@@ -537,4 +581,7 @@ table.dataTable thead .sorting:after {
     border-right-width: 14px;
     border-left-width: 0;
   }
+
+
+
 }
