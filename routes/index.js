@@ -1,11 +1,12 @@
 var express = require('express')
 var router = express.Router();
-const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
 var bcrypt = require('bcrypt');
+var keys = require('../config/keys');
 
 //MongoDB Credentials. Extremly confidential information! Don't share this url with anyone!
-const url = 'mongodb://admin:Zxc159Zxc159@ds139690.mlab.com:39690/allemdb';
+const url = keys.MONGO_URI;
 const dbName = 'allemdb';
 
 /* GET home page. Below are only public pages -------------------------------------------------------------------------*/

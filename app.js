@@ -7,7 +7,6 @@ var bodyParser = require('body-parser')
 var session = require('express-session');
 
 var routes = require('./routes/index')
-var users = require('./routes/members')
 var admin = require('./routes/admin')
 
 //Создаем приложение Express
@@ -40,7 +39,6 @@ app.use(express.static(path.join(__dirname, 'public')))
 
 //Setting routes configuration files
 app.use('/', routes)          //root routing goes to routes routes/index.js
-app.use('/members', users)    //all /member/.. goes to routes/members.js
 app.use('/admin', admin)      // all /admin/.. goes to routes/admin.js
 
 /// if all above routes does not catch any matching urls -> catch 404 and forwarding to error handler

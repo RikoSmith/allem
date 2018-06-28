@@ -1,16 +1,17 @@
 var express = require('express');
 var router = express.Router();
-const dates =   require('../lib/dates');
-const MongoClient = require('mongodb').MongoClient;
-const assert = require('assert');
-const axios = require('axios');
+var dates =   require('../lib/dates');
+var MongoClient = require('mongodb').MongoClient;
+var assert = require('assert');
+var axios = require('axios');
 var ObjectId = require('mongodb').ObjectID;
 var bcrypt = require('bcrypt');
+var keys = require('../config/keys');
 const saltRounds = 10;
 
 
 //MongoDB Credentials. Extremly confidential information! Don't share this url with anyone!
-const url = 'mongodb://admin:Zxc159Zxc159@ds139690.mlab.com:39690/allemdb';
+const url = keys.MONGO_URI;
 const dbName = 'allemdb';
 
 //-------------------------------------MIDDLEWARE FUNCTIONS ----------------------------------------------------------------------------------------
@@ -115,6 +116,7 @@ router.get('/', permissionCheck('general'), function (req, res) {
   });
 })
 
+
 //All notifications page
 router.get('/notifications', permissionCheck('general'), function (req, res) {
   MongoClient.connect(url, function(err, client) {
@@ -132,11 +134,11 @@ router.get('/notifications', permissionCheck('general'), function (req, res) {
 })
 
 
-
 //Page for adding new user
 router.get('/addAdminUser', permissionCheck('add_user'), function (req, res) {
   res.render('sb-admin/signup');
 })
+
 
 //New user form is sent here
 router.post('/signup', permissionCheck('add_user'), function (req, res) {
@@ -596,8 +598,6 @@ router.get('/updateHandbook', permissionCheck('general'), function (req, res) {
   .catch(function (error) {
     console.log(error);
   });
-
-
 
 })
 
