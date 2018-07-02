@@ -12,12 +12,22 @@ var mongoose = require('mongoose');
 
 //Models
 const Member = require('../models/Member');
+const Event = require('../models/HistoryEvent');
 
 
 //MongoDB Credentials. Extremly confidential information! Don't share this url with anyone!
 const url = keys.MONGO_URI;
 const dbName = 'allemdb';
 
+
+router.get('/event_test', function (req, res) {
+
+    Event.find({}, (err, result) => {
+      if (err) throw err;
+      res.send(result);
+      //res.render('sb-admin/index', {history: result, user: req.session.user});
+  });
+});
 
 
 //-------------------------------------MIDDLEWARE FUNCTIONS ----------------------------------------------------------------------------------------
@@ -32,7 +42,7 @@ function permissionCheck(perm){
   })
 }
 
-//This middleware function makes changes in the database after the member has changes that affect other  fields of document.
+//This middleware function makes changes in the datab`a`se after the member has changes that affect other  fields of document.
 //It should be done using MongoDB aggregation function, but now it's done by this middleware
 function updateStatus(req, res, next){
   MongoClient.connect(url, function(err, client) {
@@ -95,6 +105,32 @@ function checkSignIn(req, res, next){
       req.session.return_url = req.originalUrl;
       res.redirect('/login');
    }
+}
+
+//History logger FUNCTIONS
+function makeEvent(type, edittype, object, subject){
+  var event = {};
+  event.object = {};
+  event.subject = {};
+  event.type = type;
+  event.edit_type = edittype;
+  event.object.name = object.name;
+  event.object.lastname = object.lastname;
+  event.object.username = object.id;
+  event.subject.name = subject.name;
+  event.subject.lastname = subject.lastname;
+  event.subject.id = subject._id;
+  event.timestamp = new Date();
+  if(edittype === "Штат"){
+    if(subject.is_active == "Нет"){
+      event.text = object.name + " " + object.lastname + " убрал(а) из штата " + ' <a href="../../admin/member/'+ event.subject.id + '">' + event.subject.name + " " + event.subject.lastname + "</a>"
+    }else{
+      event.text = object.name + " " + object.lastname + " добавил(а) в штат " + ' <a href="../../admin/member/'+ event.subject.id + '">' + event.subject.name + " " + event.subject.lastname + "</a>"
+    }
+  }else{
+      event.text = object.name + " " + object.lastname + " изменил(а) данные '" + event.edit_type + "'" + ' <a href="../../admin/member/'+ event.subject.id+ '">' + event.subject.name + " " + event.subject.lastname+ "</a>"
+  }
+  return event;
 }
 
 //--------------------------------END MIDDLEWARE FUNCTIONS ----------------------------------------------------------------------------------------
@@ -410,7 +446,13 @@ router.post('/editMemberPrivate', function (req, res) {
           if (err) throw err;
           console.log("1 document updated " + response);
 
-          collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
+          User.findOne({"_id": new ObjectId(req.body.member_id)}, (err, m_res) => {
+            var event = makeEvent("member_edit", "Личные", req.session.user, m_res);
+
+          })
+
+
+          /*collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
             var event = {};
             event.object = {};
             event.subject = {};
@@ -427,7 +469,7 @@ router.post('/editMemberPrivate', function (req, res) {
             history.insertOne(event);
             res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
             client.close();
-          })
+          })*/
         });
       }
     });
