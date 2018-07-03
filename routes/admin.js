@@ -12,7 +12,7 @@ var mongoose = require('mongoose');
 
 //Models
 const Member = require('../models/Member');
-const Event = require('../models/HistoryEvent');
+const Department = require('../models/Department');
 
 
 //MongoDB Credentials. Extremly confidential information! Don't share this url with anyone!
@@ -149,7 +149,7 @@ router.get('/', permissionCheck('general'), function (req, res) {
 
     const db = client.db(dbName);
     const collection = db.collection('history');
-    var data = collection.find({}).sort({timestamp: -1}).toArray(function(err, result) {
+    collection.find({}).sort({timestamp: -1}).toArray(function(err, result) {
       if (err) throw err;
 
       res.render('sb-admin/index', {history: result, user: req.session.user});
@@ -220,34 +220,25 @@ router.post('/signup', permissionCheck('add_user'), function (req, res) {
           client.close();
         });
       }
-    });
-  });
+    })
+  })
 })
 
 //All departments
 router.get('/departments', permissionCheck('departments'), function (req, res) {
-  MongoClient.connect(url, function(err, client) {
-    assert.equal(null, err);
-
-    const db = client.db(dbName);
-    const collection = db.collection('departments');
-    const collection2 = db.collection('members');
-    var data = collection.find({}).sort({dep_name: 1}).toArray(function(err, result) {
-      if (err) throw err;
-      //console.log(result);
-      var promises = 0;
-      for(let i=0; i<result.length; i++){
-        collection2.findOne({"_id": new ObjectId(result[i].head_id)}, function(err, doc) {
-          result[i].head_info = doc;
-          promises++;
-          if(promises === result.length){
-            res.render('sb-admin/departments', {deps: result, user: req.session.user});
-            client.close();
-          }
-        })
-      }
-    });
-  });
+   Department.find({}, function(err, result) {
+    if (err) throw err;
+    var promises = 0;
+    for(let i=0; i<result.length; i++){
+      Member.findOne({"_id": new ObjectId(result[i].head_id)}, function(err, doc) {
+        result[i].head_info = doc;
+        promises++;
+        if(promises === result.length){
+          res.render('sb-admin/departments', {deps: result, user: req.session.user});
+        }
+      })
+    }
+  })
 })
 
 //Handbook page
@@ -281,33 +272,22 @@ router.get('/map', permissionCheck('map'), function (req, res) {
 //All members page
 //////////////////////////////////////////////////////
 router.get('/members', permissionCheck('members'), updateStatus, (req, res) => {
-
   var filter = null;
   if(req.query.filter){
     filter = req.query.filter;
   }
-
-  Member.find({}, [], {sort: {lastname: 1}}, (err, result) => {
+  Member.find({}, [], (err, result) => {
     if (err) throw err;
-
     res.render('sb-admin/tables', {members: result, user: req.session.user, filter: filter});
   });
 })
 
 //Certain member page
 router.get('/member/:member_id', permissionCheck('members'), updateStatus, function (req, res) {
-  MongoClient.connect(url, function(err, client) {
-    assert.equal(null, err);
-
-    const db = client.db(dbName);
-    const collection = db.collection('members');
-    var data = collection.findOne({"_id": new ObjectId(req.params.member_id)}, function(err, doc) {
-      if (err) throw err;
-
-      if (req.session.user.permission_members.indexOf(doc.dep_name) < 0) res.render('sb-admin/denied');
-      res.render('sb-admin/member', {member: doc, user: req.session.user});
-      client.close();
-    });
+  Member.findOne({"_id": new ObjectId(req.params.member_id)}, function(err, doc) {
+    if (err) throw err;
+    if (req.session.user.permission_members.indexOf(doc.dep_name) < 0) res.render('sb-admin/denied');
+    res.render('sb-admin/member', {member: doc, user: req.session.user});
   });
 })
 
@@ -379,27 +359,16 @@ router.post('/editMember', permissionCheck('members'), function (req, res, next)
         }
       }
       if(newValues.$set){
-        collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
+        Member.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
           console.log("1 document updated " + response);
-
-          collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
-            var event = {};
-            event.object = {};
-            event.subject = {};
-            event.type = "member_edit";
-            event.edit_type = "Основные";
-            event.object.name = req.session.user.name;
-            event.object.lastname = req.session.user.lastname;
-            event.object.username = req.session.user.id;
-            event.subject.name = m_res.name;
-            event.subject.lastname = m_res.lastname;
-            event.subject.id = m_res._id;
-            event.timestamp = new Date();
-            event.text = req.session.user.name + " " + req.session.user.lastname + " изменил(а) данные '" + event.edit_type + "'" + ' <a href="../../admin/member/'+ event.subject.id+ '">' + event.subject.name + " " + event.subject.lastname+ "</a>"
+          res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
+          Member.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
+            if (err) {
+              console.log("error: " + err);
+            }
+            var event = makeEvent("member_edit", "Основные", req.session.user, m_res);
             history.insertOne(event);
-            res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
-            client.close();
           })
         });
       }
@@ -442,34 +411,19 @@ router.post('/editMemberPrivate', function (req, res) {
         }
       }
       if(newValues.$set){
-        collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
+        Member.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
           console.log("1 document updated " + response);
+          res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
 
-          User.findOne({"_id": new ObjectId(req.body.member_id)}, (err, m_res) => {
+          Member.findOne({"_id": new ObjectId(req.body.member_id)}, (err, m_res) => {
+            console.log(m_res);
+            if (err) {
+              console.log("error: " + err);
+            }
             var event = makeEvent("member_edit", "Личные", req.session.user, m_res);
-
-          })
-
-
-          /*collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
-            var event = {};
-            event.object = {};
-            event.subject = {};
-            event.type = "member_edit";
-            event.edit_type = "Личные";
-            event.object.name = req.session.user.name;
-            event.object.lastname = req.session.user.lastname;
-            event.object.username = req.session.user.id;
-            event.subject.name = m_res.name;
-            event.subject.lastname = m_res.lastname;
-            event.subject.id = m_res._id;
-            event.timestamp = new Date();
-            event.text = req.session.user.name + " " + req.session.user.lastname + " изменил(а) данные '" + event.edit_type + "'" + ' <a href="../../admin/member/'+ event.subject.id + '">' + event.subject.name + " " + event.subject.lastname+ "</a>"
             history.insertOne(event);
-            res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
-            client.close();
-          })*/
+          })
         });
       }
     });
@@ -499,27 +453,13 @@ router.post('/editMemberEdu', function (req, res) {
       if(req.body.ed_finish) newValues.$set.ed_finish = req.body.ed_finish;
 
       if(newValues.$set){
-        collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
+        Member.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
           console.log("1 document updated " + response);
-
-          collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
-            var event = {};
-            event.object = {};
-            event.subject = {};
-            event.type = "member_edit";
-            event.edit_type = "Образование";
-            event.object.name = req.session.user.name;
-            event.object.lastname = req.session.user.lastname;
-            event.object.username = req.session.user.id;
-            event.subject.name = m_res.name;
-            event.subject.lastname = m_res.lastname;
-            event.subject.id = m_res._id;
-            event.timestamp = new Date();
-            event.text = req.session.user.name + " " + req.session.user.lastname + " изменил(а) данные '" + event.edit_type + "'" + ' <a href="../../admin/member/'+ event.subject.id + '">' + event.subject.name + " " + event.subject.lastname+ "</a>"
+          res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
+          Member.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
+            var event = makeEvent("member_edit", "Образование", req.session.user, m_res);
             history.insertOne(event);
-            res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
-            client.close();
           })
         });
       }
@@ -549,31 +489,13 @@ router.post('/editMemberShtat', function (req, res) {
       }
 
       if(newValues.$set){
-        collection.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
+        Member.updateOne({"_id": new ObjectId(req.body.member_id)}, newValues, function(err, response) {
           if (err) throw err;
           console.log("1 document updated " + response);
-          collection.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
-            var event = {};
-            event.object = {};
-            event.subject = {};
-            event.type = "member_edit";
-            event.edit_type = "Штат";
-            event.object.name = req.session.user.name;
-            event.object.lastname = req.session.user.lastname;
-            event.object.username = req.session.user.id;
-            event.subject.name = m_res.name;
-            event.subject.lastname = m_res.lastname;
-            event.subject.id = m_res._id;
-            event.timestamp = new Date();
-            console.log(newValues.$set);
-            if(newValues.$set.is_active == "Нет"){
-              event.text = req.session.user.name + " " + req.session.user.lastname + " убрал(а) из штата " + ' <a href="../../admin/member/'+ event.subject.id + '">' + event.subject.name + " " + event.subject.lastname + "</a>"
-            }else{
-              event.text = req.session.user.name + " " + req.session.user.lastname + " добавил(а) в штат " + ' <a href="../../admin/member/'+ event.subject.id + '">' + event.subject.name + " " + event.subject.lastname + "</a>"
-            }
+          res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
+          Member.findOne({"_id": new ObjectId(req.body.member_id)}, function(err, m_res) {
+            var event = makeEvent("member_edit", "Личные", req.session.user, m_res);
             history.insertOne(event);
-            res.send('Данные успешно изменены <a href="../../admin/member/'+req.body.member_id+'">Назад</a>');
-            client.close();
           })
         });
       }

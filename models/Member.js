@@ -15,7 +15,7 @@ const MemberSchema = new Schema({
     required: false
   },
   birthdate: {
-    type: Date,
+    type: String,
     required: true
   },
   id: {
@@ -118,4 +118,4 @@ const MemberSchema = new Schema({
 });
 
 
-module.exports = User = Mongoose.model('members', MemberSchema);
+module.exports = Member = Mongoose.model('members', MemberSchema);
