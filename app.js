@@ -10,6 +10,7 @@ const mongoose = require('mongoose')
 
 var routes = require('./routes/index')
 var admin = require('./routes/admin')
+var api = require('./api/main')
 
 //Создаем приложение Express
 //Creating the Express app
@@ -47,6 +48,7 @@ mongoose
 //Setting routes configuration files
 app.use('/', routes)          //root routing goes to routes routes/index.js
 app.use('/admin', admin)      // all /admin/.. goes to routes/admin.js
+app.use('/api', api)        // all /api/.. goes to api/main.js
 
 /// if all above routes does not catch any matching urls -> catch 404 and forwarding to error handler
 app.use(function (req, res, next) {
