@@ -20,7 +20,10 @@
     "mongoose": "^5.1.7",
     "morgan": "~1.0.0",
     "nodemon": "^1.17.4",
-    "static-favicon": "~1.0.0"
+    "passport": "^0.4.0",
+    "passport-jwt": "^4.0.0",
+    "static-favicon": "~1.0.0",
+    "validator": "^10.4.0"
   },
   "devDependencies": {
     "excel-as-json": "^2.0.2"
