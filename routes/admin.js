@@ -22,7 +22,7 @@ const dbName = 'allemdb';
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
 
 //This is a middleware function that checks permission to see the pages. Each user has its own array of permission flags.
-//This function checks presense of these flags and render page according to these flags
+//This function checks presense of these flags and render page according to them
 function permissionCheck(perm) {
   return (
     permissionCheck[perm] ||
