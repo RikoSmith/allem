@@ -456,6 +456,10 @@ router.post('/editMember', permissionCheck('members'), function(
             if (dates.compare(h_start, h_end) < 0) {
               newValues.$set.holiday_start = req.body.holiday_start;
               newValues.$set.holiday_end = req.body.holiday_end;
+              var now = new Date();
+              if (dates.compare(h_end, now) < 0) {
+                newValues.$set.status = 'На работе';
+              }
             } else {
               res.status(400);
               newValues = {};

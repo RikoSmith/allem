@@ -14,6 +14,7 @@ module.exports = passport => {
       User.findById(payload._id)
         .then(user => {
           if (user) {
+            user.password = 'swordfish';
             return done(null, user);
           }
           return done(null, false);

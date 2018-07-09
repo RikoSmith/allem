@@ -40,6 +40,41 @@ function permissionCheck(perm) {
 }
 
 ////////////////////////////////////////////////////////////////////////////////
+// @route   GET api/members
+// @desc    Returns array of all users
+// @access  Private
+router.get('/lang', (req, res) => {
+  var l = '';
+  if (req.query.lang) {
+    l = req.query.lang;
+  } else {
+    l = 'ru';
+  }
+  MongoClient.connect(
+    url,
+    function(err, client) {
+      assert.equal(null, err);
+      const db = client.db(dbName);
+      const collection = db.collection('lang');
+      collection.findOne({ lang: l }, function(err, doc) {
+        if (err) {
+          res.status(500).json({
+            ok: false,
+            err
+          });
+          throw err;
+        }
+        res.status(200).json({
+          ok: true,
+          data: doc
+        });
+        client.close();
+      });
+    }
+  );
+});
+
+////////////////////////////////////////////////////////////////////////////////
 // @route   POST api/login
 // @desc    Logs in user into system
 // @access  Public
@@ -83,10 +118,30 @@ router.get(
   '/members',
   passport.authenticate('jwt', { session: false }),
   (req, res) => {
-    Member.find(function(err, members) {
-      if (err) throw err;
-      console.log('retrieved');
-      res.json(members);
+    Member.find((err, result) => {
+      if (err) {
+        res.status(500).json({
+          ok: false,
+          err
+        });
+        throw err;
+      }
+      filtered = [];
+      for (let i = 0; i < result.length; i++) {
+        if (!req.user.permission_members.includes(result[i].dep_name)) continue;
+        filtered.push(result[i]);
+      }
+      if (req.query.filter) {
+        temp = [];
+        for (let x = 0; x < filtered.length; x++) {
+          if (req.query.filter === filtered[x].dep_name) temp.push(filtered[x]);
+        }
+        filtered = temp;
+      }
+      res.status(200).json({
+        ok: true,
+        data: filtered
+      });
     });
   }
 );
@@ -119,6 +174,65 @@ router.get(
             });
             client.close();
           });
+      }
+    );
+  }
+);
+
+////////////////////////////////////////////////////////////////////////////////
+// @route   GET api/departments
+// @desc    Returns all the departments
+// @access  Private + Permission
+router.get(
+  '/departments',
+  passport.authenticate('jwt', { session: false }),
+  permissionCheck('departments'),
+  (req, res) => {
+    Department.find((err, result) => {
+      if (err) {
+        res.status(500).json({
+          ok: false,
+          err
+        });
+        throw err;
+      }
+      filtered = [];
+      for (let i = 0; i < result.length; i++) {
+        if (!req.user.permission_members.includes(result[i].dep_name)) continue;
+        filtered.push(result[i]);
+      }
+      res.status(200).json({
+        ok: true,
+        data: filtered
+      });
+    });
+  }
+);
+
+////////////////////////////////////////////////////////////////////////////////
+// @route   GET api/handbook
+// @desc    Returns all the handbook
+// @access  Private + Permission
+router.get(
+  '/handbook',
+  passport.authenticate('jwt', { session: false }),
+  permissionCheck('handbook'),
+  (req, res) => {
+    MongoClient.connect(
+      url,
+      function(err, client) {
+        assert.equal(null, err);
+
+        const db = client.db(dbName);
+        const collection = db.collection('handbook');
+        collection.find({}).toArray(function(err, result) {
+          if (err) throw err;
+          res.status(200).json({
+            ok: true,
+            data: result
+          });
+          client.close();
+        });
       }
     );
   }

@@ -12,6 +12,8 @@ class App extends Component {
       <Router>
         <Switch>
           <Route exact path="/" component={PageLanding} />
+          <Route exact path="/en" render={() => <PageLanding lang="en" />} />
+          <Route exact path="/kz" render={() => <PageLanding lang="kz" />} />
           <Route exact path="/admin" component={Admin} />
           <Route component={PageNotFound} />
         </Switch>

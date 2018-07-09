@@ -33,7 +33,7 @@ const MemberSchema = new Schema({
   address: {
     type: String,
     required: true,
-    default: "г. Астана"
+    default: 'г. Астана'
   },
   address_current: {
     type: String,
@@ -72,13 +72,15 @@ const MemberSchema = new Schema({
     required: true
   },
   start_date: {
-    type: Date,
+    type: String,
     required: true
   },
   end_date: {
-    type: Date,
+    type: String,
     required: true
   },
+  holiday_start: String,
+  holiday_end: String,
   sex: {
     type: String,
     required: true
@@ -111,11 +113,10 @@ const MemberSchema = new Schema({
     type: String,
     required: true
   },
-  ed_finish:{
+  ed_finish: {
     type: Number,
     requied: true
   }
 });
-
 
 module.exports = Member = Mongoose.model('members', MemberSchema);
