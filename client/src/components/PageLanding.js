@@ -3,6 +3,7 @@ import MetaTags from 'react-meta-tags';
 import axios from 'axios';
 import ReactLoading from 'react-loading';
 import ReactHtmlParser from 'react-html-parser';
+import { ScriptInjector } from '../config/scriptInjector';
 
 class PageLanding extends Component {
   constructor(props) {
@@ -27,28 +28,7 @@ class PageLanding extends Component {
     })
       .then(res => {
         //console.log('Res: ' + JSON.stringify(res));
-        var scriptList = [
-          '/plugins/jquery.min.js',
-          'https://cdnjs.cloudflare.com/ajax/libs/waypoints/2.0.5/waypoints.min.js',
-          '/bootstrap/js/bootstrap.min.js',
-          '/plugins/modernizr.js',
-          '/plugins/isotope/isotope.pkgd.min.js',
-          '/plugins/jquery.backstretch.min.js',
-          '/plugins/jquery.appear.js',
-          '/js/template.js',
-          '/js/jquery.countTo.js',
-          '/js/jquery.lightbox.min.js',
-          '/slick/slick.min.js',
-          '/js/custom.js',
-          'https://cdn.rawgit.com/dwyl/learn-to-send-email-via-google-script-html-no-server/master/form-submission-handler.js'
-        ];
-        for (let i = 0; i < scriptList.length; i++) {
-          const script = document.createElement('script');
-          script.src = scriptList[i];
-          script.async = false;
-          script.type = 'text/javascript';
-          document.body.appendChild(script);
-        }
+        ScriptInjector();
         this.setState({ loaded: true, lang: res.data.data });
 
         //console.log('State: ' + JSON.stringify(this.state.lang));
@@ -57,8 +37,6 @@ class PageLanding extends Component {
         throw err;
       });
   }
-
-  componentDidMount() {}
 
   render() {
     if (this.state.loaded) {
@@ -129,7 +107,7 @@ class PageLanding extends Component {
                         <img
                           id="logo"
                           src="images/logo.png"
-                          alt="Worthy"
+                          alt=""
                           style={{ height: '60px' }}
                         />
                       </a>
@@ -155,7 +133,7 @@ class PageLanding extends Component {
                     <div className="main-navigation animated">
                       {/*<!-- navbar start -->
                     <!-- ================ -->*/}
-                      <nav className="navbar navbar-default" role="navigation">
+                      <div className="navbar navbar-default" role="navigation">
                         <div className="container-fluid">
                           {/*<!-- Toggle get grouped for better mobile display -->*/}
                           <div className="navbar-header">
@@ -214,7 +192,7 @@ class PageLanding extends Component {
                             </ul>
                           </div>
                         </div>
-                      </nav>
+                      </div>
                       {/*<!-- navbar end -->*/}
                     </div>
                     {/*<!-- main-navigation end -->*/}
@@ -598,7 +576,7 @@ class PageLanding extends Component {
                 <div className="gallery">
                   <div>
                     <a href="/images/civil.jpg" title="Image 1">
-                      <img src="/images/civil.jpg" />
+                      <img alt="" src="/images/civil.jpg" />
                     </a>
                   </div>
                 </div>
@@ -651,6 +629,8 @@ class PageLanding extends Component {
                       <form
                         role="form"
                         id="gform"
+                        method="POST"
+                        target="_self"
                         action="https://script.google.com/macros/s/AKfycbxZpkNOh16i8mpjLyFwWni_8vhYAg7sDLr_Ew-f/exec"
                       >
                         <div className="form-group has-feedback">

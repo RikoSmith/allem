@@ -5,6 +5,24 @@
  */
 
 
+ .col-centered{
+     float: none;
+     margin: 0 auto;
+ }
+
+ #root{
+   height: 100%;
+   width: 100%;
+   position: relative;
+ }
+
+ .vertical-center {
+   min-height: 100%;  /* Fallback for browsers do NOT support vh unit */
+   min-height: 100vh; /* These two lines are counted as one :-)       */
+
+   display: flex;
+   align-items: center;
+ }
 
  .logout_button {
    font-size: 15px;

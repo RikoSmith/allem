@@ -6,6 +6,7 @@ class HeaderNav extends Component {
       <div
         className="navbar navbar-default navbar-static-top"
         role="navigation"
+        style={{ marginBottom: '0px' }}
       >
         <div className="navbar-header">
           <button
