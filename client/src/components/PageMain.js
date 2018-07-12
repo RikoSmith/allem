@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import Header from './Header';
 import MainTopButtons from './MainTopButtons';
 import MetaTags from 'react-meta-tags';
+import { connect } from 'react-redux';
+import { logoutUser } from '../actions/authActions';
 
 class PageMain extends Component {
   render() {

@@ -3,6 +3,9 @@ import { ScriptInjector } from '../config/scriptInjector';
 import MetaTags from 'react-meta-tags';
 import CSSHead from './CSSHead';
 import ReactLoading from 'react-loading';
+import { connect } from 'react-redux';
+import { loginUser } from '../actions/authActions';
+import { withRouter } from 'react-router-dom';
 
 class PageLogin extends Component {
   constructor(props) {
@@ -17,7 +20,14 @@ class PageLogin extends Component {
   }
 
   componentWillMount() {
+    if (!this.props.auth.isAuth) this.props.history.push('/login');
     ScriptInjector();
+  }
+
+  componentWillReceiveProps(nextProps) {
+    if (nextProps.auth.isAuth) {
+      this.props.history.push('/admin');
+    }
   }
 
   onChange(e) {
@@ -30,6 +40,8 @@ class PageLogin extends Component {
       id: this.state.id,
       password: this.state.password
     };
+
+    this.props.loginUser(newUser, this.props.history);
 
     console.log('Logging in: ' + newUser);
   }
@@ -61,6 +73,11 @@ class PageLogin extends Component {
                         onChange={this.onChange}
                         autoFocus
                       />
+                      <div className="invalid-feedback">
+                        {this.props.errors
+                          ? this.props.errors.user_not_found
+                          : null}
+                      </div>
                     </div>
                     <div className="form-group">
                       <input
@@ -71,6 +88,11 @@ class PageLogin extends Component {
                         value={this.state.password}
                         onChange={this.onChange}
                       />
+                      <div className="invalid-feedback">
+                        {this.props.errors
+                          ? this.props.errors.invalid_password
+                          : null}
+                      </div>
                     </div>
                     <input
                       type="submit"
@@ -88,4 +110,12 @@ class PageLogin extends Component {
   }
 }
 
-export default PageLogin;
+const mapStateToProps = state => ({
+  auth: state.auth,
+  errors: state.errors
+});
+
+export default connect(
+  mapStateToProps,
+  { loginUser }
+)(withRouter(PageLogin));

@@ -81,7 +81,7 @@ router.get('/lang', (req, res) => {
 router.post('/login', (req, res) => {
   const { errors, isValid } = validateLogin(req.body);
   if (!isValid) {
-    return res.status(400).json({ ok: false, err: errors });
+    return res.status(400).json({ ok: false, invalid_input: errors });
   }
   const id = req.body.username;
   const password = req.body.password;
@@ -89,7 +89,9 @@ router.post('/login', (req, res) => {
   User.findOne({ id })
     .then(result => {
       if (!result)
-        res.status(404).json({ ok: false, err: 'Пользователь не найден' });
+        res
+          .status(404)
+          .json({ ok: false, user_not_found: 'Пользователь не найден' });
       bcrypt.compare(password, result.password, (err, response) => {
         if (response) {
           var payload = Object.assign({}, result._doc);
@@ -101,7 +103,9 @@ router.post('/login', (req, res) => {
             });
           });
         } else {
-          res.status(400).json({ ok: false, err: 'Неверный пароль' });
+          res
+            .status(400)
+            .json({ ok: false, invalid_password: 'Неверный пароль' });
         }
       });
     })

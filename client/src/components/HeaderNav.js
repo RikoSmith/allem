@@ -1,7 +1,16 @@
 import React, { Component } from 'react';
+import { connect } from 'react-redux';
+import { logoutUser } from '../actions/authActions';
 
 class HeaderNav extends Component {
+  onLogoutClick = e => {
+    e.preventDefault();
+    this.props.logoutUser();
+    window.location.reload();
+  };
+
   render() {
+    const { user } = this.props.auth;
     return (
       <div
         className="navbar navbar-default navbar-static-top"
@@ -26,8 +35,12 @@ class HeaderNav extends Component {
         </div>
         <div className="navbar-right logout_div">
           <p>
-            Вы вошли как <b>[USERNAME] |</b>{' '}
-            <a className="logout_button" href="../logout">
+            Вы вошли как <b>{user.name + ' ' + user.lastname} |</b>{' '}
+            <a
+              className="logout_button"
+              href="#"
+              onClick={this.onLogoutClick.bind(this)}
+            >
               <i className="fa fa-user fa-fw" />Выход
             </a>
           </p>
@@ -74,4 +87,11 @@ class HeaderNav extends Component {
   }
 }
 
-export default HeaderNav;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default connect(
+  mapStateToProps,
+  { logoutUser }
+)(HeaderNav);

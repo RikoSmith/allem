@@ -1,9 +1,9 @@
 import React, { Component } from 'react';
 import MetaTags from 'react-meta-tags';
-import axios from 'axios';
 import ReactLoading from 'react-loading';
 import ReactHtmlParser from 'react-html-parser';
 import { ScriptInjector } from '../config/scriptInjector';
+import { instance as axios } from '../utils/axiosConf';
 
 class PageLanding extends Component {
   constructor(props) {
@@ -19,10 +19,8 @@ class PageLanding extends Component {
     if (this.props.lang) ll = this.props.lang;
     axios({
       method: 'get',
-      url: '/api/lang?lang=' + ll,
+      url: '/lang?lang=' + ll,
       headers: {
-        Authorization:
-          'Bearer eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJwZXJtaXNzaW9uIjpbImdlbmVyYWwiLCJtZW1iZXJzIiwiZGVwYXJ0bWVudHMiLCJtYXAiLCJmaWxlcyIsImhhbmRib29rIiwiYWRkX21lbWJlciIsImFkZF91c2VyIl0sInBlcm1pc3Npb25fbWVtYmVycyI6WyJoZWFkIiwiaGVhZF9zZXJ2aWNlIiwicHJvcF9oZWFkIiwicmVtb250Iiwic3VwcGx5IiwiZW5lcmd5IiwiZXN5c3RlbSIsInNhZmV0eSIsInNlY3VyaXR5Iiwia2lwaWEiXSwiX2lkIjoiNWIyMzNiYzJhMTYxMzMzNzRjYmIwMTU1IiwibmFtZSI6IlJhaXltYmVrIiwibGFzdG5hbWUiOiJNdXN0YXpoYXBvdiIsImdyb3VwIjoiYWRtaW4iLCJpZCI6ImFkbWluIiwiZW1haWwiOiJyYWltYmVrLnJpa29AZ21haWwuY29tIiwiaWF0IjoxNTMxMTMyNjg5LCJleHAiOjE1MzExMzYyODl9._i4IqLLUxz5fT9ZP7XLcm-aha2lYqmUtV4589CxeyTk',
         'Content-Type': 'application/x-www-form-urlencoded'
       }
     })
@@ -53,7 +51,7 @@ class PageLanding extends Component {
           }}
         >
           <MetaTags>
-            <title>Аллем</title>
+            <title>{this.state.lang.fields.html_title}</title>
             <meta
               name="viewport"
               content="width=device-width, initial-scale=1.0"

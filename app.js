@@ -51,6 +51,15 @@ mongoose
   .then(() => console.log('Mongoose connected!'))
   .catch(err => console.log(err));
 
+app.use(function(req, res, next) {
+  res.header('Access-Control-Allow-Origin', '*');
+  res.header(
+    'Access-Control-Allow-Headers',
+    'Origin, X-Requested-With, Content-Type, Accept, Authorization'
+  );
+  next();
+});
+
 //Setting routes configuration files
 app.use('/', routes); //root routing goes to routes routes/index.js
 app.use('/admin', admin); // all /admin/.. goes to routes/admin.js
