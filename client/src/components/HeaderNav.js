@@ -1,6 +1,8 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { logoutUser } from '../actions/authActions';
+import { NavLink } from 'react-router-dom';
+import { withRouter } from 'react-router-dom';
 
 class HeaderNav extends Component {
   onLogoutClick = e => {
@@ -29,7 +31,7 @@ class HeaderNav extends Component {
             <span className="icon-bar" />
             <span className="icon-bar" />
           </button>
-          <a className="navbar-brand" href="/">
+          <a className="navbar-brand" href="../../../">
             Панель Allem
           </a>
         </div>
@@ -91,7 +93,9 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(
-  mapStateToProps,
-  { logoutUser }
-)(HeaderNav);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { logoutUser }
+  )(HeaderNav)
+);

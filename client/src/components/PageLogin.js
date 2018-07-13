@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
 import { ScriptInjector } from '../config/scriptInjector';
-import MetaTags from 'react-meta-tags';
-import CSSHead from './CSSHead';
+import { Helmet } from 'react-helmet';
 import ReactLoading from 'react-loading';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/authActions';
@@ -20,7 +19,7 @@ class PageLogin extends Component {
   }
 
   componentWillMount() {
-    if (!this.props.auth.isAuth) this.props.history.push('/login');
+    if (this.props.auth.isAuth) this.props.history.push('/admin');
     ScriptInjector();
   }
 
@@ -49,10 +48,9 @@ class PageLogin extends Component {
   render() {
     return (
       <div className="container">
-        <CSSHead />
-        <MetaTags>
+        <Helmet>
           <title>Авторизация - Панель администратора</title>
-        </MetaTags>
+        </Helmet>
         <div className="row">
           <div className="col-md-4 col-md-offset-4">
             <div className="login-panel panel panel-default">
@@ -115,7 +113,9 @@ const mapStateToProps = state => ({
   errors: state.errors
 });
 
-export default connect(
-  mapStateToProps,
-  { loginUser }
-)(withRouter(PageLogin));
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { loginUser }
+  )(PageLogin)
+);

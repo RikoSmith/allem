@@ -2,6 +2,7 @@ import React, { Component } from 'react';
 import { BrowserRouter as Router, Route, Switch } from 'react-router-dom';
 import { connect } from 'react-redux';
 import { logoutUser } from '../actions/authActions';
+import { withRouter } from 'react-router-dom';
 
 import HeaderNav from './HeaderNav';
 import PageMain from './PageMain';
@@ -16,7 +17,7 @@ class Admin extends Component {
       <Router>
         <Switch>
           <div id="wrapper">
-            <HeaderNav />
+            <Route component={HeaderNav} />
             <Route path="/" component={PageMain} />
           </div>
         </Switch>
@@ -29,7 +30,9 @@ const mapStateToProps = state => ({
   auth: state.auth
 });
 
-export default connect(
-  mapStateToProps,
-  { logoutUser }
-)(Admin);
+export default withRouter(
+  connect(
+    mapStateToProps,
+    { logoutUser }
+  )(Admin)
+);

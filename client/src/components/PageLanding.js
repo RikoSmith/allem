@@ -4,6 +4,7 @@ import ReactLoading from 'react-loading';
 import ReactHtmlParser from 'react-html-parser';
 import { ScriptInjector } from '../config/scriptInjector';
 import { instance as axios } from '../utils/axiosConf';
+import { withRouter } from 'react-router-dom';
 
 class PageLanding extends Component {
   constructor(props) {
@@ -751,4 +752,4 @@ class PageLanding extends Component {
   }
 }
 
-export default PageLanding;
+export default withRouter(PageLanding);
