@@ -1,7 +1,12 @@
 import React, { Component } from 'react';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 class MainTopButtons extends Component {
   render() {
+    if (!this.props.auth.user.permission.includes('general')) {
+      return <div />;
+    }
     return (
       <div className="row">
         <div className="col-lg-3 col-md-6">
@@ -105,4 +110,13 @@ class MainTopButtons extends Component {
   }
 }
 
-export default MainTopButtons;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    {}
+  )(MainTopButtons)
+);

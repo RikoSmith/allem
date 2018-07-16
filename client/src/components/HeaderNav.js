@@ -1,13 +1,13 @@
 import React, { Component } from 'react';
 import { connect } from 'react-redux';
 import { logoutUser } from '../actions/authActions';
-import { NavLink } from 'react-router-dom';
 import { withRouter } from 'react-router-dom';
 
 class HeaderNav extends Component {
   onLogoutClick = e => {
     e.preventDefault();
     this.props.logoutUser();
+    this.props.history.push('/login');
     window.location.reload();
   };
 
@@ -40,7 +40,7 @@ class HeaderNav extends Component {
             Вы вошли как <b>{user.name + ' ' + user.lastname} |</b>{' '}
             <a
               className="logout_button"
-              href="#"
+              href=""
               onClick={this.onLogoutClick.bind(this)}
             >
               <i className="fa fa-user fa-fw" />Выход

@@ -2,7 +2,7 @@ import React, { Component } from 'react';
 import MetaTags from 'react-meta-tags';
 import ReactLoading from 'react-loading';
 import ReactHtmlParser from 'react-html-parser';
-import { ScriptInjector } from '../config/scriptInjector';
+import { ScriptInjector } from '../utils/scriptInjector';
 import { instance as axios } from '../utils/axiosConf';
 import { withRouter } from 'react-router-dom';
 

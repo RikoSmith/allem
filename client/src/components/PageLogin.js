@@ -1,7 +1,6 @@
 import React, { Component } from 'react';
-import { ScriptInjector } from '../config/scriptInjector';
+import { ScriptInjector } from '../utils/scriptInjector';
 import { Helmet } from 'react-helmet';
-import ReactLoading from 'react-loading';
 import { connect } from 'react-redux';
 import { loginUser } from '../actions/authActions';
 import { withRouter } from 'react-router-dom';

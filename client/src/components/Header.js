@@ -5,7 +5,7 @@ class Header extends Component {
     return (
       <div className="row">
         <div className="col-lg-12">
-          <h1 className="page-header">Общая панель</h1>
+          <h1 className="page-header">{this.props.page}</h1>
         </div>
       </div>
     );
