@@ -33,8 +33,8 @@ function permissionCheck(perm) {
   );
 }
 
-//This middleware function makes changes in the datab`a`se after the member has changes that affect other  fields of document.
-//It should be done using MongoDB aggregation function, but now it's done by this middleware
+//This middleware function makes changes in the database after the member has changes that affect other  fields of document.
+//It should have been done using MongoDB aggregation function, but now it's done by this middleware
 function updateStatus(req, res, next) {
   MongoClient.connect(
     url,

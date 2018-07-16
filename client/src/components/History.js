@@ -48,7 +48,7 @@ class History extends Component {
               <div className="list-group">
                 {this.state.events.map(function(event, i) {
                   if (i > 15) {
-                    return 0;
+                    return '';
                   }
                   var date = new Date(event.timestamp);
                   var now = new Date();
@@ -56,28 +56,30 @@ class History extends Component {
                   var diffMinutes = Math.ceil(timeDiff / (1000 * 60));
                   var time = '';
                   if (diffMinutes < 60) {
-                    time = diffMinutes + ' минут назад';
+                    time = String(diffMinutes + ' минут назад');
                   } else if (
                     diffMinutes < 60 * 24 &&
                     now.getDate() === date.getDate()
                   ) {
                     var hours = date.getHours();
                     var mins = ('0' + date.getMinutes()).slice(-2);
-                    time = hours + ':' + mins;
+                    time = String(hours + ':' + mins);
                   } else if (
                     diffMinutes < 60 * 24 * 2 &&
                     now.getDate() - date.getDate() === 1
                   ) {
                     hours = date.getHours();
                     mins = ('0' + date.getMinutes()).slice(-2);
-                    time = 'вчера в ' + hours + ':' + mins;
+                    time = String('вчера в ' + hours + ':' + mins);
                   } else {
                     hours = date.getHours();
                     mins = ('0' + date.getMinutes()).slice(-2);
                     var day = date.getDate();
                     var m = date.getMonth() + 1;
                     var y = date.getFullYear();
-                    time = hours + ':' + mins + ' ' + day + '.' + m + '.' + y;
+                    time = String(
+                      hours + ':' + mins + ' ' + day + '.' + m + '.' + y
+                    );
                   }
 
                   return (

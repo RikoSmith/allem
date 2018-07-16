@@ -21,7 +21,7 @@ class PageMembers extends Component {
     if (!this.props.auth.isAuth) {
       this.props.history.push('/login');
     } else {
-      if (!this.props.auth.user.permission.includes('general')) {
+      if (!this.props.auth.user.permission.includes('members')) {
         this.props.history.push('/denied');
         window.location.reload();
       }
@@ -48,6 +48,17 @@ class PageMembers extends Component {
               <div className="panel panel-default">
                 <div className="panel-heading">Список сотрудников</div>
                 <div className="panel-body">
+                  <div
+                    className="vertical-center col-centered col-md-1"
+                    style={{ display: this.state.show }}
+                  >
+                    <ReactLoading
+                      type="spin"
+                      color="#339BEB"
+                      height={100}
+                      width={100}
+                    />
+                  </div>
                   <table width="100%" className="table" id="dataTables-example">
                     <thead>
                       <tr>
@@ -100,7 +111,7 @@ class PageMembers extends Component {
                             <td>{item.phone}</td>
                             <td>{item.status}</td>
                             <td>
-                              <a href="../../admin/member/{item._id}">
+                              <a href={'../../admin/member/' + item._id}>
                                 Подробнее...
                               </a>
                             </td>

@@ -39,6 +39,70 @@ function permissionCheck(perm) {
   );
 }
 
+function updateStatus(req, res, next) {
+  MongoClient.connect(
+    url,
+    function(err, client) {
+      assert.equal(null, err);
+
+      const db = client.db(dbName);
+      const collection = db.collection('members');
+      var data = collection.find({}).toArray(function(err, members) {
+        if (err) throw err;
+
+        var now = new Date();
+        for (var i = 0; i < members.length; i++) {
+          var newValues = { $set: {} };
+
+          //If member has expired status end date -> change status to default
+          if (members[i].status_end_date) {
+            if (dates.compare(new Date(members[i].status_end_date), now) < 0) {
+              if (members[i].status !== 'На работе')
+                newValues.$set.status = 'На работе';
+            } else {
+              newValues.$set.status = null;
+            }
+          }
+
+          //If member has holiday status -> check if the dates are expired
+          if (members[i].holiday_start && members[i].holiday_end) {
+            if (
+              dates.inRange(
+                now,
+                new Date(members[i].holiday_start),
+                new Date(members[i].holiday_end)
+              )
+            ) {
+              if (members[i].status !== 'В отпуске')
+                newValues.$set.status = 'В отпуске';
+            } else {
+              if (members[i].status_end_date) {
+              } else {
+                if (members[i].status !== 'На работе')
+                  newValues.$set.status = 'На работе';
+              }
+            }
+          }
+
+          //If there is a pending change -> execute the change
+          if (newValues.$set.status) {
+            //console.log(members[i].lastname + " " + members[i].name);
+            collection.updateOne(
+              { _id: new ObjectId(members[i]._id) },
+              newValues,
+              function(err, response) {
+                if (err) throw err;
+                console.log('1 document updated');
+              }
+            );
+          }
+        }
+        client.close();
+      });
+    }
+  );
+}
+
 ////////////////////////////////////////////////////////////////////////////////
 // @route   GET api/members
 // @desc    Returns array of all users
@@ -116,7 +180,7 @@ router.post('/login', (req, res) => {
 
 ////////////////////////////////////////////////////////////////////////////////
 // @route   GET api/members
-// @desc    Returns array of all users
+// @desc    Returns array of all employees/members (but for heads all members from parent deprtments: energy, kipia, remont, AHO etc.)
 // @access  Private
 router.get(
   '/members',
@@ -146,6 +210,36 @@ router.get(
         ok: true,
         data: filtered
       });
+    });
+  }
+);
+
+////////////////////////////////////////////////////////////////////////////////
+// @route   GET api/member/[member_id]
+// @desc    Returns specific member data
+// @access  Private + Permission specific (e.g. head of Energetics deprtment will see only members under his leading dep.)
+router.get(
+  '/member/:member_id',
+  passport.authenticate('jwt', { session: false }),
+  permissionCheck('members'),
+  updateStatus,
+  function(req, res) {
+    Member.findOne({ _id: new ObjectId(req.params.member_id) }, function(
+      err,
+      doc
+    ) {
+      if (err) {
+        res.status(404).json({
+          ok: false,
+          err: 'Не найдено'
+        });
+      }
+      if (!req.user.permission_members.includes(doc.dep_name))
+        res.status(400).json({
+          ok: false,
+          err: 'У вас нет доступа к просмотру данных этого сотрудника'
+        });
+      res.status(200).json({ ok: true, data: doc });
     });
   }
 );

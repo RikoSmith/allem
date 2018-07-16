@@ -20,6 +20,7 @@ class PageMain extends Component {
   componentWillMount() {
     if (!this.props.auth.isAuth) {
       this.props.history.push('/login');
+      window.location.reload();
     } else {
       console.log('Here');
       /*if (!this.props.auth.user.permission.includes('general')) {
