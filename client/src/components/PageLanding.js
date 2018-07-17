@@ -48,7 +48,7 @@ class PageLanding extends Component {
             position: 'relative',
             fontSize: '15px',
             color: '#333333',
-            backgroundColor: '#ffffff'
+            backgroundColor: '#0000'
           }}
         >
           <MetaTags>
@@ -87,6 +87,9 @@ class PageLanding extends Component {
             />
             <link href="css/custom.css" rel="stylesheet" />
           </MetaTags>
+          <video autoPlay muted loop id="myVideo">
+            <source src="video/webbg.mp4" type="video/mp4" />
+          </video>
           <div className="scrollToTop">
             <i className="icon-up-open-big" />
           </div>

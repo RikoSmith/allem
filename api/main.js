@@ -49,7 +49,7 @@ function updateStatus(req, res, next) {
       const collection = db.collection('members');
       var data = collection.find({}).toArray(function(err, members) {
         if (err) throw err;
-
+        console.log('Updatestatus found user');
         var now = new Date();
         for (var i = 0; i < members.length; i++) {
           var newValues = { $set: {} };
@@ -101,6 +101,7 @@ function updateStatus(req, res, next) {
       });
     }
   );
+  next();
 }
 
 ////////////////////////////////////////////////////////////////////////////////

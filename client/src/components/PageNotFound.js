@@ -17,7 +17,7 @@ class PageNotFound extends Component {
           }}
         >
           <div
-            class="alert alert-warning"
+            className="alert alert-warning"
             role="alert"
             style={{ margin: 'auto' }}
           >

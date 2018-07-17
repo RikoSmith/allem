@@ -12,6 +12,7 @@ import PageNotFound from './components/PageNotFound';
 import PageLanding from './components/PageLanding';
 import PageMain from './components/PageMain';
 import PageMembers from './components/PageMembers';
+import PageSingleMember from './components/PageSingleMember';
 
 if (localStorage.jtoken) {
   setAuthHeader(localStorage.jtoken);
@@ -35,6 +36,11 @@ class App extends Component {
             <Route exact path="/ru" render={() => <PageLanding lang="ru" />} />
             <Route exact path="/admin" component={PageMain} />
             <Route exact path="/admin/members" component={PageMembers} />
+            <Route
+              exact
+              path="/admin/member/:memberId"
+              component={PageSingleMember}
+            />
             <Route exact path="/login" component={PageLogin} />
             <Route component={PageNotFound} />
           </Switch>

@@ -8,6 +8,40 @@ License: Creative Commons Attribution 3.0 License (https://creativecommons.org/l
 File Description: Place here your custom CSS styles
 */
 
+body{
+  background-color: #000;
+}
+
+#myVideo {
+    position: fixed;
+    right: 0;
+    bottom: 0;
+    min-width: 100%;
+    min-height: 100%;
+    z-index: -1;
+    opacity: 0.5;
+}
+
+.bg-image-1 {
+  background: #0000;
+}
+
+.bg-image-2 {
+  background: #ccc0;
+}
+
+.bg-image-2::after{
+  background-color: #ccc0;
+}
+
+.banner-image{
+  display: none;
+}
+
+.banner::after{
+  background-color: rgba(0, 0, 0, 0);
+}
+
 .col-centered{
     float: none;
     margin: 0 auto;
