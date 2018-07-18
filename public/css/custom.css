@@ -14,7 +14,6 @@ body{
 
 #myVideo {
     position: fixed;
-    right: -150px;
     bottom: 0;
     min-width: 100%;
     min-height: 100%;
