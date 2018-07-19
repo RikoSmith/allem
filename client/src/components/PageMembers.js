@@ -17,7 +17,7 @@ class PageMembers extends Component {
     };
   }
 
-  componentWillMount() {
+  componentDidMount() {
     if (!this.props.auth.isAuth) {
       this.props.history.push('/login');
     } else {
