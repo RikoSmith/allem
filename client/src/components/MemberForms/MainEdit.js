@@ -1,29 +1,84 @@
 import React, { Component } from 'react';
+import dateFormat from '../../utils/formatDate';
+import { instance as axios } from '../../utils/axiosConf';
 
 class MainEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
-      name: this.props.user.name,
-      lastname: this.props.user.lastname,
-      middlename: this.props.user.middlename,
-      position: this.props.user.position,
-      department: this.props.user.department,
-      start_date: this.props.user.start_date,
-      end_date: this.props.user.end_date,
-      member_id: this.props.user.member_id,
-      status: this.props.user.status,
-      status_end_date: this.props.user.status_end_date,
-      holiday_start: this.props.user.holiday_start,
-      holiday_end: this.props.user.holiday_end
+      holiday_edit: 'disabled',
+      dates_edit: 'disabled',
+      _id: this.props.member._id,
+      name: this.props.member.name,
+      lastname: this.props.member.lastname,
+      middlename: this.props.member.middlename,
+      position: this.props.member.position,
+      department: this.props.member.department,
+      dep_name: this.props.member.dep_name,
+      start_date: dateFormat(new Date(this.props.member.start_date)),
+      end_date: dateFormat(new Date(this.props.member.end_date)),
+      member_id: this.props.member.member_id,
+      status: this.props.member.status,
+      status_end_date: dateFormat(new Date(this.props.member.status_end_date)),
+      holiday_start: dateFormat(new Date(this.props.member.holiday_start)),
+      holiday_end: dateFormat(new Date(this.props.member.holiday_end))
     };
+
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onChange(e) {
+    console.log('Target name: ' + e.target.name + '\nValue: ' + e.target.value);
+    this.setState({ [e.target.name]: e.target.value }, () => {
+      console.log('"' + this.state.status + '"');
+      if (
+        this.state.status === 'На работе' ||
+        this.state.status === 'В отпуске'
+      ) {
+        this.setState({ holiday_edit: 'disabled' });
+      } else {
+        this.setState({ holiday_edit: '' });
+      }
+
+      if (this.state.status === 'В отпуске') {
+        this.setState({ dates_edit: '' });
+      } else {
+        this.setState({ dates_edit: 'disabled' });
+      }
+    });
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+    axios
+      .post('/editMain', {
+        member_id: this.state._id,
+        name: this.state.name,
+        lastname: this.state.lastname,
+        middlename: this.state.middlename,
+        position: this.state.position,
+        department: this.state.department,
+        start_date: this.state.start_date,
+        end_date: this.state.end_date,
+        status: this.state.status,
+        status_end_date: this.state.status_end_date,
+        holiday_start: this.state.holiday_start,
+        holiday_end: this.state.holiday_end
+      })
+      .then(res => {
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log('Error: ' + err);
+      });
   }
   render() {
     return (
       <div
         className="modal fade"
         id="osnov_modal"
-        tabindex="-1"
+        tabIndex="-1"
         role="dialog"
         aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true"
@@ -49,21 +104,21 @@ class MainEdit extends Component {
                   <div className="col-md-12">
                     <form
                       role="form"
+                      onSubmit={this.onSubmit}
                       method="POST"
-                      action="../editMember"
                       id="osnov_form"
                     >
                       <input
                         type="hidden"
                         name="member_id"
-                        value={this.props.member._id}
+                        value={this.state._id}
                       />
                       <div className="form-group">
                         <label>Фамилия</label>
                         <input
                           className="form-control"
                           name="lastname"
-                          value={this.props.member.lastname}
+                          value={this.state.lastname}
                           onChange={this.onChange}
                           required
                         />
@@ -73,7 +128,7 @@ class MainEdit extends Component {
                         <input
                           className="form-control"
                           name="name"
-                          value={this.props.member.name}
+                          value={this.state.name}
                           onChange={this.onChange}
                           required
                         />
@@ -84,9 +139,7 @@ class MainEdit extends Component {
                           className="form-control"
                           name="middlename"
                           value={
-                            this.props.member.middlename
-                              ? this.props.member.middlename
-                              : '-'
+                            this.state.middlename ? this.state.middlename : '-'
                           }
                           onChange={this.onChange}
                         />
@@ -97,9 +150,7 @@ class MainEdit extends Component {
                           className="form-control"
                           name="position"
                           value={
-                            this.props.member.position
-                              ? this.props.member.position
-                              : '-'
+                            this.state.position ? this.state.position : '-'
                           }
                           onChange={this.onChange}
                           required
@@ -110,79 +161,30 @@ class MainEdit extends Component {
                         <select
                           className="form-control"
                           name="department"
+                          value={this.state.department}
                           onChange={this.onChange}
                           required
                         >
-                          <option
-                            {...(this.props.member.dep_name === 'head'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
+                          <option>
                             Административно-управленческий персонал
                           </option>
-                          <option
-                            {...(this.props.member.dep_name === 'head_service'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
+                          <option>
                             Административно – хозяйственная служба
                           </option>
-                          <option
-                            {...(this.props.member.dep_name === 'prop_head'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
-                            Административно – хозяйственный отдел
-                          </option>
-                          <option
-                            {...(this.props.member.dep_name === 'remont'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
-                            Ремонтно – строительный отдел
-                          </option>
-                          <option
-                            {...(this.props.member.dep_name === 'supply'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
+                          <option>Административно – хозяйственный отдел</option>
+                          <option>Ремонтно – строительный отдел</option>
+                          <option>
                             Отдел материально – технического снабжения
                           </option>
-                          <option
-                            {...(this.props.member.dep_name === 'energy'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
-                            Отдел энергетики
-                          </option>
-                          <option
-                            {...(this.props.member.dep_name === 'esystem'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
+                          <option>Отдел энергетики</option>
+                          <option>
                             Отдел по эксплуатации инженерных систем
                           </option>
-                          <option
-                            {...(this.props.member.dep_name === 'safety'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
+                          <option>
                             Отдел ГО, ЧС, охраны труда и техники безопасности
                           </option>
-                          <option
-                            {...(this.props.member.dep_name === 'security'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
-                            Отдел безопасности
-                          </option>
-                          <option
-                            {...(this.props.member.dep_name === 'kipia'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
-                            Отдел слаботочных систем и КИПиА
-                          </option>
+                          <option>Отдел безопасности</option>
+                          <option>Отдел слаботочных систем и КИПиА</option>
                         </select>
                       </div>
                       <div className="form-group">
@@ -191,50 +193,15 @@ class MainEdit extends Component {
                           className="form-control"
                           name="status"
                           id="status_select"
+                          value={this.state.status}
                           required
-                          {...(this.props.member.status === 'В отпуске'
-                            ? 'disabled'
-                            : null)}
                           onChange={this.onChange}
                         >
-                          <option
-                            id="work"
-                            {...(this.props.member.status === 'На работе'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
-                            На работе
-                          </option>
-                          ...this.props.member.status === 'В отпуске' ? '<option
-                            id="holiday"
-                            selected="selected"
-                          >
-                            В отпуске
-                          </option>' : null
-                          <option
-                            id="dekret"
-                            {...(this.props.member.status === 'В декрете'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
-                            В декрете
-                          </option>
-                          <option
-                            id="ill"
-                            {...(this.props.member.status === 'На больничных'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
-                            На больничных
-                          </option>
-                          <option
-                            id="trip"
-                            {...(this.props.member.status === 'В командировке'
-                              ? 'selected="selected"'
-                              : null)}
-                          >
-                            В командировке
-                          </option>
+                          <option id="work">На работе</option>
+                          <option id="holiday">В отпуске</option>
+                          <option id="dekret">В декрете</option>
+                          <option id="ill">На больничных</option>
+                          <option id="trip">В командировке</option>
                         </select>
                       </div>
                       <div className="form-group">
@@ -244,15 +211,8 @@ class MainEdit extends Component {
                           type="date"
                           className="form-control"
                           name="status_end_date"
-                          value={
-                            this.props.member.status_end_date
-                              ? this.props.member.status_end_date
-                              : '-'
-                          }
-                          {...(this.props.member.status === 'На работе' ||
-                          this.props.member.status === 'В отпуске'
-                            ? 'disabled'
-                            : null)}
+                          disabled={this.state.holiday_edit}
+                          onChange={this.onChange}
                         />
                       </div>
                       <div className="form-group">
@@ -262,10 +222,12 @@ class MainEdit extends Component {
                           className="form-control"
                           name="holiday_start"
                           value={
-                            this.props.member.holiday_start
-                              ? this.props.member.holiday_start
+                            this.state.holiday_start
+                              ? this.state.holiday_start
                               : '-'
                           }
+                          disabled={this.state.dates_edit}
+                          onChange={this.onChange}
                         />
                         <label>Отпуск до</label>
                         <input
@@ -273,10 +235,12 @@ class MainEdit extends Component {
                           className="form-control"
                           name="holiday_end"
                           value={
-                            this.props.member.holiday_end
-                              ? this.props.member.holiday_end
+                            this.state.holiday_end
+                              ? this.state.holiday_end
                               : '-'
                           }
+                          disabled={this.state.dates_edit}
+                          onChange={this.onChange}
                         />
                       </div>
                       <div className="form-group">
@@ -286,10 +250,9 @@ class MainEdit extends Component {
                           className="form-control"
                           name="start_date"
                           value={
-                            this.props.member.start_date
-                              ? this.props.member.start_date
-                              : '-'
+                            this.state.start_date ? this.state.start_date : '-'
                           }
+                          onChange={this.onChange}
                         />
                       </div>
                       <div className="form-group">
@@ -299,10 +262,9 @@ class MainEdit extends Component {
                           className="form-control"
                           name="end_date"
                           value={
-                            this.props.member.end_date
-                              ? this.props.member.end_date
-                              : '-'
+                            this.state.end_date ? this.state.end_date : '-'
                           }
+                          onChange={this.onChange}
                         />
                       </div>
                     </form>

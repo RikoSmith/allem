@@ -7,17 +7,17 @@
  * File Description: Place here your custom scripts
  */
 
-$(document).ready(function () {
+$(document).ready(function() {
+  $('.email-submit').click(function() {
+    var button = $('.email-success');
+    setTimeout(function() {
+      button.css('display', 'block');
+    }, 2000);
+  });
 
-  $('.email-submit').click(function () {
-    var button = $('.email-success')
-    setTimeout(function () {
-      button.css('display', 'block')
-    }, 2000)
-  })
+  //$('.media p').after('<a class="more_service" href="#contact">Заказать</a>');
 
-
-  var counterArray = [57, 116, 1572, 412745];
+  /*var counterArray = [57, 116, 1572, 412745];
 
   if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
      $('.js-counter').text('2500');
@@ -95,18 +95,13 @@ $(document).ready(function () {
           $('.c-fourth').removeClass('c-fourth');
 
       },{offset: '100%'});
-  }
-
+  }*/
 
   $('.gallery a').lightBox();
-
 
   $('.gallery').slick({
     infinite: true,
     slidesToShow: 3,
     slidesToScroll: 1
   });
-
-
-
-})
+});

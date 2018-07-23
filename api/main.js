@@ -29,6 +29,7 @@ function permissionCheck(perm) {
   return (
     permissionCheck[perm] ||
     (permissionCheck[perm] = function(req, res, next) {
+      console.log(req.user);
       if (req.user.permission.indexOf(perm) >= 0) next();
       else
         return res.status(400).json({
