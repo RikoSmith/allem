@@ -1,11 +1,15 @@
 import React, { Component } from 'react';
 import dateFormat from '../../utils/formatDate';
 import { instance as axios } from '../../utils/axiosConf';
+import ReactHtmlParser from 'react-html-parser';
 
 class MainEdit extends Component {
   constructor(props) {
     super(props);
     this.state = {
+      res: 'none',
+      res_message: '',
+      res_type: 'alert ',
       holiday_edit: 'disabled',
       dates_edit: 'disabled',
       _id: this.props.member._id,
@@ -15,13 +19,13 @@ class MainEdit extends Component {
       position: this.props.member.position,
       department: this.props.member.department,
       dep_name: this.props.member.dep_name,
-      start_date: dateFormat(new Date(this.props.member.start_date)),
-      end_date: dateFormat(new Date(this.props.member.end_date)),
+      start_date: this.props.member.start_date,
+      end_date: this.props.member.end_date,
       member_id: this.props.member.member_id,
       status: this.props.member.status,
-      status_end_date: dateFormat(new Date(this.props.member.status_end_date)),
-      holiday_start: dateFormat(new Date(this.props.member.holiday_start)),
-      holiday_end: dateFormat(new Date(this.props.member.holiday_end))
+      status_end_date: this.props.member.status_end_date,
+      holiday_start: this.props.member.holiday_start,
+      holiday_end: this.props.member.holiday_end
     };
 
     this.onChange = this.onChange.bind(this);
@@ -29,14 +33,15 @@ class MainEdit extends Component {
   }
 
   onChange(e) {
-    console.log('Target name: ' + e.target.name + '\nValue: ' + e.target.value);
     this.setState({ [e.target.name]: e.target.value }, () => {
-      console.log('"' + this.state.status + '"');
       if (
         this.state.status === 'На работе' ||
         this.state.status === 'В отпуске'
       ) {
-        this.setState({ holiday_edit: 'disabled' });
+        this.setState({
+          holiday_edit: 'disabled',
+          status_end_date: '-'
+        });
       } else {
         this.setState({ holiday_edit: '' });
       }
@@ -44,7 +49,11 @@ class MainEdit extends Component {
       if (this.state.status === 'В отпуске') {
         this.setState({ dates_edit: '' });
       } else {
-        this.setState({ dates_edit: 'disabled' });
+        this.setState({
+          dates_edit: 'disabled',
+          holiday_start: '-',
+          holiday_end: '-'
+        });
       }
     });
   }
@@ -67,9 +76,19 @@ class MainEdit extends Component {
         holiday_end: this.state.holiday_end
       })
       .then(res => {
+        this.setState({
+          res_type: 'alert alert-success',
+          res_message: res.data,
+          res: 'block'
+        });
         console.log(res.data);
       })
       .catch(err => {
+        this.setState({
+          res_type: 'alert alert-danger',
+          res_message: err.response.data,
+          res: 'block'
+        });
         console.log('Error: ' + err);
       });
   }
@@ -83,6 +102,11 @@ class MainEdit extends Component {
         aria-labelledby="exampleModalCenterTitle"
         aria-hidden="true"
       >
+        <div className="result_message" style={{ display: this.state.res }}>
+          <div className={this.state.res_type} role="alert">
+            {ReactHtmlParser(this.state.res_message)}
+          </div>
+        </div>
         <div className="modal-dialog modal-dialog-centered" role="document">
           <div className="modal-content">
             <div className="modal-header">
@@ -211,6 +235,7 @@ class MainEdit extends Component {
                           type="date"
                           className="form-control"
                           name="status_end_date"
+                          value={this.state.status_end_date}
                           disabled={this.state.holiday_edit}
                           onChange={this.onChange}
                         />
@@ -221,11 +246,7 @@ class MainEdit extends Component {
                           type="date"
                           className="form-control"
                           name="holiday_start"
-                          value={
-                            this.state.holiday_start
-                              ? this.state.holiday_start
-                              : '-'
-                          }
+                          value={this.state.holiday_start}
                           disabled={this.state.dates_edit}
                           onChange={this.onChange}
                         />
@@ -234,11 +255,7 @@ class MainEdit extends Component {
                           type="date"
                           className="form-control"
                           name="holiday_end"
-                          value={
-                            this.state.holiday_end
-                              ? this.state.holiday_end
-                              : '-'
-                          }
+                          value={this.state.holiday_end}
                           disabled={this.state.dates_edit}
                           onChange={this.onChange}
                         />
@@ -249,9 +266,7 @@ class MainEdit extends Component {
                           type="date"
                           className="form-control"
                           name="start_date"
-                          value={
-                            this.state.start_date ? this.state.start_date : '-'
-                          }
+                          value={this.state.start_date}
                           onChange={this.onChange}
                         />
                       </div>
@@ -261,9 +276,7 @@ class MainEdit extends Component {
                           type="date"
                           className="form-control"
                           name="end_date"
-                          value={
-                            this.state.end_date ? this.state.end_date : '-'
-                          }
+                          value={this.state.end_date}
                           onChange={this.onChange}
                         />
                       </div>

@@ -1,4 +1,5 @@
 const dateFormat = date => {
+  date = new Date(date);
   var day = date.getDate();
   var monthIndex = date.getMonth() + 1;
   var year = date.getFullYear();

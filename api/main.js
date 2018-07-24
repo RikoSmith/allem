@@ -40,6 +40,66 @@ function permissionCheck(perm) {
   );
 }
 
+function makeEvent(type, edittype, object, subject) {
+  var event = {};
+  event.object = {};
+  event.subject = {};
+  event.type = type;
+  event.edit_type = edittype;
+  event.object.name = object.name;
+  event.object.lastname = object.lastname;
+  event.object.username = object.id;
+  event.subject.name = subject.name;
+  event.subject.lastname = subject.lastname;
+  event.subject.id = subject._id;
+  event.timestamp = new Date();
+  if (edittype === 'Штат') {
+    if (subject.is_active == 'Нет') {
+      event.text =
+        object.name +
+        ' ' +
+        object.lastname +
+        ' убрал(а) из штата ' +
+        ' <a href="../../admin/member/' +
+        event.subject.id +
+        '">' +
+        event.subject.name +
+        ' ' +
+        event.subject.lastname +
+        '</a>';
+    } else {
+      event.text =
+        object.name +
+        ' ' +
+        object.lastname +
+        ' добавил(а) в штат ' +
+        ' <a href="../../admin/member/' +
+        event.subject.id +
+        '">' +
+        event.subject.name +
+        ' ' +
+        event.subject.lastname +
+        '</a>';
+    }
+  } else {
+    event.text =
+      object.name +
+      ' ' +
+      object.lastname +
+      " изменил(а) данные '" +
+      event.edit_type +
+      "'" +
+      ' <a href="../../admin/member/' +
+      event.subject.id +
+      '">' +
+      event.subject.name +
+      ' ' +
+      event.subject.lastname +
+      '</a>';
+  }
+  return event;
+}
+
 function updateStatus(req, res, next) {
   MongoClient.connect(
     url,
@@ -342,128 +402,311 @@ router.get(
 // @route   GET api/editMain
 // @desc    Requires inputs for main data of members and saves to db
 // @access  Private + Permission
-router.post('/editMain', permissionCheck('members'), function(req, res, next) {
-  console.log(req.body);
-  MongoClient.connect(
-    url,
-    function(err, client) {
-      assert.equal(null, err);
+router.post(
+  '/editMain',
+  passport.authenticate('jwt', { session: false }),
+  permissionCheck('members'),
+  function(req, res, next) {
+    console.log(req.body);
+    MongoClient.connect(
+      url,
+      function(err, client) {
+        assert.equal(null, err);
 
-      var newValues = { $set: {} };
-      var prevDoc = null;
-      const db = client.db(dbName);
-      const collection = db.collection('members');
-      const history = db.collection('history');
-      var data = collection.findOne(
-        { _id: new ObjectId(req.body.member_id) },
-        function(err, doc) {
-          if (err) throw err;
+        var newValues = { $set: {} };
+        var prevDoc = null;
+        const db = client.db(dbName);
+        const collection = db.collection('members');
+        const history = db.collection('history');
+        var data = collection.findOne(
+          { _id: new ObjectId(req.body.member_id) },
+          function(err, doc) {
+            if (err) throw err;
 
-          if (req.body.name) newValues.$set.name = req.body.name;
-          if (req.body.lastname) newValues.$set.lastname = req.body.lastname;
-          if (req.body.middlename)
-            newValues.$set.middlename = req.body.middlename;
-          if (req.body.position) newValues.$set.position = req.body.position;
-          if (req.body.department)
-            newValues.$set.department = req.body.department;
+            if (req.body.name) newValues.$set.name = req.body.name;
+            if (req.body.lastname) newValues.$set.lastname = req.body.lastname;
+            if (req.body.middlename)
+              newValues.$set.middlename = req.body.middlename;
+            if (req.body.position) newValues.$set.position = req.body.position;
+            if (req.body.department)
+              newValues.$set.department = req.body.department;
 
-          if (req.body.start_date && req.body.end_date) {
-            var start = new Date(req.body.start_date);
-            var end = new Date(req.body.end_date);
-            var now = new Date();
-
-            if (dates.compare(start, end) < 0) {
-              newValues.$set.start_date = req.body.start_date;
-              newValues.$set.end_date = req.body.end_date;
-              //if(dates.compare(end, now) < 0) newValues.$set.status = "На работе";
-            } else {
-              res.status(400);
-              newValues = {};
-              res.send(
-                'Ошибка! Даты срока сотрудничества введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                  req.body.member_id +
-                  '">Назад</a>'
-              );
-            }
-          }
-
-          if (req.body.status && newValues.$set) {
-            console.log('status exists in body');
-            if (req.body.status == 'На работе') {
-              newValues.$set.status = req.body.status;
-              newValues.$set.status_end_date = '';
-            } else {
+            if (req.body.start_date && req.body.end_date) {
+              var start = new Date(req.body.start_date);
+              var end = new Date(req.body.end_date);
               var now = new Date();
-              var status_end = new Date(req.body.status_end_date);
-              if (dates.compare(now, status_end) <= 0) {
-                newValues.$set.status = req.body.status;
-                newValues.$set.status_end_date = req.body.status_end_date;
+
+              if (dates.compare(start, end) < 0) {
+                newValues.$set.start_date = req.body.start_date;
+                newValues.$set.end_date = req.body.end_date;
+                //if(dates.compare(end, now) < 0) newValues.$set.status = "На работе";
               } else {
-                res.status(400);
                 newValues = {};
-                res.send(
-                  'Ошибка! Даты срока статуса введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
-                );
+                res
+                  .status(400)
+                  .send(
+                    'Ошибка! Даты срока сотрудничества введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
+                      req.body.member_id +
+                      '">Назад</a>'
+                  );
               }
             }
-          }
-          if (req.body.holiday_start && req.body.holiday_end) {
-            var h_start = new Date(req.body.holiday_start);
-            var h_end = new Date(req.body.holiday_end);
 
-            if (dates.compare(h_start, h_end) < 0) {
-              newValues.$set.holiday_start = req.body.holiday_start;
-              newValues.$set.holiday_end = req.body.holiday_end;
-              var now = new Date();
-              if (dates.compare(h_end, now) < 0) {
-                newValues.$set.status = 'На работе';
+            if (req.body.status && newValues.$set) {
+              console.log('status exists in body');
+              if (req.body.status == 'На работе') {
+                newValues.$set.status = req.body.status;
+                newValues.$set.status_end_date = '';
+              } else {
+                var now = new Date();
+                var status_end = new Date(req.body.status_end_date);
+                if (dates.compare(now, status_end) <= 0) {
+                  newValues.$set.status = req.body.status;
+                  newValues.$set.status_end_date = req.body.status_end_date;
+                } else {
+                  newValues = {};
+                  res
+                    .status(400)
+                    .send(
+                      'Ошибка! Даты срока статуса введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
+                        req.body.member_id +
+                        '">Назад</a>'
+                    );
+                }
               }
-            } else {
-              res.status(400);
-              newValues = {};
-              res.send(
-                'Ошибка! Даты срока отпуска введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                  req.body.member_id +
-                  '">Назад</a>'
+            }
+            if (req.body.status === 'В отпуске') {
+              if (req.body.holiday_start && req.body.holiday_end) {
+                var h_start = new Date(req.body.holiday_start);
+                var h_end = new Date(req.body.holiday_end);
+
+                if (dates.compare(h_start, h_end) < 0) {
+                  newValues.$set.holiday_start = req.body.holiday_start;
+                  newValues.$set.holiday_end = req.body.holiday_end;
+                  var now = new Date();
+                  if (dates.compare(h_end, now) < 0) {
+                    newValues.$set.status = 'На работе';
+                  }
+                } else {
+                  newValues = {};
+                  res
+                    .status(400)
+                    .send(
+                      'Ошибка! Даты срока отпуска введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
+                        req.body.member_id +
+                        '">Назад</a>'
+                    );
+                }
+              }
+            }
+            if (newValues.$set) {
+              console.log('Edit is active');
+              console.log('Change fields: ' + newValues.$set);
+              Member.updateOne(
+                { _id: new ObjectId(req.body.member_id) },
+                newValues,
+                function(err, response) {
+                  if (err) throw err;
+                  console.log('1 document updated ' + response);
+                  res.send(
+                    'Данные успешно изменены <a href="../../admin/member/' +
+                      req.body.member_id +
+                      '">Назад</a>'
+                  );
+                  Member.findOne(
+                    { _id: new ObjectId(req.body.member_id) },
+                    function(err, m_res) {
+                      if (err) {
+                        console.log('error: ' + err);
+                      }
+                      var event = makeEvent(
+                        'member_edit',
+                        'Основные',
+                        req.user,
+                        m_res
+                      );
+                      history.insertOne(event);
+                    }
+                  );
+                }
               );
             }
           }
-          if (newValues.$set) {
-            Member.updateOne(
-              { _id: new ObjectId(req.body.member_id) },
-              newValues,
-              function(err, response) {
-                if (err) throw err;
-                console.log('1 document updated ' + response);
-                res.send(
-                  'Данные успешно изменены <a href="../../admin/member/' +
+        );
+      }
+    );
+  }
+);
+
+// @route   GET api/editPrivate
+// @desc    Requires inputs for private data of members and saves to db
+// @access  Private + Permission
+router.post(
+  '/editPrivate',
+  passport.authenticate('jwt', { session: false }),
+  permissionCheck('members'),
+  function(req, res) {
+    //console.log(req.body);
+    MongoClient.connect(
+      url,
+      function(err, client) {
+        assert.equal(null, err);
+
+        var newValues = { $set: {} };
+        var prevDoc = null;
+        const db = client.db(dbName);
+        const collection = db.collection('members');
+        const history = db.collection('history');
+        var data = collection.findOne(
+          { _id: new ObjectId(req.body.member_id) },
+          function(err, doc) {
+            if (err) {
+              throw err;
+              res
+                .status(400)
+                .send(
+                  'Ошибка с соединением с БД <a href="../../admin/member/' +
                     req.body.member_id +
                     '">Назад</a>'
                 );
-                Member.findOne(
-                  { _id: new ObjectId(req.body.member_id) },
-                  function(err, m_res) {
-                    if (err) {
-                      console.log('error: ' + err);
-                    }
-                    var event = makeEvent(
-                      'member_edit',
-                      'Основные',
-                      req.user,
-                      m_res
-                    );
-                    history.insertOne(event);
-                  }
-                );
+            }
+
+            if (req.body.sex) newValues.$set.sex = req.body.sex;
+            if (req.body.id) newValues.$set.id = req.body.id;
+            if (req.body.birthdate)
+              newValues.$set.birthdate = req.body.birthdate;
+            if (req.body.phone) newValues.$set.phone = req.body.phone;
+            if (req.body.address) newValues.$set.address = req.body.address;
+            if (req.body.address_current)
+              newValues.$set.address_current = req.body.address_current;
+            if (req.body.family_status)
+              newValues.$set.family_status = req.body.family_status;
+            if (req.body.children && req.body.children_18) {
+              if (req.body.children >= req.body.children_18) {
+                newValues.$set.children = req.body.children;
+                newValues.$set.children_18 = req.body.children_18;
+              } else {
+                newValues = {};
+                res
+                  .status(400)
+                  .send(
+                    'Ошибка! Неправильно введено число детей <a href="../../admin/member/' +
+                      req.body.member_id +
+                      '">Назад</a>'
+                  );
               }
-            );
+            }
+            if (newValues.$set) {
+              console.log('newValues: ' + JSON.stringify(newValues.$set));
+              Member.updateOne(
+                { _id: new ObjectId(req.body.member_id) },
+                newValues,
+                function(err, response) {
+                  if (err) throw err;
+                  console.log('1 document updated ' + response);
+                  res.send(
+                    'Данные успешно изменены <a href="../../admin/member/' +
+                      req.body.member_id +
+                      '">Назад</a>'
+                  );
+
+                  Member.findOne(
+                    { _id: new ObjectId(req.body.member_id) },
+                    (err, m_res) => {
+                      console.log(m_res);
+                      if (err) {
+                        console.log('error: ' + err);
+                      }
+                      var event = makeEvent(
+                        'member_edit',
+                        'Личные',
+                        req.user,
+                        m_res
+                      );
+                      history.insertOne(event);
+                    }
+                  );
+                }
+              );
+            }
           }
-        }
-      );
-    }
-  );
-});
+        );
+      }
+    );
+  }
+);
+
+// @route   GET api/editEdu
+// @desc    Requires inputs for information about education of members and saves to db
+// @access  Private + Permission
+router.post(
+  '/editEdu',
+  passport.authenticate('jwt', { session: false }),
+  permissionCheck('members'),
+  function(req, res) {
+    MongoClient.connect(
+      url,
+      function(err, client) {
+        assert.equal(null, err);
+        var newValues = { $set: {} };
+        var prevDoc = null;
+        const db = client.db(dbName);
+        const collection = db.collection('members');
+        const history = db.collection('history');
+        var data = collection.findOne(
+          { _id: new ObjectId(req.body.member_id) },
+          function(err, doc) {
+            if (err) {
+              throw err;
+              res
+                .status(400)
+                .send(
+                  'Ошибка с соединением с БД <a href="../../admin/member/' +
+                    req.body.member_id +
+                    '">Назад</a>'
+                );
+            }
+            if (req.body.s_ed) newValues.$set.s_ed = req.body.s_ed;
+            if (req.body.h_ed) newValues.$set.h_ed = req.body.h_ed;
+            if (req.body.institute)
+              newValues.$set.institute = req.body.institute;
+            if (req.body.specialty)
+              newValues.$set.specialty = req.body.specialty;
+            if (req.body.ed_finish)
+              newValues.$set.ed_finish = req.body.ed_finish;
+
+            if (newValues.$set) {
+              Member.updateOne(
+                { _id: new ObjectId(req.body.member_id) },
+                newValues,
+                function(err, response) {
+                  if (err) throw err;
+                  console.log('1 document updated ' + response);
+                  res.send(
+                    'Данные успешно изменены <a href="../../admin/member/' +
+                      req.body.member_id +
+                      '">Назад</a>'
+                  );
+                  Member.findOne(
+                    { _id: new ObjectId(req.body.member_id) },
+                    function(err, m_res) {
+                      var event = makeEvent(
+                        'member_edit',
+                        'Образование',
+                        req.user,
+                        m_res
+                      );
+                      history.insertOne(event);
+                    }
+                  );
+                }
+              );
+            }
+          }
+        );
+      }
+    );
+  }
+);
 
 module.exports = router;

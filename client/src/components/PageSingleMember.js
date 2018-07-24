@@ -45,7 +45,10 @@ class PageMembers extends Component {
       return (
         <div id="wrapper">
           <Helmet>
-            <title>Сотрудники</title>
+            <title>
+              Сотрудник -{' '}
+              {this.state.member.name + ' ' + this.state.member.lastname}
+            </title>
           </Helmet>
           <HeaderNav />
           <div id="page-wrapper">
