@@ -35,6 +35,8 @@ class PageLanding extends Component {
       .catch(err => {
         throw err;
       });
+
+    axios.get('/update');
   }
 
   render() {

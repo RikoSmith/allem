@@ -26,7 +26,7 @@ class PageMembers extends Component {
         window.location.reload();
       }
 
-      axios.get('/members').then(res => {
+      axios.get('/members' + this.props.location.search).then(res => {
         const list = res.data.data;
         this.setState({ list, show: 'none' });
         ScriptInjector();

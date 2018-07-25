@@ -17,14 +17,49 @@ class PageMembers extends Component {
     super(props);
     this.state = {
       member: {},
-      show: 'flex'
+      show: 'flex',
+      res: 'none',
+      res_message: '',
+      res_type: 'alert '
     };
+
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+    axios
+      .post('/editStaff', {
+        member_id: this.state.member._id
+      })
+      .then(res => {
+        this.setState({
+          res_type: 'alert alert-success',
+          res_message: res.data,
+          res: 'block'
+        });
+        console.log(res.data);
+      })
+      .catch(err => {
+        console.log(err);
+        this.setState({
+          res_type: 'alert alert-danger',
+          res_message: err,
+          res: 'block'
+        });
+        console.log('Error: ' + err);
+      });
   }
 
   componentDidMount() {
     if (!this.props.auth.isAuth) {
       this.props.history.push('/login');
     } else {
+      if (!this.props.auth.user.permission.includes('members')) {
+        this.props.history.push('/denied');
+        window.location.reload();
+      }
+
       axios
         .get('/member/' + this.props.match.params.memberId)
         .then(res => {
@@ -380,6 +415,14 @@ class PageMembers extends Component {
                 aria-hidden="true"
               >
                 <div
+                  className="result_message"
+                  style={{ display: this.state.res }}
+                >
+                  <div className={this.state.res_type} role="alert">
+                    {ReactHtmlParser(this.state.res_message)}
+                  </div>
+                </div>
+                <div
                   className="modal-dialog modal-dialog-centered"
                   role="document"
                 >
@@ -413,6 +456,7 @@ class PageMembers extends Component {
                               method="POST"
                               action="../editMemberShtat"
                               id="shtat_form"
+                              onSubmit={this.onSubmit}
                             >
                               <input
                                 type="hidden"

@@ -261,6 +261,7 @@ router.get(
         if (!req.user.permission_members.includes(result[i].dep_name)) continue;
         filtered.push(result[i]);
       }
+      console.log('Query: ' + req.query);
       if (req.query.filter) {
         temp = [];
         for (let x = 0; x < filtered.length; x++) {
@@ -361,10 +362,23 @@ router.get(
         if (!req.user.permission_members.includes(result[i].dep_name)) continue;
         filtered.push(result[i]);
       }
-      res.status(200).json({
-        ok: true,
-        data: filtered
-      });
+      var promises = 0;
+      for (let i = 0; i < filtered.length; i++) {
+        Member.findOne({ _id: new ObjectId(filtered[i].head_id) }, function(
+          err,
+          doc
+        ) {
+          filtered = JSON.parse(JSON.stringify(filtered));
+          filtered[i].head_info = doc;
+          promises++;
+          if (promises === filtered.length) {
+            res.status(200).json({
+              ok: true,
+              data: filtered
+            });
+          }
+        });
+      }
     });
   }
 );
@@ -428,8 +442,12 @@ router.post(
             if (req.body.middlename)
               newValues.$set.middlename = req.body.middlename;
             if (req.body.position) newValues.$set.position = req.body.position;
-            if (req.body.department)
+            if (req.body.dep_name) {
+              newValues.$set.dep_name = req.body.dep_name;
+            }
+            if (req.body.department) {
               newValues.$set.department = req.body.department;
+            }
 
             if (req.body.start_date && req.body.end_date) {
               var start = new Date(req.body.start_date);
@@ -708,5 +726,120 @@ router.post(
     );
   }
 );
+
+// @route   GET api/editEdu
+// @desc    Requires inputs for information about education of members and saves to db
+// @access  Private + Permission
+router.post(
+  '/editStaff',
+  passport.authenticate('jwt', { session: false }),
+  permissionCheck('members'),
+  function(req, res) {
+    MongoClient.connect(
+      url,
+      function(err, client) {
+        assert.equal(null, err);
+
+        var newValues = { $set: {} };
+        var prevDoc = null;
+        const db = client.db(dbName);
+        const collection = db.collection('members');
+        const history = db.collection('history');
+        var data = collection.findOne(
+          { _id: new ObjectId(req.body.member_id) },
+          function(err, doc) {
+            if (err) {
+              throw err;
+              res
+                .status(400)
+                .send(
+                  'Ошибка с соединением с БД <a href="../../admin/member/' +
+                    req.body.member_id +
+                    '">Назад</a>'
+                );
+              return;
+            }
+            if (doc.is_active === 'Да') {
+              newValues.$set.is_active = 'Нет';
+            } else {
+              newValues.$set.is_active = 'Да';
+            }
+
+            if (newValues.$set) {
+              Member.updateOne(
+                { _id: new ObjectId(req.body.member_id) },
+                newValues,
+                function(err, response) {
+                  if (err) throw err;
+                  console.log('1 document updated ' + response);
+                  res.send(
+                    'Данные успешно изменены <a href="../../admin/member/' +
+                      req.body.member_id +
+                      '">Назад</a>'
+                  );
+                  Member.findOne(
+                    { _id: new ObjectId(req.body.member_id) },
+                    function(err, m_res) {
+                      var event = makeEvent(
+                        'member_edit',
+                        'Личные',
+                        req.user,
+                        m_res
+                      );
+                      history.insertOne(event);
+                    }
+                  );
+                }
+              );
+            }
+          }
+        );
+      }
+    );
+  }
+);
+
+// @route   GET api/update
+// @desc    Just update, no arguments, does not return anything
+// @access  Public
+router.get('/update', updateStatus, function(req, res) {
+  MongoClient.connect(
+    url,
+    function(err, client) {
+      assert.equal(null, err);
+
+      var filter = null;
+      if (req.query.filter) {
+        filter = req.query.filter;
+      }
+      const db = client.db(dbName);
+      const departments = db.collection('departments');
+      const members = db.collection('members');
+      var data = departments.find({}).toArray(function(err, result) {
+        if (err) throw err;
+        var prom = 0;
+        for (let i = 0; i < result.length; i++) {
+          members
+            .find({ dep_name: result[i].dep_name })
+            .toArray(function(err, ress) {
+              var newValues = { $set: { member_count: ress.length } };
+              departments.updateOne(
+                { _id: new ObjectId(result[i]._id) },
+                newValues,
+                function(err, response) {
+                  if (err) throw err;
+                  prom++;
+                  if (prom === result.length) {
+                    res.status(200).send('Данные успешно изменены');
+                    client.close();
+                  }
+                }
+              );
+            });
+        }
+      });
+    }
+  );
+});
 
 module.exports = router;

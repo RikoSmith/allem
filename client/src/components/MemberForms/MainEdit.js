@@ -30,10 +30,23 @@ class MainEdit extends Component {
 
     this.onChange = this.onChange.bind(this);
     this.onSubmit = this.onSubmit.bind(this);
+    this.depMap = {
+      head: 'Административно-управленческий персонал',
+      safety: 'Отдел ГО, ЧС, охраны труда и техники безопасности',
+      supply: 'Отдел материально–технического снабжения',
+      energy: 'Отдел энергетики',
+      head_service: 'Административно-хозяйственная служба',
+      prop_head: 'Административно-хозяйственный отдел',
+      remont: 'Ремонтно-строительный отдел',
+      esystem: 'Отдел по эксплуатации инженерных систем',
+      security: 'Отдел безопасности',
+      kipia: 'Отдел слаботочных систем и КИПиА'
+    };
   }
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value }, () => {
+      this.state.department = this.depMap[this.state.dep_name];
       if (
         this.state.status === 'На работе' ||
         this.state.status === 'В отпуске'
@@ -68,6 +81,7 @@ class MainEdit extends Component {
         middlename: this.state.middlename,
         position: this.state.position,
         department: this.state.department,
+        dep_name: this.state.dep_name,
         start_date: this.state.start_date,
         end_date: this.state.end_date,
         status: this.state.status,
@@ -184,31 +198,27 @@ class MainEdit extends Component {
                         <label>Отдел</label>
                         <select
                           className="form-control"
-                          name="department"
-                          value={this.state.department}
+                          name="dep_name"
+                          value={this.state.dep_name}
                           onChange={this.onChange}
                           required
                         >
-                          <option>
-                            Административно-управленческий персонал
+                          <option value="head">{this.depMap.head}</option>
+                          <option value="head_service">
+                            {this.depMap.head_service}
                           </option>
-                          <option>
-                            Административно – хозяйственная служба
+                          <option value="prop_head">
+                            {this.depMap.prop_head}
                           </option>
-                          <option>Административно – хозяйственный отдел</option>
-                          <option>Ремонтно – строительный отдел</option>
-                          <option>
-                            Отдел материально – технического снабжения
+                          <option value="remont">{this.depMap.remont}</option>
+                          <option value="supply">{this.depMap.supply}</option>
+                          <option value="energy">{this.depMap.energy}</option>
+                          <option value="esystem">{this.depMap.esystem}</option>
+                          <option value="safety">{this.depMap.safety}</option>
+                          <option value="security">
+                            {this.depMap.security}
                           </option>
-                          <option>Отдел энергетики</option>
-                          <option>
-                            Отдел по эксплуатации инженерных систем
-                          </option>
-                          <option>
-                            Отдел ГО, ЧС, охраны труда и техники безопасности
-                          </option>
-                          <option>Отдел безопасности</option>
-                          <option>Отдел слаботочных систем и КИПиА</option>
+                          <option value="kipia">{this.depMap.kipia}</option>
                         </select>
                       </div>
                       <div className="form-group">

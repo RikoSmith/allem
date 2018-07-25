@@ -13,6 +13,7 @@ import PageLanding from './components/PageLanding';
 import PageMain from './components/PageMain';
 import PageMembers from './components/PageMembers';
 import PageSingleMember from './components/PageSingleMember';
+import PageDepartments from './components/PageDepartments';
 
 if (localStorage.jtoken) {
   setAuthHeader(localStorage.jtoken);
@@ -40,6 +41,11 @@ class App extends Component {
               exact
               path="/admin/member/:memberId"
               component={PageSingleMember}
+            />
+            <Route
+              exact
+              path="/admin/departments"
+              component={PageDepartments}
             />
             <Route exact path="/login" component={PageLogin} />
             <Route component={PageNotFound} />
