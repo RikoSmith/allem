@@ -14,6 +14,9 @@ import PageMain from './components/PageMain';
 import PageMembers from './components/PageMembers';
 import PageSingleMember from './components/PageSingleMember';
 import PageDepartments from './components/PageDepartments';
+import PageMap from './components/PageMap';
+import PageMapView from './components/PageMapView';
+import PageHandbook from './components/PageHandbook';
 
 if (localStorage.jtoken) {
   setAuthHeader(localStorage.jtoken);
@@ -47,6 +50,9 @@ class App extends Component {
               path="/admin/departments"
               component={PageDepartments}
             />
+            <Route exact path="/admin/map" component={PageMap} />
+            <Route exact path="/admin/mapview" component={PageMapView} />
+            <Route exact path="/admin/handbook" component={PageHandbook} />
             <Route exact path="/login" component={PageLogin} />
             <Route component={PageNotFound} />
           </Switch>

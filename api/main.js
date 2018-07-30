@@ -12,6 +12,10 @@ const jwt = require('jsonwebtoken');
 const passport = require('passport');
 const validation = require('../config/validation');
 const validateLogin = validation.validateLogin;
+var fs = require('fs');
+
+//Conatiner for MapKeys
+var mapKeys = [];
 
 //Models
 const Member = require('../models/Member');
@@ -840,6 +844,39 @@ router.get('/update', updateStatus, function(req, res) {
       });
     }
   );
+});
+
+// @route   GET api/,map
+// @desc    Returns the Allem LLC Organisational-Structural Map
+// @access  Private
+router.get(
+  '/mapGetKey',
+  updateStatus,
+  passport.authenticate('jwt', { session: false }),
+  permissionCheck('map'),
+  function(req, res) {
+    var key = Math.random()
+      .toString(36)
+      .substr(2, 10);
+    mapKeys.push(key);
+    console.log(mapKeys);
+    res.status(200).send(key);
+  }
+);
+
+router.get('/map', function(req, res) {
+  if (req.query.key) {
+    if (mapKeys.includes(req.query.key)) {
+      res.status(200).render('/allem/api/etc/map.ejs');
+      var index = mapKeys.indexOf(req.query.key);
+      mapKeys.splice(index, 1);
+      console.log(mapKeys);
+    } else {
+      res.status(200).send('Доступ запрещен');
+    }
+  } else {
+    res.status(200).send('Доступ запрещен');
+  }
 });
 
 module.exports = router;
