@@ -46,28 +46,29 @@ class MainEdit extends Component {
 
   onChange(e) {
     this.setState({ [e.target.name]: e.target.value }, () => {
-      this.state.department = this.depMap[this.state.dep_name];
-      if (
-        this.state.status === 'На работе' ||
-        this.state.status === 'В отпуске'
-      ) {
-        this.setState({
-          holiday_edit: 'disabled',
-          status_end_date: '-'
-        });
-      } else {
-        this.setState({ holiday_edit: '' });
-      }
+      this.setState({ department: this.depMap[this.state.dep_name] }, () => {
+        if (
+          this.state.status === 'На работе' ||
+          this.state.status === 'В отпуске'
+        ) {
+          this.setState({
+            holiday_edit: 'disabled',
+            status_end_date: '-'
+          });
+        } else {
+          this.setState({ holiday_edit: '' });
+        }
 
-      if (this.state.status === 'В отпуске') {
-        this.setState({ dates_edit: '' });
-      } else {
-        this.setState({
-          dates_edit: 'disabled',
-          holiday_start: '-',
-          holiday_end: '-'
-        });
-      }
+        if (this.state.status === 'В отпуске') {
+          this.setState({ dates_edit: '' });
+        } else {
+          this.setState({
+            dates_edit: 'disabled',
+            holiday_start: '-',
+            holiday_end: '-'
+          });
+        }
+      });
     });
   }
 

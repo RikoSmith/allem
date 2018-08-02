@@ -6,6 +6,8 @@ import { ScriptInjector } from '../utils/scriptInjectorAdmin';
 import conf from '../config/config';
 import { instance as axios } from '../utils/axiosConf';
 import ReactLoading from 'react-loading';
+import { withRouter } from 'react-router-dom';
+import { connect } from 'react-redux';
 
 class PageMap extends Component {
   constructor(props) {
@@ -19,11 +21,19 @@ class PageMap extends Component {
   }
 
   componentDidMount() {
-    axios.get('/mapGetKey').then(res => {
-      var key = res.data;
-      this.setState({ key, show: 'none', show_iframe: 'block' });
-    });
-    ScriptInjector();
+    if (!this.props.auth.isAuth) {
+      this.props.history.push('/login');
+    } else {
+      if (!this.props.auth.user.permission.includes('members')) {
+        this.props.history.push('/denied');
+        window.location.reload();
+      }
+      axios.get('/mapGetKey').then(res => {
+        var key = res.data;
+        this.setState({ key, show: 'none', show_iframe: 'block' });
+      });
+      ScriptInjector();
+    }
   }
 
   render() {
@@ -68,4 +78,13 @@ class PageMap extends Component {
   }
 }
 
-export default PageMap;
+const mapStateToProps = state => ({
+  auth: state.auth
+});
+
+export default withRouter(
+  connect(
+    mapStateToProps,
+    {}
+  )(PageMap)
+);

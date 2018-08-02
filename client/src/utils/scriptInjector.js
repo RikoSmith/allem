@@ -11,8 +11,7 @@ export function ScriptInjector() {
     '/js/jquery.countTo.js',
     '/js/jquery.lightbox.min.js',
     '/slick/slick.min.js',
-    '/js/custom.js',
-    'https://cdn.rawgit.com/dwyl/learn-to-send-email-via-google-script-html-no-server/master/form-submission-handler.js'
+    '/js/custom.js'
   ];
   for (let i = 0; i < scriptList.length; i++) {
     const script = document.createElement('script');

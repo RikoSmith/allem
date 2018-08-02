@@ -471,6 +471,7 @@ router.post(
                       req.body.member_id +
                       '">Назад</a>'
                   );
+                return;
               }
             }
 
@@ -479,6 +480,30 @@ router.post(
               if (req.body.status == 'На работе') {
                 newValues.$set.status = req.body.status;
                 newValues.$set.status_end_date = '';
+                newValues.$set.holiday_start = '';
+                newValues.$set.holiday_end = '';
+              } else if (req.body.status === 'В отпуске') {
+                if (req.body.holiday_start && req.body.holiday_end) {
+                  var h_start = new Date(req.body.holiday_start);
+                  var h_end = new Date(req.body.holiday_end);
+                  if (dates.compare(h_start, h_end) < 0) {
+                    newValues.$set.holiday_start = req.body.holiday_start;
+                    newValues.$set.holiday_end = req.body.holiday_end;
+                    var now = new Date();
+                    if (dates.compare(h_end, now) < 0) {
+                      newValues.$set.status = 'На работе';
+                    }
+                  } else {
+                    newValues = {};
+                    res
+                      .status(400)
+                      .send(
+                        'Ошибка! Даты срока отпуска введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
+                          req.body.member_id +
+                          '">Назад</a>'
+                      );
+                  }
+                }
               } else {
                 var now = new Date();
                 var status_end = new Date(req.body.status_end_date);
@@ -494,30 +519,7 @@ router.post(
                         req.body.member_id +
                         '">Назад</a>'
                     );
-                }
-              }
-            }
-            if (req.body.status === 'В отпуске') {
-              if (req.body.holiday_start && req.body.holiday_end) {
-                var h_start = new Date(req.body.holiday_start);
-                var h_end = new Date(req.body.holiday_end);
-
-                if (dates.compare(h_start, h_end) < 0) {
-                  newValues.$set.holiday_start = req.body.holiday_start;
-                  newValues.$set.holiday_end = req.body.holiday_end;
-                  var now = new Date();
-                  if (dates.compare(h_end, now) < 0) {
-                    newValues.$set.status = 'На работе';
-                  }
-                } else {
-                  newValues = {};
-                  res
-                    .status(400)
-                    .send(
-                      'Ошибка! Даты срока отпуска введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                        req.body.member_id +
-                        '">Назад</a>'
-                    );
+                  return;
                 }
               }
             }

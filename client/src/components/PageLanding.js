@@ -3,22 +3,58 @@ import MetaTags from 'react-meta-tags';
 import ReactLoading from 'react-loading';
 import ReactHtmlParser from 'react-html-parser';
 import { ScriptInjector } from '../utils/scriptInjector';
-import { instance as axios } from '../utils/axiosConf';
+import { instance } from '../utils/axiosConf';
 import { withRouter } from 'react-router-dom';
+import axios from 'axios';
 
 class PageLanding extends Component {
   constructor(props) {
     super(props);
     this.state = {
       lang: {},
-      loaded: false
+      loaded: false,
+      name: '',
+      email: '',
+      message: '',
+      color: 'red',
+      success: 'none',
+      form: 'block'
     };
+
+    this.onChange = this.onChange.bind(this);
+    this.onSubmit = this.onSubmit.bind(this);
+  }
+
+  onChange(e) {
+    this.setState({ [e.target.name]: e.target.value }, () => {});
+  }
+
+  onSubmit(e) {
+    e.preventDefault();
+
+    const instanceB = axios.create({
+      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+    });
+
+    instanceB
+      .post(
+        'https://script.google.com/macros/s/AKfycbzTpALEOLNTTA4gBKChuxgCSzeyV6TRYsmawag3t97D0p_d6iLj/exec',
+        {
+          name: this.state.name,
+          email: this.state.email,
+          color: this.state.color,
+          message: this.state.message
+        }
+      )
+      .then(res => {
+        this.setState({ success: 'display', form: 'none' });
+      });
   }
 
   componentWillMount() {
     var ll = 'ru';
     if (this.props.lang) ll = this.props.lang;
-    axios({
+    instance({
       method: 'get',
       url: '/lang?lang=' + ll,
       headers: {
@@ -36,7 +72,7 @@ class PageLanding extends Component {
         throw err;
       });
 
-    axios.get('/update');
+    instance.get('/update');
   }
 
   render() {
@@ -438,7 +474,7 @@ class PageLanding extends Component {
               <div className="space" />
               <div className="row">
                 <div className="col-sm-6">
-                  <div className="media">
+                  <div className="media" id="slabotok">
                     <div className="media-body text-right">
                       <h4 className="media-heading">
                         {ReactHtmlParser(
@@ -448,12 +484,15 @@ class PageLanding extends Component {
                       <p>
                         {ReactHtmlParser(this.state.lang.fields.services_1)}
                       </p>
+                      <a className="more_service" href="#contact">
+                        {this.state.lang.fields.order_service}
+                      </a>
                     </div>
                     <div className="media-right">
                       <i className="fa fa-desktop" />
                     </div>
                   </div>
-                  <div className="media">
+                  <div className="media" id="kipia">
                     <div className="media-body text-right">
                       <h4 className="media-heading">
                         {ReactHtmlParser(
@@ -463,12 +502,15 @@ class PageLanding extends Component {
                       <p>
                         {ReactHtmlParser(this.state.lang.fields.services_2)}
                       </p>
+                      <a className="more_service" href="#contact">
+                        {this.state.lang.fields.order_service}
+                      </a>
                     </div>
                     <div className="media-right">
                       <i className="fa fa-sitemap" />
                     </div>
                   </div>
-                  <div className="media">
+                  <div className="media" id="remont">
                     <div className="media-body text-right">
                       <h4 className="media-heading">
                         {ReactHtmlParser(
@@ -478,12 +520,15 @@ class PageLanding extends Component {
                       <p>
                         {ReactHtmlParser(this.state.lang.fields.services_3)}
                       </p>
+                      <a className="more_service" href="#contact">
+                        {this.state.lang.fields.order_service}
+                      </a>
                     </div>
                     <div className="media-right">
                       <i className="fa fa-cogs" />
                     </div>
                   </div>
-                  <div className="media">
+                  <div className="media" id="cleaning">
                     <div className="media-body text-right">
                       <h4 className="media-heading">
                         {ReactHtmlParser(
@@ -493,30 +538,18 @@ class PageLanding extends Component {
                       <p>
                         {ReactHtmlParser(this.state.lang.fields.services_4)}
                       </p>
+                      <a className="more_service" href="#contact">
+                        {this.state.lang.fields.order_service}
+                      </a>
                     </div>
                     <div className="media-right">
                       <i className="fa fa-paint-brush" />
                     </div>
                   </div>
-                  <div className="media">
-                    <div className="media-body text-right">
-                      <h4 className="media-heading">
-                        {ReactHtmlParser(
-                          this.state.lang.fields.services_5_header
-                        )}
-                      </h4>
-                      <p>
-                        {ReactHtmlParser(this.state.lang.fields.services_5)}
-                      </p>
-                    </div>
-                    <div className="media-right">
-                      <i className="fa fa-paperclip" />
-                    </div>
-                  </div>
                 </div>
                 <div className="space visible-xs" />
                 <div className="col-sm-6">
-                  <div className="media">
+                  <div className="media" id="esystem">
                     <div className="media-left">
                       <i className="fa fa-plug" />
                     </div>
@@ -529,9 +562,12 @@ class PageLanding extends Component {
                       <p>
                         {ReactHtmlParser(this.state.lang.fields.services_6)}
                       </p>
+                      <a className="more_service" href="#contact">
+                        {this.state.lang.fields.order_service}
+                      </a>
                     </div>
                   </div>
-                  <div className="media">
+                  <div className="media" id="energy">
                     <div className="media-left">
                       <i className="fa fa-bolt" />
                     </div>
@@ -544,9 +580,12 @@ class PageLanding extends Component {
                       <p>
                         {ReactHtmlParser(this.state.lang.fields.services_7)}
                       </p>
+                      <a className="more_service" href="#contact">
+                        {this.state.lang.fields.order_service}
+                      </a>
                     </div>
                   </div>
-                  <div className="media">
+                  <div className="media" id="safety">
                     <div className="media-left">
                       <i className="fa fa-shield-alt" />
                     </div>
@@ -559,6 +598,27 @@ class PageLanding extends Component {
                       <p>
                         {ReactHtmlParser(this.state.lang.fields.services_8)}
                       </p>
+                      <a className="more_service" href="#contact">
+                        {this.state.lang.fields.order_service}
+                      </a>
+                    </div>
+                  </div>
+                  <div className="media" id="finance">
+                    <div className="media-body text-right">
+                      <h4 className="media-heading">
+                        {ReactHtmlParser(
+                          this.state.lang.fields.services_5_header
+                        )}
+                      </h4>
+                      <p>
+                        {ReactHtmlParser(this.state.lang.fields.services_5)}
+                      </p>
+                      <a className="more_service" href="#contact">
+                        {this.state.lang.fields.order_service}
+                      </a>
+                    </div>
+                    <div className="media-right">
+                      <i className="fa fa-paperclip" />
                     </div>
                   </div>
                 </div>
@@ -627,15 +687,20 @@ class PageLanding extends Component {
                   </div>
                   <div className="col-sm-6">
                     <div className="footer-content">
-                      <div className="email-success">
+                      <div
+                        className="email-success"
+                        style={{ display: this.state.success }}
+                      >
                         <p>Сообщение принято.</p>
                       </div>
                       <form
+                        style={{ display: this.state.form }}
                         role="form"
                         id="gform"
                         method="POST"
                         target="_self"
-                        action="https://script.google.com/macros/s/AKfycbxZpkNOh16i8mpjLyFwWni_8vhYAg7sDLr_Ew-f/exec"
+                        onSubmit={this.onSubmit}
+                        action="https://script.google.com/macros/s/AKfycbzTpALEOLNTTA4gBKChuxgCSzeyV6TRYsmawag3t97D0p_d6iLj/exec"
                       >
                         <div className="form-group has-feedback">
                           <label className="sr-only" htmlFor="name2">
@@ -647,6 +712,8 @@ class PageLanding extends Component {
                             id="name2"
                             placeholder={this.state.lang.fields.message_name}
                             name="name"
+                            value={this.state.name}
+                            onChange={this.onChange}
                             required
                           />
                           <i className="fa fa-user form-control-feedback" />
@@ -661,6 +728,8 @@ class PageLanding extends Component {
                             id="email2"
                             placeholder={this.state.lang.fields.message_email}
                             name="email"
+                            value={this.state.email}
+                            onChange={this.onChange}
                             required
                           />
                           <i className="fa fa-envelope form-control-feedback" />
@@ -675,10 +744,19 @@ class PageLanding extends Component {
                             id="message2"
                             placeholder={this.state.lang.fields.message_text}
                             name="message"
+                            value={this.state.message}
+                            onChange={this.onChange}
                             required
                           />
                           <i className="fa fa-pencil form-control-feedback" />
                         </div>
+                        <input
+                          type="text"
+                          name="color"
+                          value="red"
+                          onChange={this.onChange}
+                          style={{ display: 'none' }}
+                        />
                         <input
                           type="submit"
                           value={this.state.lang.fields.message_send}
