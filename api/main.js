@@ -869,7 +869,7 @@ router.get(
 router.get('/map', function(req, res) {
   if (req.query.key) {
     if (mapKeys.includes(req.query.key)) {
-      res.status(200).render('/allem/api/etc/map.ejs');
+      res.status(200).render('./etc/map.ejs');
       var index = mapKeys.indexOf(req.query.key);
       mapKeys.splice(index, 1);
       console.log(mapKeys);

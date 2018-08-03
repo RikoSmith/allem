@@ -227,7 +227,7 @@ class PageLanding extends Component {
                               <li>
                                 <a
                                   className="login-button"
-                                  href="http://mail.allem.kz"
+                                  href="../../../admin"
                                 >
                                   {this.state.lang.fields.sign_in}
                                 </a>
