@@ -1,5 +1,5 @@
 const conf = {
-  SERVER_ADRESS: 'http://localhost:3000/api'
+  SERVER_ADRESS: 'https://api.allem.kz/api'
 };
 
 export default conf;
