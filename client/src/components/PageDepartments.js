@@ -122,7 +122,7 @@ class PageDepartments extends Component {
                                             ? '/images/members_small/' +
                                               item.head_info.image +
                                               '.jpg'
-                                            : 'http://via.placeholder.com/250x300'
+                                            : 'https://via.placeholder.com/250x300'
                                         }
                                       />
                                       <a

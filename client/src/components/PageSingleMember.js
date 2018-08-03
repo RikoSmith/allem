@@ -99,7 +99,7 @@ class PageMembers extends Component {
                         ? '../../images/members/' +
                           this.state.member.image +
                           '.jpg'
-                        : 'http://via.placeholder.com/750x900'
+                        : 'https://via.placeholder.com/750x900'
                     }
                   />
                 </div>
