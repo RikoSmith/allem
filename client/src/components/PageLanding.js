@@ -98,12 +98,12 @@ class PageLanding extends Component {
             <meta name="yandex-verification" content="1f99fa0fe11f2ce4" />
             <link rel="shortcut icon" href="images/favicon.ico" />
             <link
-              href="http://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext"
+              href="https://fonts.googleapis.com/css?family=Open+Sans:400italic,700italic,400,700,300&amp;subset=latin,latin-ext"
               rel="stylesheet"
               type="text/css"
             />
             <link
-              href="http://fonts.googleapis.com/css?family=Raleway:700,400,300"
+              href="https://fonts.googleapis.com/css?family=Raleway:700,400,300"
               rel="stylesheet"
               type="text/css"
             />
