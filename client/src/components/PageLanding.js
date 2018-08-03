@@ -36,6 +36,9 @@ class PageLanding extends Component {
       headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
     });
 
+    instanceB.defaults.headers.common['Content-Type'] =
+      'application/x-www-form-urlencoded';
+
     instanceB
       .post(
         'https://script.google.com/macros/s/AKfycbzTpALEOLNTTA4gBKChuxgCSzeyV6TRYsmawag3t97D0p_d6iLj/exec',
