@@ -7,106 +7,104 @@
  * File Description: Place here your custom scripts
  */
 
-$(document).ready(function () {
-
-  $('.email-submit').click(function () {
-    var button = $('.email-success')
-    setTimeout(function () {
-      button.css('display', 'block')
-    }, 2000)
-  })
-
+$(document).ready(function() {
+  $('.email-submit').click(function() {
+    var button = $('.email-success');
+    setTimeout(function() {
+      button.css('display', 'block');
+      $('#gform').css('display', 'none');
+    }, 2000);
+  });
 
   var counterArray = [57, 116, 1572, 412745];
 
-  if( /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(navigator.userAgent) ) {
-     $('.js-counter').text('2500');
-  }else{
+  if (
+    /Android|webOS|iPhone|iPad|iPod|BlackBerry|IEMobile|Opera Mini/i.test(
+      navigator.userAgent
+    )
+  ) {
+    $('.js-counter').text('2500');
+  } else {
+    $('#gtco-counter').waypoint(
+      function() {
+        $('.c-first').countTo({
+          from: 1,
+          to: counterArray[0],
+          speed: 3000,
+          refreshInterval: 50,
+          formatter: function(value, options) {
+            return value.toFixed(options.decimals);
+          },
+          onUpdate: function(value) {
+            console.debug(this);
+          },
+          onComplete: function(value) {
+            console.debug(this);
+          }
+        });
 
-      $('#gtco-counter').waypoint(function(){
+        $('.c-first').removeClass('c-first');
 
-          $('.c-first').countTo({
-              from: 1,
-              to: counterArray[0],
-              speed: 3000,
-              refreshInterval: 50,
-              formatter: function (value, options) {
-                return value.toFixed(options.decimals);
-              },
-              onUpdate: function (value) {
-                console.debug(this);
-              },
-              onComplete: function (value) {
-                console.debug(this);
-              }
-          });
+        $('.c-second').countTo({
+          from: 1,
+          to: counterArray[1],
+          speed: 3000,
+          refreshInterval: 50,
+          formatter: function(value, options) {
+            return value.toFixed(options.decimals);
+          },
+          onUpdate: function(value) {
+            console.debug(this);
+          },
+          onComplete: function(value) {
+            console.debug(this);
+          }
+        });
+        $('.c-second').removeClass('c-second');
 
-          $('.c-first').removeClass('c-first');
+        $('.c-third').countTo({
+          from: 1,
+          to: counterArray[2],
+          speed: 3000,
+          refreshInterval: 50,
+          formatter: function(value, options) {
+            return value.toFixed(options.decimals);
+          },
+          onUpdate: function(value) {
+            console.debug(this);
+          },
+          onComplete: function(value) {
+            console.debug(this);
+          }
+        });
+        $('.c-third').removeClass('c-third');
 
-          $('.c-second').countTo({
-              from: 1,
-              to: counterArray[1],
-              speed: 3000,
-              refreshInterval: 50,
-              formatter: function (value, options) {
-                return value.toFixed(options.decimals);
-              },
-              onUpdate: function (value) {
-                console.debug(this);
-              },
-              onComplete: function (value) {
-                console.debug(this);
-              }
-          });
-          $('.c-second').removeClass('c-second');
-
-          $('.c-third').countTo({
-              from: 1,
-              to: counterArray[2],
-              speed: 3000,
-              refreshInterval: 50,
-              formatter: function (value, options) {
-                return value.toFixed(options.decimals);
-              },
-              onUpdate: function (value) {
-                console.debug(this);
-              },
-              onComplete: function (value) {
-                console.debug(this);
-              }
-          });
-          $('.c-third').removeClass('c-third');
-
-          $('.c-fourth').countTo({
-              from: 1,
-              to: counterArray[3],
-              speed: 3000,
-              refreshInterval: 50,
-              formatter: function (value, options) {
-                return value.toFixed(options.decimals);
-              },
-              onUpdate: function (value) {
-                console.debug(this);
-              },
-              onComplete: function (value) {
-                console.debug(this);
-              }
-          });
-          $('.c-fourth').removeClass('c-fourth');
-
-      },{offset: '100%'});
+        $('.c-fourth').countTo({
+          from: 1,
+          to: counterArray[3],
+          speed: 3000,
+          refreshInterval: 50,
+          formatter: function(value, options) {
+            return value.toFixed(options.decimals);
+          },
+          onUpdate: function(value) {
+            console.debug(this);
+          },
+          onComplete: function(value) {
+            console.debug(this);
+          }
+        });
+        $('.c-fourth').removeClass('c-fourth');
+      },
+      { offset: '100%' }
+    );
   }
 
-
   $('.gallery a').lightBox();
-
 
   $('.gallery').slick({
     infinite: true,
     slidesToShow: 3,
     slidesToScroll: 1
   });
-
-
-
-})
+});

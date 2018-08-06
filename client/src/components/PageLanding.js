@@ -696,13 +696,13 @@ class PageLanding extends Component {
                       >
                         <p>Сообщение принято.</p>
                       </div>
+
                       <form
                         style={{ display: this.state.form }}
                         role="form"
                         id="gform"
                         method="POST"
-                        target="_self"
-                        onSubmit={this.onSubmit}
+                        target="dummyframe"
                         action="https://script.google.com/macros/s/AKfycbzTpALEOLNTTA4gBKChuxgCSzeyV6TRYsmawag3t97D0p_d6iLj/exec"
                       >
                         <div className="form-group has-feedback">
@@ -715,8 +715,6 @@ class PageLanding extends Component {
                             id="name2"
                             placeholder={this.state.lang.fields.message_name}
                             name="name"
-                            value={this.state.name}
-                            onChange={this.onChange}
                             required
                           />
                           <i className="fa fa-user form-control-feedback" />
@@ -731,8 +729,6 @@ class PageLanding extends Component {
                             id="email2"
                             placeholder={this.state.lang.fields.message_email}
                             name="email"
-                            value={this.state.email}
-                            onChange={this.onChange}
                             required
                           />
                           <i className="fa fa-envelope form-control-feedback" />
@@ -747,8 +743,6 @@ class PageLanding extends Component {
                             id="message2"
                             placeholder={this.state.lang.fields.message_text}
                             name="message"
-                            value={this.state.message}
-                            onChange={this.onChange}
                             required
                           />
                           <i className="fa fa-pencil form-control-feedback" />
@@ -757,7 +751,6 @@ class PageLanding extends Component {
                           type="text"
                           name="color"
                           value="red"
-                          onChange={this.onChange}
                           style={{ display: 'none' }}
                         />
                         <input
@@ -770,6 +763,13 @@ class PageLanding extends Component {
                   </div>
                 </div>
               </div>
+              <iframe
+                width="0"
+                height="0"
+                border="0"
+                name="dummyframe"
+                id="dummyframe"
+              />
             </div>
             {/*<!-- .footer end -->*/}
 
