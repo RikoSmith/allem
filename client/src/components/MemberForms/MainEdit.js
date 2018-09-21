@@ -33,14 +33,15 @@ class MainEdit extends Component {
     this.depMap = {
       head: 'Административно-управленческий персонал',
       safety: 'Отдел ГО, ЧС, охраны труда и техники безопасности',
-      supply: 'Отдел материально–технического снабжения',
+      supply: 'Отдел юридической, кадровой работы, маркетинга и закупок',
       energy: 'Отдел энергетики',
       head_service: 'Административно-хозяйственная служба',
       prop_head: 'Административно-хозяйственный отдел',
       remont: 'Ремонтно-строительный отдел',
       esystem: 'Отдел по эксплуатации инженерных систем',
       security: 'Отдел безопасности',
-      kipia: 'Отдел слаботочных систем и КИПиА'
+      kipia: 'Отдел слаботочных систем и КИПиА',
+      tech_service: 'Административно-техническая служба'
     };
   }
 
@@ -220,6 +221,9 @@ class MainEdit extends Component {
                             {this.depMap.security}
                           </option>
                           <option value="kipia">{this.depMap.kipia}</option>
+                          <option value="tech_service">
+                            {this.depMap.tech_service}
+                          </option>
                         </select>
                       </div>
                       <div className="form-group">
