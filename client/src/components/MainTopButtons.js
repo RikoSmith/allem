@@ -17,7 +17,7 @@ class MainTopButtons extends Component {
                   <i className="fa fa-users fa-5x" />
                 </div>
                 <div className="col-xs-9 text-right">
-                  <div className="huge">72</div>
+                  <div className="huge">90</div>
                   <div>Сотрудников</div>
                 </div>
               </div>
@@ -41,7 +41,7 @@ class MainTopButtons extends Component {
                   <i className="fa fa-sitemap fa-5x" />
                 </div>
                 <div className="col-xs-9 text-right">
-                  <div className="huge">6</div>
+                  <div className="huge">11</div>
                   <div>Отделов</div>
                 </div>
               </div>
