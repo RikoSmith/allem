@@ -686,6 +686,16 @@ class PageLanding extends Component {
                           {this.state.lang.fields.contact_mail}
                         </li>
                       </ul>
+                      <ul className="social-links">
+                        <li className="facebook">
+                          <a
+                            target="_blank"
+                            href="https://www.facebook.com/allemkz"
+                          >
+                            <i className="fab fa-facebook-f" />
+                          </a>
+                        </li>
+                      </ul>
                     </div>
                   </div>
                   <div className="col-sm-6">
