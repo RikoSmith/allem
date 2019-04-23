@@ -1,31 +1,31 @@
-const express = require('express');
+const express = require("express");
 var router = express.Router();
-var dates = require('../lib/dates');
-var MongoClient = require('mongodb').MongoClient;
-var assert = require('assert');
-var ObjectId = require('mongodb').ObjectID;
-var bcrypt = require('bcrypt');
-var keys = require('../config/keys');
+var dates = require("../lib/dates");
+var MongoClient = require("mongodb").MongoClient;
+var assert = require("assert");
+var ObjectId = require("mongodb").ObjectID;
+var bcrypt = require("bcrypt");
+var keys = require("../config/keys");
 const saltRounds = 10;
-var mongoose = require('mongoose');
-const jwt = require('jsonwebtoken');
-const passport = require('passport');
-const validation = require('../config/validation');
+var mongoose = require("mongoose");
+const jwt = require("jsonwebtoken");
+const passport = require("passport");
+const validation = require("../config/validation");
 const validateLogin = validation.validateLogin;
-var fs = require('fs');
+var fs = require("fs");
 
 //Conatiner for MapKeys
 var mapKeys = [];
 
 //Models
-const Member = require('../models/Member');
-const Department = require('../models/Department');
-const User = require('../models/User');
+const Member = require("../models/Member");
+const Department = require("../models/Department");
+const User = require("../models/User");
 
 //MongoDB Credentials. Extremly confidential information! Don't share this url with anyone!
 const url = keys.MONGO_URI;
 const jwt_key = keys.JWT_KEY;
-const dbName = 'allemdb';
+const dbName = "allemdb";
 
 //This is a middleware function that checks permission to see the pages. Each user has its own array of permission flags.
 //This function checks presense of these flags and render page according to them
@@ -38,7 +38,7 @@ function permissionCheck(perm) {
       else
         return res.status(400).json({
           ok: false,
-          err: { permission: 'У вас нет доступа к этой странице' }
+          err: { permission: "У вас нет доступа к этой странице" }
         });
     })
   );
@@ -57,38 +57,38 @@ function makeEvent(type, edittype, object, subject) {
   event.subject.lastname = subject.lastname;
   event.subject.id = subject._id;
   event.timestamp = new Date();
-  if (edittype === 'Штат') {
-    if (subject.is_active == 'Нет') {
+  if (edittype === "Штат") {
+    if (subject.is_active == "Нет") {
       event.text =
         object.name +
-        ' ' +
+        " " +
         object.lastname +
-        ' убрал(а) из штата ' +
+        " убрал(а) из штата " +
         ' <a href="../../admin/member/' +
         event.subject.id +
         '">' +
         event.subject.name +
-        ' ' +
+        " " +
         event.subject.lastname +
-        '</a>';
+        "</a>";
     } else {
       event.text =
         object.name +
-        ' ' +
+        " " +
         object.lastname +
-        ' добавил(а) в штат ' +
+        " добавил(а) в штат " +
         ' <a href="../../admin/member/' +
         event.subject.id +
         '">' +
         event.subject.name +
-        ' ' +
+        " " +
         event.subject.lastname +
-        '</a>';
+        "</a>";
     }
   } else {
     event.text =
       object.name +
-      ' ' +
+      " " +
       object.lastname +
       " изменил(а) данные '" +
       event.edit_type +
@@ -97,131 +97,127 @@ function makeEvent(type, edittype, object, subject) {
       event.subject.id +
       '">' +
       event.subject.name +
-      ' ' +
+      " " +
       event.subject.lastname +
-      '</a>';
+      "</a>";
   }
   return event;
 }
 
 function updateStatus(req, res, next) {
-  MongoClient.connect(
-    url,
-    function(err, client) {
-      assert.equal(null, err);
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
 
-      const db = client.db(dbName);
-      const collection = db.collection('members');
-      var data = collection.find({}).toArray(function(err, members) {
-        if (err) throw err;
-        console.log('Updatestatus found user');
-        var now = new Date();
-        for (var i = 0; i < members.length; i++) {
-          var newValues = { $set: {} };
+    const db = client.db(dbName);
+    const collection = db.collection("members");
+    var data = collection.find({}).toArray(function(err, members) {
+      if (err) throw err;
+      console.log("Updatestatus found user");
+      var now = new Date();
+      for (var i = 0; i < members.length; i++) {
+        var newValues = { $set: {} };
 
-          //If member has expired status end date -> change status to default
-          if (members[i].status_end_date) {
-            if (dates.compare(new Date(members[i].status_end_date), now) < 0) {
-              if (members[i].status !== 'На работе')
-                newValues.$set.status = 'На работе';
-            } else {
-              newValues.$set.status = null;
-            }
-          }
-
-          //If member has holiday status -> check if the dates are expired
-          if (members[i].holiday_start && members[i].holiday_end) {
-            if (
-              dates.inRange(
-                now,
-                new Date(members[i].holiday_start),
-                new Date(members[i].holiday_end)
-              )
-            ) {
-              if (members[i].status !== 'В отпуске')
-                newValues.$set.status = 'В отпуске';
-            } else {
-              if (members[i].status_end_date) {
-              } else {
-                if (members[i].status !== 'На работе')
-                  newValues.$set.status = 'На работе';
-              }
-            }
-          }
-
-          //If there is a pending change -> execute the change
-          if (newValues.$set.status) {
-            //console.log(members[i].lastname + " " + members[i].name);
-            collection.updateOne(
-              { _id: new ObjectId(members[i]._id) },
-              newValues,
-              function(err, response) {
-                if (err) throw err;
-                console.log('1 document updated');
-              }
-            );
+        //If member has expired status end date -> change status to default
+        if (members[i].status_end_date) {
+          if (dates.compare(new Date(members[i].status_end_date), now) < 0) {
+            if (members[i].status !== "На работе")
+              newValues.$set.status = "На работе";
+          } else {
+            newValues.$set.status = null;
           }
         }
-        client.close();
-      });
-    }
-  );
+
+        //If member has holiday status -> check if the dates are expired
+        if (members[i].holiday_start && members[i].holiday_end) {
+          if (
+            dates.inRange(
+              now,
+              new Date(members[i].holiday_start),
+              new Date(members[i].holiday_end)
+            )
+          ) {
+            if (members[i].status !== "В отпуске")
+              newValues.$set.status = "В отпуске";
+          } else {
+            if (members[i].status_end_date) {
+            } else {
+              if (members[i].status !== "На работе")
+                newValues.$set.status = "На работе";
+            }
+          }
+        }
+
+        //If there is a pending change -> execute the change
+        if (newValues.$set.status) {
+          //console.log(members[i].lastname + " " + members[i].name);
+          collection.updateOne(
+            { _id: new ObjectId(members[i]._id) },
+            newValues,
+            function(err, response) {
+              if (err) throw err;
+              console.log("1 document updated");
+            }
+          );
+        }
+      }
+      client.close();
+    });
+  });
   next();
 }
 
 ////////////////////////////////////////////////////////////////////////////////
-// @route   GET api/members
-// @desc    Returns array of all users
-// @access  Private
-router.get('/lang', (req, res) => {
-  var l = '';
+// @route   GET api/lang
+// @desc    Returns array of all languages
+// @access  Public
+router.get("/lang", (req, res) => {
+  var l = "";
   if (req.query.lang) {
     l = req.query.lang;
   } else {
-    l = 'ru';
+    l = "ru";
   }
-  MongoClient.connect(
-    url,
-    function(err, client) {
-      assert.equal(null, err);
-      const db = client.db(dbName);
-      const collection = db.collection('lang');
-      collection.findOne({ lang: l }, function(err, doc) {
-        if (err) {
-          res.status(500).json({
-            ok: false,
-            err
-          });
-          throw err;
-        }
-        res.status(200).json({
-          ok: true,
-          data: doc
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
+    const db = client.db(dbName);
+    const collection = db.collection("lang");
+    const news = db.collection("news");
+    collection.findOne({ lang: l }, function(err, doc) {
+      if (err) {
+        res.status(500).json({
+          ok: false,
+          err
         });
-        client.close();
+        throw err;
+      }
+      res.status(200).json({
+        ok: true,
+        data: doc,
+        news: news
       });
-    }
-  );
+      client.close();
+    });
+  });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
 // @route   POST api/login
 // @desc    Logs in user into system
 // @access  Public
-router.post('/login', (req, res) => {
+router.post("/login", (req, res) => {
   const { errors, isValid } = validateLogin(req.body);
   if (!isValid) {
     return res.status(400).json({ ok: false, invalid_input: errors });
   }
   const id = req.body.username;
   const password = req.body.password;
-  console.log('id: ' + id);
+  console.log("id: " + id);
   User.findOne({ id })
     .then(result => {
       if (!result)
         res
           .status(404)
-          .json({ ok: false, user_not_found: 'Пользователь не найден' });
+          .json({ ok: false, user_not_found: "Пользователь не найден" });
       bcrypt.compare(password, result.password, (err, response) => {
         if (response) {
           var payload = Object.assign({}, result._doc);
@@ -229,13 +225,13 @@ router.post('/login', (req, res) => {
           jwt.sign(payload, jwt_key, { expiresIn: 3600 }, (err, token) => {
             res.json({
               ok: true,
-              token: 'Bearer ' + token
+              token: "Bearer " + token
             });
           });
         } else {
           res
             .status(400)
-            .json({ ok: false, invalid_password: 'Неверный пароль' });
+            .json({ ok: false, invalid_password: "Неверный пароль" });
         }
       });
     })
@@ -249,8 +245,8 @@ router.post('/login', (req, res) => {
 // @desc    Returns array of all employees/members (but for heads all members from parent deprtments: energy, kipia, remont, AHO etc.)
 // @access  Private
 router.get(
-  '/members',
-  passport.authenticate('jwt', { session: false }),
+  "/members",
+  passport.authenticate("jwt", { session: false }),
   (req, res) => {
     Member.find((err, result) => {
       if (err) {
@@ -265,7 +261,7 @@ router.get(
         if (!req.user.permission_members.includes(result[i].dep_name)) continue;
         filtered.push(result[i]);
       }
-      console.log('Query: ' + req.query);
+      console.log("Query: " + req.query);
       if (req.query.filter) {
         temp = [];
         for (let x = 0; x < filtered.length; x++) {
@@ -286,9 +282,9 @@ router.get(
 // @desc    Returns specific member data
 // @access  Private + Permission specific (e.g. head of Energetics deprtment will see only members under his leading dep.)
 router.get(
-  '/member/:member_id',
-  passport.authenticate('jwt', { session: false }),
-  permissionCheck('members'),
+  "/member/:member_id",
+  passport.authenticate("jwt", { session: false }),
+  permissionCheck("members"),
   updateStatus,
   function(req, res) {
     Member.findOne({ _id: new ObjectId(req.params.member_id) }, function(
@@ -298,13 +294,13 @@ router.get(
       if (err) {
         res.status(404).json({
           ok: false,
-          err: 'Не найдено'
+          err: "Не найдено"
         });
       }
       if (!req.user.permission_members.includes(doc.dep_name))
         res.status(400).json({
           ok: false,
-          err: 'У вас нет доступа к просмотру данных этого сотрудника'
+          err: "У вас нет доступа к просмотру данных этого сотрудника"
         });
       res.status(200).json({ ok: true, data: doc });
     });
@@ -316,31 +312,28 @@ router.get(
 // @desc    Returns all the events
 // @access  Private + Permission
 router.get(
-  '/history',
-  passport.authenticate('jwt', { session: false }),
-  permissionCheck('general'),
+  "/history",
+  passport.authenticate("jwt", { session: false }),
+  permissionCheck("general"),
   (req, res) => {
-    MongoClient.connect(
-      url,
-      function(err, client) {
-        assert.equal(null, err);
+    MongoClient.connect(url, function(err, client) {
+      assert.equal(null, err);
 
-        const db = client.db(dbName);
-        const collection = db.collection('history');
-        collection
-          .find({})
-          .sort({ timestamp: -1 })
-          .toArray(function(err, result) {
-            if (err) throw err;
+      const db = client.db(dbName);
+      const collection = db.collection("history");
+      collection
+        .find({})
+        .sort({ timestamp: -1 })
+        .toArray(function(err, result) {
+          if (err) throw err;
 
-            res.status(200).json({
-              ok: true,
-              data: result
-            });
-            client.close();
+          res.status(200).json({
+            ok: true,
+            data: result
           });
-      }
-    );
+          client.close();
+        });
+    });
   }
 );
 
@@ -349,9 +342,9 @@ router.get(
 // @desc    Returns all the departments
 // @access  Private + Permission
 router.get(
-  '/departments',
-  passport.authenticate('jwt', { session: false }),
-  permissionCheck('departments'),
+  "/departments",
+  passport.authenticate("jwt", { session: false }),
+  permissionCheck("departments"),
   (req, res) => {
     Department.find((err, result) => {
       if (err) {
@@ -392,27 +385,24 @@ router.get(
 // @desc    Returns all the handbook
 // @access  Private + Permission
 router.get(
-  '/handbook',
-  passport.authenticate('jwt', { session: false }),
-  permissionCheck('handbook'),
+  "/handbook",
+  passport.authenticate("jwt", { session: false }),
+  permissionCheck("handbook"),
   (req, res) => {
-    MongoClient.connect(
-      url,
-      function(err, client) {
-        assert.equal(null, err);
+    MongoClient.connect(url, function(err, client) {
+      assert.equal(null, err);
 
-        const db = client.db(dbName);
-        const collection = db.collection('handbook');
-        collection.find({}).toArray(function(err, result) {
-          if (err) throw err;
-          res.status(200).json({
-            ok: true,
-            data: result
-          });
-          client.close();
+      const db = client.db(dbName);
+      const collection = db.collection("handbook");
+      collection.find({}).toArray(function(err, result) {
+        if (err) throw err;
+        res.status(200).json({
+          ok: true,
+          data: result
         });
-      }
-    );
+        client.close();
+      });
+    });
   }
 );
 
@@ -421,144 +411,141 @@ router.get(
 // @desc    Requires inputs for main data of members and saves to db
 // @access  Private + Permission
 router.post(
-  '/editMain',
-  passport.authenticate('jwt', { session: false }),
-  permissionCheck('members'),
+  "/editMain",
+  passport.authenticate("jwt", { session: false }),
+  permissionCheck("members"),
   function(req, res, next) {
     console.log(req.body);
-    MongoClient.connect(
-      url,
-      function(err, client) {
-        assert.equal(null, err);
+    MongoClient.connect(url, function(err, client) {
+      assert.equal(null, err);
 
-        var newValues = { $set: {} };
-        var prevDoc = null;
-        const db = client.db(dbName);
-        const collection = db.collection('members');
-        const history = db.collection('history');
-        var data = collection.findOne(
-          { _id: new ObjectId(req.body.member_id) },
-          function(err, doc) {
-            if (err) throw err;
+      var newValues = { $set: {} };
+      var prevDoc = null;
+      const db = client.db(dbName);
+      const collection = db.collection("members");
+      const history = db.collection("history");
+      var data = collection.findOne(
+        { _id: new ObjectId(req.body.member_id) },
+        function(err, doc) {
+          if (err) throw err;
 
-            if (req.body.name) newValues.$set.name = req.body.name;
-            if (req.body.lastname) newValues.$set.lastname = req.body.lastname;
-            if (req.body.middlename)
-              newValues.$set.middlename = req.body.middlename;
-            if (req.body.position) newValues.$set.position = req.body.position;
-            if (req.body.dep_name) {
-              newValues.$set.dep_name = req.body.dep_name;
+          if (req.body.name) newValues.$set.name = req.body.name;
+          if (req.body.lastname) newValues.$set.lastname = req.body.lastname;
+          if (req.body.middlename)
+            newValues.$set.middlename = req.body.middlename;
+          if (req.body.position) newValues.$set.position = req.body.position;
+          if (req.body.dep_name) {
+            newValues.$set.dep_name = req.body.dep_name;
+          }
+          if (req.body.department) {
+            newValues.$set.department = req.body.department;
+          }
+
+          if (req.body.start_date && req.body.end_date) {
+            var start = new Date(req.body.start_date);
+            var end = new Date(req.body.end_date);
+            var now = new Date();
+
+            if (dates.compare(start, end) < 0) {
+              newValues.$set.start_date = req.body.start_date;
+              newValues.$set.end_date = req.body.end_date;
+              //if(dates.compare(end, now) < 0) newValues.$set.status = "На работе";
+            } else {
+              newValues = {};
+              res
+                .status(400)
+                .send(
+                  'Ошибка! Даты срока сотрудничества введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
+                    req.body.member_id +
+                    '">Назад</a>'
+                );
+              return;
             }
-            if (req.body.department) {
-              newValues.$set.department = req.body.department;
-            }
+          }
 
-            if (req.body.start_date && req.body.end_date) {
-              var start = new Date(req.body.start_date);
-              var end = new Date(req.body.end_date);
+          if (req.body.status && newValues.$set) {
+            console.log("status exists in body");
+            if (req.body.status == "На работе") {
+              newValues.$set.status = req.body.status;
+              newValues.$set.status_end_date = "";
+              newValues.$set.holiday_start = "";
+              newValues.$set.holiday_end = "";
+            } else if (req.body.status === "В отпуске") {
+              if (req.body.holiday_start && req.body.holiday_end) {
+                var h_start = new Date(req.body.holiday_start);
+                var h_end = new Date(req.body.holiday_end);
+                if (dates.compare(h_start, h_end) < 0) {
+                  newValues.$set.holiday_start = req.body.holiday_start;
+                  newValues.$set.holiday_end = req.body.holiday_end;
+                  var now = new Date();
+                  if (dates.compare(h_end, now) < 0) {
+                    newValues.$set.status = "На работе";
+                  }
+                } else {
+                  newValues = {};
+                  res
+                    .status(400)
+                    .send(
+                      'Ошибка! Даты срока отпуска введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
+                        req.body.member_id +
+                        '">Назад</a>'
+                    );
+                }
+              }
+            } else {
               var now = new Date();
-
-              if (dates.compare(start, end) < 0) {
-                newValues.$set.start_date = req.body.start_date;
-                newValues.$set.end_date = req.body.end_date;
-                //if(dates.compare(end, now) < 0) newValues.$set.status = "На работе";
+              var status_end = new Date(req.body.status_end_date);
+              if (dates.compare(now, status_end) <= 0) {
+                newValues.$set.status = req.body.status;
+                newValues.$set.status_end_date = req.body.status_end_date;
               } else {
                 newValues = {};
                 res
                   .status(400)
                   .send(
-                    'Ошибка! Даты срока сотрудничества введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
+                    'Ошибка! Даты срока статуса введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
                       req.body.member_id +
                       '">Назад</a>'
                   );
                 return;
               }
             }
-
-            if (req.body.status && newValues.$set) {
-              console.log('status exists in body');
-              if (req.body.status == 'На работе') {
-                newValues.$set.status = req.body.status;
-                newValues.$set.status_end_date = '';
-                newValues.$set.holiday_start = '';
-                newValues.$set.holiday_end = '';
-              } else if (req.body.status === 'В отпуске') {
-                if (req.body.holiday_start && req.body.holiday_end) {
-                  var h_start = new Date(req.body.holiday_start);
-                  var h_end = new Date(req.body.holiday_end);
-                  if (dates.compare(h_start, h_end) < 0) {
-                    newValues.$set.holiday_start = req.body.holiday_start;
-                    newValues.$set.holiday_end = req.body.holiday_end;
-                    var now = new Date();
-                    if (dates.compare(h_end, now) < 0) {
-                      newValues.$set.status = 'На работе';
-                    }
-                  } else {
-                    newValues = {};
-                    res
-                      .status(400)
-                      .send(
-                        'Ошибка! Даты срока отпуска введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                          req.body.member_id +
-                          '">Назад</a>'
-                      );
-                  }
-                }
-              } else {
-                var now = new Date();
-                var status_end = new Date(req.body.status_end_date);
-                if (dates.compare(now, status_end) <= 0) {
-                  newValues.$set.status = req.body.status;
-                  newValues.$set.status_end_date = req.body.status_end_date;
-                } else {
-                  newValues = {};
-                  res
-                    .status(400)
-                    .send(
-                      'Ошибка! Даты срока статуса введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                        req.body.member_id +
-                        '">Назад</a>'
-                    );
-                  return;
-                }
-              }
-            }
-            if (newValues.$set) {
-              console.log('Edit is active');
-              console.log('Change fields: ' + newValues.$set);
-              Member.updateOne(
-                { _id: new ObjectId(req.body.member_id) },
-                newValues,
-                function(err, response) {
-                  if (err) throw err;
-                  console.log('1 document updated ' + response);
-                  res.send(
-                    'Данные успешно изменены <a href="../../admin/member/' +
-                      req.body.member_id +
-                      '">Назад</a>'
-                  );
-                  Member.findOne(
-                    { _id: new ObjectId(req.body.member_id) },
-                    function(err, m_res) {
-                      if (err) {
-                        console.log('error: ' + err);
-                      }
-                      var event = makeEvent(
-                        'member_edit',
-                        'Основные',
-                        req.user,
-                        m_res
-                      );
-                      history.insertOne(event);
-                    }
-                  );
-                }
-              );
-            }
           }
-        );
-      }
-    );
+          if (newValues.$set) {
+            console.log("Edit is active");
+            console.log("Change fields: " + newValues.$set);
+            Member.updateOne(
+              { _id: new ObjectId(req.body.member_id) },
+              newValues,
+              function(err, response) {
+                if (err) throw err;
+                console.log("1 document updated " + response);
+                res.send(
+                  'Данные успешно изменены <a href="../../admin/member/' +
+                    req.body.member_id +
+                    '">Назад</a>'
+                );
+                Member.findOne(
+                  { _id: new ObjectId(req.body.member_id) },
+                  function(err, m_res) {
+                    if (err) {
+                      console.log("error: " + err);
+                    }
+                    var event = makeEvent(
+                      "member_edit",
+                      "Основные",
+                      req.user,
+                      m_res
+                    );
+                    history.insertOne(event);
+                  }
+                );
+              }
+            );
+          }
+        }
+      );
+    });
   }
 );
 
@@ -566,296 +553,280 @@ router.post(
 // @desc    Requires inputs for private data of members and saves to db
 // @access  Private + Permission
 router.post(
-  '/editPrivate',
-  passport.authenticate('jwt', { session: false }),
-  permissionCheck('members'),
+  "/editPrivate",
+  passport.authenticate("jwt", { session: false }),
+  permissionCheck("members"),
   function(req, res) {
     //console.log(req.body);
-    MongoClient.connect(
-      url,
-      function(err, client) {
-        assert.equal(null, err);
+    MongoClient.connect(url, function(err, client) {
+      assert.equal(null, err);
 
-        var newValues = { $set: {} };
-        var prevDoc = null;
-        const db = client.db(dbName);
-        const collection = db.collection('members');
-        const history = db.collection('history');
-        var data = collection.findOne(
-          { _id: new ObjectId(req.body.member_id) },
-          function(err, doc) {
-            if (err) {
-              throw err;
-              res
-                .status(400)
-                .send(
-                  'Ошибка с соединением с БД <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
-                );
-            }
-
-            if (req.body.sex) newValues.$set.sex = req.body.sex;
-            if (req.body.id) newValues.$set.id = req.body.id;
-            if (req.body.birthdate)
-              newValues.$set.birthdate = req.body.birthdate;
-            if (req.body.phone) newValues.$set.phone = req.body.phone;
-            if (req.body.address) newValues.$set.address = req.body.address;
-            if (req.body.address_current)
-              newValues.$set.address_current = req.body.address_current;
-            if (req.body.family_status)
-              newValues.$set.family_status = req.body.family_status;
-            if (req.body.children && req.body.children_18) {
-              if (req.body.children >= req.body.children_18) {
-                newValues.$set.children = req.body.children;
-                newValues.$set.children_18 = req.body.children_18;
-              } else {
-                newValues = {};
-                res
-                  .status(400)
-                  .send(
-                    'Ошибка! Неправильно введено число детей <a href="../../admin/member/' +
-                      req.body.member_id +
-                      '">Назад</a>'
-                  );
-              }
-            }
-            if (newValues.$set) {
-              console.log('newValues: ' + JSON.stringify(newValues.$set));
-              Member.updateOne(
-                { _id: new ObjectId(req.body.member_id) },
-                newValues,
-                function(err, response) {
-                  if (err) throw err;
-                  console.log('1 document updated ' + response);
-                  res.send(
-                    'Данные успешно изменены <a href="../../admin/member/' +
-                      req.body.member_id +
-                      '">Назад</a>'
-                  );
-
-                  Member.findOne(
-                    { _id: new ObjectId(req.body.member_id) },
-                    (err, m_res) => {
-                      console.log(m_res);
-                      if (err) {
-                        console.log('error: ' + err);
-                      }
-                      var event = makeEvent(
-                        'member_edit',
-                        'Личные',
-                        req.user,
-                        m_res
-                      );
-                      history.insertOne(event);
-                    }
-                  );
-                }
+      var newValues = { $set: {} };
+      var prevDoc = null;
+      const db = client.db(dbName);
+      const collection = db.collection("members");
+      const history = db.collection("history");
+      var data = collection.findOne(
+        { _id: new ObjectId(req.body.member_id) },
+        function(err, doc) {
+          if (err) {
+            throw err;
+            res
+              .status(400)
+              .send(
+                'Ошибка с соединением с БД <a href="../../admin/member/' +
+                  req.body.member_id +
+                  '">Назад</a>'
               );
-            }
           }
-        );
-      }
-    );
-  }
-);
 
-// @route   GET api/editEdu
-// @desc    Requires inputs for information about education of members and saves to db
-// @access  Private + Permission
-router.post(
-  '/editEdu',
-  passport.authenticate('jwt', { session: false }),
-  permissionCheck('members'),
-  function(req, res) {
-    MongoClient.connect(
-      url,
-      function(err, client) {
-        assert.equal(null, err);
-        var newValues = { $set: {} };
-        var prevDoc = null;
-        const db = client.db(dbName);
-        const collection = db.collection('members');
-        const history = db.collection('history');
-        var data = collection.findOne(
-          { _id: new ObjectId(req.body.member_id) },
-          function(err, doc) {
-            if (err) {
-              throw err;
-              res
-                .status(400)
-                .send(
-                  'Ошибка с соединением с БД <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
-                );
-            }
-            if (req.body.s_ed) newValues.$set.s_ed = req.body.s_ed;
-            if (req.body.h_ed) newValues.$set.h_ed = req.body.h_ed;
-            if (req.body.institute)
-              newValues.$set.institute = req.body.institute;
-            if (req.body.specialty)
-              newValues.$set.specialty = req.body.specialty;
-            if (req.body.ed_finish)
-              newValues.$set.ed_finish = req.body.ed_finish;
-
-            if (newValues.$set) {
-              Member.updateOne(
-                { _id: new ObjectId(req.body.member_id) },
-                newValues,
-                function(err, response) {
-                  if (err) throw err;
-                  console.log('1 document updated ' + response);
-                  res.send(
-                    'Данные успешно изменены <a href="../../admin/member/' +
-                      req.body.member_id +
-                      '">Назад</a>'
-                  );
-                  Member.findOne(
-                    { _id: new ObjectId(req.body.member_id) },
-                    function(err, m_res) {
-                      var event = makeEvent(
-                        'member_edit',
-                        'Образование',
-                        req.user,
-                        m_res
-                      );
-                      history.insertOne(event);
-                    }
-                  );
-                }
-              );
-            }
-          }
-        );
-      }
-    );
-  }
-);
-
-// @route   GET api/editEdu
-// @desc    Requires inputs for information about education of members and saves to db
-// @access  Private + Permission
-router.post(
-  '/editStaff',
-  passport.authenticate('jwt', { session: false }),
-  permissionCheck('members'),
-  function(req, res) {
-    MongoClient.connect(
-      url,
-      function(err, client) {
-        assert.equal(null, err);
-
-        var newValues = { $set: {} };
-        var prevDoc = null;
-        const db = client.db(dbName);
-        const collection = db.collection('members');
-        const history = db.collection('history');
-        var data = collection.findOne(
-          { _id: new ObjectId(req.body.member_id) },
-          function(err, doc) {
-            if (err) {
-              throw err;
-              res
-                .status(400)
-                .send(
-                  'Ошибка с соединением с БД <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
-                );
-              return;
-            }
-            if (doc.is_active === 'Да') {
-              newValues.$set.is_active = 'Нет';
+          if (req.body.sex) newValues.$set.sex = req.body.sex;
+          if (req.body.id) newValues.$set.id = req.body.id;
+          if (req.body.birthdate) newValues.$set.birthdate = req.body.birthdate;
+          if (req.body.phone) newValues.$set.phone = req.body.phone;
+          if (req.body.address) newValues.$set.address = req.body.address;
+          if (req.body.address_current)
+            newValues.$set.address_current = req.body.address_current;
+          if (req.body.family_status)
+            newValues.$set.family_status = req.body.family_status;
+          if (req.body.children && req.body.children_18) {
+            if (req.body.children >= req.body.children_18) {
+              newValues.$set.children = req.body.children;
+              newValues.$set.children_18 = req.body.children_18;
             } else {
-              newValues.$set.is_active = 'Да';
-            }
-
-            if (newValues.$set) {
-              Member.updateOne(
-                { _id: new ObjectId(req.body.member_id) },
-                newValues,
-                function(err, response) {
-                  if (err) throw err;
-                  console.log('1 document updated ' + response);
-                  res.send(
-                    'Данные успешно изменены <a href="../../admin/member/' +
-                      req.body.member_id +
-                      '">Назад</a>'
-                  );
-                  Member.findOne(
-                    { _id: new ObjectId(req.body.member_id) },
-                    function(err, m_res) {
-                      var event = makeEvent(
-                        'member_edit',
-                        'Личные',
-                        req.user,
-                        m_res
-                      );
-                      history.insertOne(event);
-                    }
-                  );
-                }
-              );
+              newValues = {};
+              res
+                .status(400)
+                .send(
+                  'Ошибка! Неправильно введено число детей <a href="../../admin/member/' +
+                    req.body.member_id +
+                    '">Назад</a>'
+                );
             }
           }
-        );
-      }
-    );
+          if (newValues.$set) {
+            console.log("newValues: " + JSON.stringify(newValues.$set));
+            Member.updateOne(
+              { _id: new ObjectId(req.body.member_id) },
+              newValues,
+              function(err, response) {
+                if (err) throw err;
+                console.log("1 document updated " + response);
+                res.send(
+                  'Данные успешно изменены <a href="../../admin/member/' +
+                    req.body.member_id +
+                    '">Назад</a>'
+                );
+
+                Member.findOne(
+                  { _id: new ObjectId(req.body.member_id) },
+                  (err, m_res) => {
+                    console.log(m_res);
+                    if (err) {
+                      console.log("error: " + err);
+                    }
+                    var event = makeEvent(
+                      "member_edit",
+                      "Личные",
+                      req.user,
+                      m_res
+                    );
+                    history.insertOne(event);
+                  }
+                );
+              }
+            );
+          }
+        }
+      );
+    });
+  }
+);
+
+// @route   GET api/editEdu
+// @desc    Requires inputs for information about education of members and saves to db
+// @access  Private + Permission
+router.post(
+  "/editEdu",
+  passport.authenticate("jwt", { session: false }),
+  permissionCheck("members"),
+  function(req, res) {
+    MongoClient.connect(url, function(err, client) {
+      assert.equal(null, err);
+      var newValues = { $set: {} };
+      var prevDoc = null;
+      const db = client.db(dbName);
+      const collection = db.collection("members");
+      const history = db.collection("history");
+      var data = collection.findOne(
+        { _id: new ObjectId(req.body.member_id) },
+        function(err, doc) {
+          if (err) {
+            throw err;
+            res
+              .status(400)
+              .send(
+                'Ошибка с соединением с БД <a href="../../admin/member/' +
+                  req.body.member_id +
+                  '">Назад</a>'
+              );
+          }
+          if (req.body.s_ed) newValues.$set.s_ed = req.body.s_ed;
+          if (req.body.h_ed) newValues.$set.h_ed = req.body.h_ed;
+          if (req.body.institute) newValues.$set.institute = req.body.institute;
+          if (req.body.specialty) newValues.$set.specialty = req.body.specialty;
+          if (req.body.ed_finish) newValues.$set.ed_finish = req.body.ed_finish;
+
+          if (newValues.$set) {
+            Member.updateOne(
+              { _id: new ObjectId(req.body.member_id) },
+              newValues,
+              function(err, response) {
+                if (err) throw err;
+                console.log("1 document updated " + response);
+                res.send(
+                  'Данные успешно изменены <a href="../../admin/member/' +
+                    req.body.member_id +
+                    '">Назад</a>'
+                );
+                Member.findOne(
+                  { _id: new ObjectId(req.body.member_id) },
+                  function(err, m_res) {
+                    var event = makeEvent(
+                      "member_edit",
+                      "Образование",
+                      req.user,
+                      m_res
+                    );
+                    history.insertOne(event);
+                  }
+                );
+              }
+            );
+          }
+        }
+      );
+    });
+  }
+);
+
+// @route   GET api/editEdu
+// @desc    Requires inputs for information about education of members and saves to db
+// @access  Private + Permission
+router.post(
+  "/editStaff",
+  passport.authenticate("jwt", { session: false }),
+  permissionCheck("members"),
+  function(req, res) {
+    MongoClient.connect(url, function(err, client) {
+      assert.equal(null, err);
+
+      var newValues = { $set: {} };
+      var prevDoc = null;
+      const db = client.db(dbName);
+      const collection = db.collection("members");
+      const history = db.collection("history");
+      var data = collection.findOne(
+        { _id: new ObjectId(req.body.member_id) },
+        function(err, doc) {
+          if (err) {
+            throw err;
+            res
+              .status(400)
+              .send(
+                'Ошибка с соединением с БД <a href="../../admin/member/' +
+                  req.body.member_id +
+                  '">Назад</a>'
+              );
+            return;
+          }
+          if (doc.is_active === "Да") {
+            newValues.$set.is_active = "Нет";
+          } else {
+            newValues.$set.is_active = "Да";
+          }
+
+          if (newValues.$set) {
+            Member.updateOne(
+              { _id: new ObjectId(req.body.member_id) },
+              newValues,
+              function(err, response) {
+                if (err) throw err;
+                console.log("1 document updated " + response);
+                res.send(
+                  'Данные успешно изменены <a href="../../admin/member/' +
+                    req.body.member_id +
+                    '">Назад</a>'
+                );
+                Member.findOne(
+                  { _id: new ObjectId(req.body.member_id) },
+                  function(err, m_res) {
+                    var event = makeEvent(
+                      "member_edit",
+                      "Личные",
+                      req.user,
+                      m_res
+                    );
+                    history.insertOne(event);
+                  }
+                );
+              }
+            );
+          }
+        }
+      );
+    });
   }
 );
 
 // @route   GET api/update
 // @desc    Just update, no arguments, does not return anything
 // @access  Public
-router.get('/update', updateStatus, function(req, res) {
-  MongoClient.connect(
-    url,
-    function(err, client) {
-      assert.equal(null, err);
+router.get("/update", updateStatus, function(req, res) {
+  MongoClient.connect(url, function(err, client) {
+    assert.equal(null, err);
 
-      var filter = null;
-      if (req.query.filter) {
-        filter = req.query.filter;
-      }
-      const db = client.db(dbName);
-      const departments = db.collection('departments');
-      const members = db.collection('members');
-      var data = departments.find({}).toArray(function(err, result) {
-        if (err) throw err;
-        var prom = 0;
-        for (let i = 0; i < result.length; i++) {
-          members
-            .find({ dep_name: result[i].dep_name })
-            .toArray(function(err, ress) {
-              var newValues = { $set: { member_count: ress.length } };
-              departments.updateOne(
-                { _id: new ObjectId(result[i]._id) },
-                newValues,
-                function(err, response) {
-                  if (err) throw err;
-                  prom++;
-                  if (prom === result.length) {
-                    res.status(200).send('Данные успешно изменены');
-                    client.close();
-                  }
-                }
-              );
-            });
-        }
-      });
+    var filter = null;
+    if (req.query.filter) {
+      filter = req.query.filter;
     }
-  );
+    const db = client.db(dbName);
+    const departments = db.collection("departments");
+    const members = db.collection("members");
+    var data = departments.find({}).toArray(function(err, result) {
+      if (err) throw err;
+      var prom = 0;
+      for (let i = 0; i < result.length; i++) {
+        members
+          .find({ dep_name: result[i].dep_name })
+          .toArray(function(err, ress) {
+            var newValues = { $set: { member_count: ress.length } };
+            departments.updateOne(
+              { _id: new ObjectId(result[i]._id) },
+              newValues,
+              function(err, response) {
+                if (err) throw err;
+                prom++;
+                if (prom === result.length) {
+                  res.status(200).send("Данные успешно изменены");
+                  client.close();
+                }
+              }
+            );
+          });
+      }
+    });
+  });
 });
 
-// @route   GET api/,map
+// @route   GET api/map
 // @desc    Returns the Allem LLC Organisational-Structural Map
 // @access  Private
 router.get(
-  '/mapGetKey',
+  "/mapGetKey",
   updateStatus,
-  passport.authenticate('jwt', { session: false }),
-  permissionCheck('map'),
+  passport.authenticate("jwt", { session: false }),
+  permissionCheck("map"),
   function(req, res) {
     var key = Math.random()
       .toString(36)
@@ -866,18 +837,18 @@ router.get(
   }
 );
 
-router.get('/map', function(req, res) {
+router.get("/map", function(req, res) {
   if (req.query.key) {
     if (mapKeys.includes(req.query.key)) {
-      res.status(200).render('../api/etc/map.ejs');
+      res.status(200).render("../api/etc/map.ejs");
       var index = mapKeys.indexOf(req.query.key);
       mapKeys.splice(index, 1);
       console.log(mapKeys);
     } else {
-      res.status(200).send('Доступ запрещен');
+      res.status(200).send("Доступ запрещен");
     }
   } else {
-    res.status(200).send('Доступ запрещен');
+    res.status(200).send("Доступ запрещен");
   }
 });
 
