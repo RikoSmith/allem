@@ -1,0 +1,22 @@
+{
+  "images": [
+    {
+      "original": "http://lorempixel.com/1000/600/nature/1/"
+    },
+    {
+      "original": "http://lorempixel.com/1000/600/nature/2/"
+    },
+    {
+      "original": "http://lorempixel.com/1000/600/nature/3/"
+    }
+  ],
+  "ru": {
+    "active": true,
+    "title": "Новость номер 1",
+    "text": "Новость новость и новость и новость и новость и новость и новость и новость и новость и новость и новость и новость и новость и новость и новость и новость и новость и новостью"
+  },
+  "kz": { "active": false },
+  "en": { "active": false },
+  "date": "2018-06-20T03:49:41.963Z",
+  "show": true
+}

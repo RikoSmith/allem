@@ -1,11 +1,12 @@
-import React, { Component } from 'react';
-import MetaTags from 'react-meta-tags';
-import ReactLoading from 'react-loading';
-import ReactHtmlParser from 'react-html-parser';
-import { ScriptInjector } from '../utils/scriptInjector';
-import { instance } from '../utils/axiosConf';
-import { withRouter } from 'react-router-dom';
-import axios from 'axios';
+import React, { Component } from "react";
+import MetaTags from "react-meta-tags";
+import ReactLoading from "react-loading";
+import ReactHtmlParser from "react-html-parser";
+import { ScriptInjector } from "../utils/scriptInjector";
+import { instance } from "../utils/axiosConf";
+import { withRouter } from "react-router-dom";
+import axios from "axios";
+import NewsLanding from "./NewsLanding";
 
 class PageLanding extends Component {
   constructor(props) {
@@ -13,12 +14,12 @@ class PageLanding extends Component {
     this.state = {
       lang: {},
       loaded: false,
-      name: '',
-      email: '',
-      message: '',
-      color: 'red',
-      success: 'none',
-      form: 'block'
+      name: "",
+      email: "",
+      message: "",
+      color: "red",
+      success: "none",
+      form: "block"
     };
 
     this.onChange = this.onChange.bind(this);
@@ -33,15 +34,15 @@ class PageLanding extends Component {
     e.preventDefault();
 
     const instanceB = axios.create({
-      headers: { 'Content-Type': 'application/x-www-form-urlencoded' }
+      headers: { "Content-Type": "application/x-www-form-urlencoded" }
     });
 
-    instanceB.defaults.headers.common['Content-Type'] =
-      'application/x-www-form-urlencoded';
+    instanceB.defaults.headers.common["Content-Type"] =
+      "application/x-www-form-urlencoded";
 
     instanceB
       .post(
-        'https://script.google.com/macros/s/AKfycbzTpALEOLNTTA4gBKChuxgCSzeyV6TRYsmawag3t97D0p_d6iLj/exec',
+        "https://script.google.com/macros/s/AKfycbzTpALEOLNTTA4gBKChuxgCSzeyV6TRYsmawag3t97D0p_d6iLj/exec",
         {
           name: this.state.name,
           email: this.state.email,
@@ -50,18 +51,18 @@ class PageLanding extends Component {
         }
       )
       .then(res => {
-        this.setState({ success: 'display', form: 'none' });
+        this.setState({ success: "display", form: "none" });
       });
   }
 
   componentWillMount() {
-    var ll = 'ru';
+    var ll = "ru";
     if (this.props.lang) ll = this.props.lang;
     instance({
-      method: 'get',
-      url: '/lang?lang=' + ll,
+      method: "get",
+      url: "/lang?lang=" + ll,
       headers: {
-        'Content-Type': 'application/x-www-form-urlencoded'
+        "Content-Type": "application/x-www-form-urlencoded"
       }
     })
       .then(res => {
@@ -75,7 +76,7 @@ class PageLanding extends Component {
         throw err;
       });
 
-    instance.get('/update');
+    instance.get("/update");
   }
 
   render() {
@@ -84,12 +85,12 @@ class PageLanding extends Component {
       return (
         <div
           style={{
-            height: '100%',
-            width: '100%',
-            position: 'relative',
-            fontSize: '15px',
-            color: '#333333',
-            backgroundColor: '#0000'
+            height: "100%",
+            width: "100%",
+            position: "relative",
+            fontSize: "15px",
+            color: "#333333",
+            backgroundColor: "#0000"
           }}
         >
           <MetaTags>
@@ -151,7 +152,7 @@ class PageLanding extends Component {
                           id="logo"
                           src="images/logo.png"
                           alt=""
-                          style={{ height: '60px' }}
+                          style={{ height: "60px" }}
                         />
                       </a>
                     </div>
@@ -159,8 +160,7 @@ class PageLanding extends Component {
                     {/*<!-- name-and-slogan -->*/}
                     <div className="site-name-and-slogan smooth-scroll">
                       <p className="lang_select">
-                        <a href="../kz">қаз</a> |
-                        <a href="../ru">рус</a> |
+                        <a href="../kz">қаз</a> |<a href="../ru">рус</a> |
                         <a href="../en">eng</a>
                       </p>
                     </div>
@@ -301,49 +301,49 @@ class PageLanding extends Component {
                       <p>{this.state.lang.fields.about_list_header}</p>
                       <ul className="list-unstyled">
                         <li>
-                          <i className="fa fa-caret-right pr-10 text-colored" />{' '}
+                          <i className="fa fa-caret-right pr-10 text-colored" />{" "}
                           {ReactHtmlParser(
                             this.state.lang.fields.about_list.item_1
                           )}
                         </li>
                         <li>
-                          <i className="fa fa-caret-right pr-10 text-colored" />{' '}
+                          <i className="fa fa-caret-right pr-10 text-colored" />{" "}
                           {ReactHtmlParser(
                             this.state.lang.fields.about_list.item_2
                           )}
                         </li>
                         <li>
-                          <i className="fa fa-caret-right pr-10 text-colored" />{' '}
+                          <i className="fa fa-caret-right pr-10 text-colored" />{" "}
                           {ReactHtmlParser(
                             this.state.lang.fields.about_list.item_3
                           )}
                         </li>
                         <li>
-                          <i className="fa fa-caret-right pr-10 text-colored" />{' '}
+                          <i className="fa fa-caret-right pr-10 text-colored" />{" "}
                           {ReactHtmlParser(
                             this.state.lang.fields.about_list.item_4
                           )}
                         </li>
                         <li>
-                          <i className="fa fa-caret-right pr-10 text-colored" />{' '}
+                          <i className="fa fa-caret-right pr-10 text-colored" />{" "}
                           {ReactHtmlParser(
                             this.state.lang.fields.about_list.item_5
                           )}
                         </li>
                         <li>
-                          <i className="fa fa-caret-right pr-10 text-colored" />{' '}
+                          <i className="fa fa-caret-right pr-10 text-colored" />{" "}
                           {ReactHtmlParser(
                             this.state.lang.fields.about_list.item_6
                           )}
                         </li>
                         <li>
-                          <i className="fa fa-caret-right pr-10 text-colored" />{' '}
+                          <i className="fa fa-caret-right pr-10 text-colored" />{" "}
                           {ReactHtmlParser(
                             this.state.lang.fields.about_list.item_7
                           )}
                         </li>
                         <li>
-                          <i className="fa fa-caret-right pr-10 text-colored" />{' '}
+                          <i className="fa fa-caret-right pr-10 text-colored" />{" "}
                           {ReactHtmlParser(
                             this.state.lang.fields.about_list.item_8
                           )}
@@ -630,6 +630,26 @@ class PageLanding extends Component {
           </div>
           {/*<!-- section end -->*/}
 
+          {/*<!-- section start News -->
+        <!-- ================ -->*/}
+          <div
+            className="section clearfix object-non-visible"
+            data-animation-effect="fadeIn"
+          >
+            {/*News Component Goes Here*/}
+            <div className="container">
+              <div className="row">
+                <div className="col-md-12">
+                  <h1 id="about" className="title text-center">
+                    Новости
+                  </h1>
+                  <NewsLanding />
+                </div>
+              </div>
+            </div>
+          </div>
+          {/*<!-- section end -->*/}
+
           <div className="section translucent-bg bg-image-2 pb-clear">
             <div
               className="container object-non-visible"
@@ -761,7 +781,7 @@ class PageLanding extends Component {
                           type="text"
                           name="color"
                           value="red"
-                          style={{ display: 'none' }}
+                          style={{ display: "none" }}
                         />
                         <input
                           type="submit"

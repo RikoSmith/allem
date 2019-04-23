@@ -122,6 +122,11 @@ body{
     opacity: 0.5;
 }
 
+.each-slide > div {
+  width: 100%;
+  height: auto;
+}
+
 .bg-image-1 {
   background: #0000;
 }
