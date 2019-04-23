@@ -105,7 +105,7 @@ function makeEvent(type, edittype, object, subject) {
 }
 
 function updateStatus(req, res, next) {
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
     assert.equal(null, err);
 
     const db = client.db(dbName);
@@ -177,11 +177,12 @@ router.get("/lang", (req, res) => {
   } else {
     l = "ru";
   }
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
     assert.equal(null, err);
     const db = client.db(dbName);
     const collection = db.collection("lang");
     const news = db.collection("news");
+
     collection.findOne({ lang: l }, function(err, doc) {
       if (err) {
         res.status(500).json({
@@ -190,12 +191,22 @@ router.get("/lang", (req, res) => {
         });
         throw err;
       }
-      res.status(200).json({
-        ok: true,
-        data: doc,
-        news: news
+      news.find({}).toArray(function(err, newsEntries) {
+        if (err) {
+          res.status(500).json({
+            ok: false,
+            err
+          });
+          throw err;
+        }
+        //console.log(newsEntries);
+        res.status(200).json({
+          ok: true,
+          data: doc,
+          news: newsEntries
+        });
+        client.close();
       });
-      client.close();
     });
   });
 });
@@ -316,7 +327,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("general"),
   (req, res) => {
-    MongoClient.connect(url, function(err, client) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
       assert.equal(null, err);
 
       const db = client.db(dbName);
@@ -389,7 +400,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("handbook"),
   (req, res) => {
-    MongoClient.connect(url, function(err, client) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
       assert.equal(null, err);
 
       const db = client.db(dbName);
@@ -416,7 +427,7 @@ router.post(
   permissionCheck("members"),
   function(req, res, next) {
     console.log(req.body);
-    MongoClient.connect(url, function(err, client) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -558,7 +569,7 @@ router.post(
   permissionCheck("members"),
   function(req, res) {
     //console.log(req.body);
-    MongoClient.connect(url, function(err, client) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -651,7 +662,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("members"),
   function(req, res) {
-    MongoClient.connect(url, function(err, client) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
       assert.equal(null, err);
       var newValues = { $set: {} };
       var prevDoc = null;
@@ -718,7 +729,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("members"),
   function(req, res) {
-    MongoClient.connect(url, function(err, client) {
+    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -783,7 +794,7 @@ router.post(
 // @desc    Just update, no arguments, does not return anything
 // @access  Public
 router.get("/update", updateStatus, function(req, res) {
-  MongoClient.connect(url, function(err, client) {
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
     assert.equal(null, err);
 
     var filter = null;
