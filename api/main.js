@@ -830,6 +830,28 @@ router.get("/update", updateStatus, function(req, res) {
   });
 });
 
+////////////////////////////////////////////////////////////////////////////////
+// @route   GET api/news
+// @desc    Returns all the news
+// @access  Public
+router.get("/news", (req, res) => {
+  MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+    assert.equal(null, err);
+
+    const db = client.db(dbName);
+    const collection = db.collection("news");
+    collection.find({}).toArray(function(err, result) {
+      if (err) throw err;
+
+      res.status(200).json({
+        ok: true,
+        data: result
+      });
+      client.close();
+    });
+  });
+});
+
 // @route   GET api/map
 // @desc    Returns the Allem LLC Organisational-Structural Map
 // @access  Private

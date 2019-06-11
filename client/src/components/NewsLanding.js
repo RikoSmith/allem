@@ -5,16 +5,46 @@ import "../../node_modules/react-image-gallery/styles/css/image-gallery.css";
 
 const images = [
   {
-    original: "http://lorempixel.com/1000/600/nature/1/",
-    thumbnail: "http://lorempixel.com/250/150/nature/1/"
+    original:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0071.jpg",
+    thumbnail:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0071.jpg"
   },
   {
-    original: "http://lorempixel.com/1000/600/nature/2/",
-    thumbnail: "http://lorempixel.com/250/150/nature/2/"
+    original:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0073.jpg",
+    thumbnail:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0073.jpg"
   },
   {
-    original: "http://lorempixel.com/1000/600/nature/3/",
-    thumbnail: "http://lorempixel.com/250/150/nature/3/"
+    original:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0082.jpg",
+    thumbnail:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0082.jpg"
+  },
+  {
+    original:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0091.jpg",
+    thumbnail:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0091.jpg"
+  },
+  {
+    original:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0096.jpg",
+    thumbnail:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0096.jpg"
+  },
+  {
+    original:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0117.jpg",
+    thumbnail:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0117.jpg"
+  },
+  {
+    original:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0126.jpg",
+    thumbnail:
+      "https://thumb.cloud.mail.ru/thumb/xw1/web/01.%2007.05.19%207_may/IMG_0126.jpg"
   }
 ];
 
