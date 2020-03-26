@@ -542,6 +542,9 @@ class PageLanding extends Component {
                         {ReactHtmlParser(this.state.lang.fields.services_4)}
                       </p>
                       <a className="more_service" href="#contact">
+                        {this.state.lang.fields.price_list}
+                      </a>
+                      <a className="more_service" href="#contact">
                         {this.state.lang.fields.order_service}
                       </a>
                     </div>
