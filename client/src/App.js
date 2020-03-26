@@ -10,6 +10,7 @@ import { setCurrentUser, logoutUser } from './actions/authActions';
 import './App.css';
 import PageNotFound from './components/PageNotFound';
 import PageLanding from './components/PageLanding';
+import PageImage from './components/PageImage';
 import PageMain from './components/PageMain';
 import PageMembers from './components/PageMembers';
 import PageSingleMember from './components/PageSingleMember';
@@ -54,6 +55,7 @@ class App extends Component {
             <Route exact path="/admin/mapview" component={PageMapView} />
             <Route exact path="/admin/handbook" component={PageHandbook} />
             <Route exact path="/login" component={PageLogin} />
+            <Route exact path="/price_cleaning" component={PageImage} />
             <Route component={PageNotFound} />
           </Switch>
         </Router>
