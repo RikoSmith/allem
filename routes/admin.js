@@ -95,7 +95,8 @@ function updateStatus(req, res, next) {
         }
         client.close();
       });
-    }
+    },
+    {useNewUrlParser: true}
   );
   next();
 }
@@ -202,7 +203,8 @@ router.get('/', permissionCheck('general'), function(req, res) {
           });
           client.close();
         });
-    }
+    },
+    {useNewUrlParser: true}
   );
 });
 
@@ -227,7 +229,8 @@ router.get('/notifications', permissionCheck('general'), function(req, res) {
           });
           client.close();
         });
-    }
+    },
+    {useNewUrlParser: true}
   );
 });
 
@@ -281,7 +284,8 @@ router.post('/signup', permissionCheck('add_user'), function(req, res) {
           }
         }
       );
-    }
+    },
+    {useNewUrlParser: true}
   );
 });
 
@@ -326,7 +330,8 @@ router.get('/handbook', permissionCheck('handbook'), function(req, res) {
         });
         client.close();
       });
-    }
+    },
+    {useNewUrlParser: true}
   );
 });
 
@@ -502,7 +507,8 @@ router.post('/editMember', permissionCheck('members'), function(
           }
         }
       );
-    }
+    },
+    {useNewUrlParser: true}
   );
 });
 
@@ -588,7 +594,8 @@ router.post('/editMemberPrivate', function(req, res) {
           }
         }
       );
-    }
+    },
+    {useNewUrlParser: true}
   );
 });
 
@@ -651,7 +658,8 @@ router.post('/editMemberEdu', function(req, res) {
           }
         }
       );
-    }
+    },
+    {useNewUrlParser: true}
   );
 });
 
@@ -713,7 +721,8 @@ router.post('/editMemberShtat', function(req, res) {
           }
         }
       );
-    }
+    },
+    {useNewUrlParser: true}
   );
 });
 
@@ -754,8 +763,9 @@ router.get('/updated', updateStatus, function(req, res) {
             });
         }
       });
-    }
-  );
+    },
+    {useNewUrlParser: true} 
+    );
 });
 
 router.get('/updateHandbook', permissionCheck('general'), function(req, res) {
@@ -788,7 +798,8 @@ router.get('/updateHandbook', permissionCheck('general'), function(req, res) {
               }
             });
           }
-        }
+        },
+        {useNewUrlParser: true}
       );
     })
     .catch(function(error) {
