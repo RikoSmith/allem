@@ -718,7 +718,7 @@ router.post('/editMemberShtat', function(req, res) {
 });
 
 //Manual update page if some changes does not take effect
-router.get('/update', updateStatus, function(req, res) {
+router.get('/updated', updateStatus, function(req, res) {
   MongoClient.connect(
     url,
     function(err, client) {
