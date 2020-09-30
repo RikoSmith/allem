@@ -1,6 +1,6 @@
 var express = require('express');
 var router = express.Router();
-var MongoClient = require('mongodb').MongoClient;
+var MongoClient = require('mongodb').MongoClient({ useUnifiedTopology: true });
 var assert = require('assert');
 var bcrypt = require('bcrypt');
 var keys = require('../config/keys');
