@@ -1,7 +1,7 @@
 const express = require("express");
 var router = express.Router();
 var dates = require("../lib/dates");
-var MongoClient = require("mongodb").MongoClient;
+var MongoClient = require("mongodb").MongoClient({ useUnifiedTopology: true });
 var assert = require("assert");
 var ObjectId = require("mongodb").ObjectID;
 var bcrypt = require("bcrypt");
@@ -32,7 +32,7 @@ const dbName = "allemdb";
 function permissionCheck(perm) {
   return (
     permissionCheck[perm] ||
-    (permissionCheck[perm] = function(req, res, next) {
+    (permissionCheck[perm] = function (req, res, next) {
       console.log(req.user);
       if (req.user.permission.indexOf(perm) >= 0) next();
       else
@@ -105,12 +105,12 @@ function makeEvent(type, edittype, object, subject) {
 }
 
 function updateStatus(req, res, next) {
-  MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+  MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
 
     const db = client.db(dbName);
     const collection = db.collection("members");
-    var data = collection.find({}).toArray(function(err, members) {
+    var data = collection.find({}).toArray(function (err, members) {
       if (err) throw err;
       console.log("Updatestatus found user");
       var now = new Date();
@@ -153,7 +153,7 @@ function updateStatus(req, res, next) {
           collection.updateOne(
             { _id: new ObjectId(members[i]._id) },
             newValues,
-            function(err, response) {
+            function (err, response) {
               if (err) throw err;
               console.log("1 document updated");
             }
@@ -162,7 +162,8 @@ function updateStatus(req, res, next) {
       }
       client.close();
     });
-  });
+  },
+    { useNewUrlParser: true });
   next();
 }
 
@@ -177,21 +178,14 @@ router.get("/lang", (req, res) => {
   } else {
     l = "ru";
   }
-  MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
-    assert.equal(null, err);
-    const db = client.db(dbName);
-    const collection = db.collection("lang");
-    const news = db.collection("news");
+  MongoClient.connect(url,
+    function (err, client) {
+      assert.equal(null, err);
+      const db = client.db(dbName);
+      const collection = db.collection("lang");
+      const news = db.collection("news");
 
-    collection.findOne({ lang: l }, function(err, doc) {
-      if (err) {
-        res.status(500).json({
-          ok: false,
-          err
-        });
-        throw err;
-      }
-      news.find({}).toArray(function(err, newsEntries) {
+      collection.findOne({ lang: l }, function (err, doc) {
         if (err) {
           res.status(500).json({
             ok: false,
@@ -199,16 +193,25 @@ router.get("/lang", (req, res) => {
           });
           throw err;
         }
-        //console.log(newsEntries);
-        res.status(200).json({
-          ok: true,
-          data: doc,
-          news: newsEntries
+        news.find({}).toArray(function (err, newsEntries) {
+          if (err) {
+            res.status(500).json({
+              ok: false,
+              err
+            });
+            throw err;
+          }
+          //console.log(newsEntries);
+          res.status(200).json({
+            ok: true,
+            data: doc,
+            news: newsEntries
+          });
+          client.close();
         });
-        client.close();
       });
-    });
-  });
+    },
+    { useNewUrlParser: true });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -297,8 +300,8 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("members"),
   updateStatus,
-  function(req, res) {
-    Member.findOne({ _id: new ObjectId(req.params.member_id) }, function(
+  function (req, res) {
+    Member.findOne({ _id: new ObjectId(req.params.member_id) }, function (
       err,
       doc
     ) {
@@ -327,24 +330,26 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("general"),
   (req, res) => {
-    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
-      assert.equal(null, err);
+    MongoClient.connect(url,
+      function (err, client) {
+        assert.equal(null, err);
 
-      const db = client.db(dbName);
-      const collection = db.collection("history");
-      collection
-        .find({})
-        .sort({ timestamp: -1 })
-        .toArray(function(err, result) {
-          if (err) throw err;
+        const db = client.db(dbName);
+        const collection = db.collection("history");
+        collection
+          .find({})
+          .sort({ timestamp: -1 })
+          .toArray(function (err, result) {
+            if (err) throw err;
 
-          res.status(200).json({
-            ok: true,
-            data: result
+            res.status(200).json({
+              ok: true,
+              data: result
+            });
+            client.close();
           });
-          client.close();
-        });
-    });
+      },
+      { useNewUrlParser: true });
   }
 );
 
@@ -372,7 +377,7 @@ router.get(
       }
       var promises = 0;
       for (let i = 0; i < filtered.length; i++) {
-        Member.findOne({ _id: new ObjectId(filtered[i].head_id) }, function(
+        Member.findOne({ _id: new ObjectId(filtered[i].head_id) }, function (
           err,
           doc
         ) {
@@ -400,12 +405,12 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("handbook"),
   (req, res) => {
-    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+    MongoClient.connect(url, function (err, client) {
       assert.equal(null, err);
 
       const db = client.db(dbName);
       const collection = db.collection("handbook");
-      collection.find({}).toArray(function(err, result) {
+      collection.find({}).toArray(function (err, result) {
         if (err) throw err;
         res.status(200).json({
           ok: true,
@@ -413,7 +418,8 @@ router.get(
         });
         client.close();
       });
-    });
+    },
+      { useNewUrlParser: true });
   }
 );
 
@@ -425,9 +431,9 @@ router.post(
   "/editMain",
   passport.authenticate("jwt", { session: false }),
   permissionCheck("members"),
-  function(req, res, next) {
+  function (req, res, next) {
     console.log(req.body);
-    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+    MongoClient.connect(url, function (err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -437,7 +443,7 @@ router.post(
       const history = db.collection("history");
       var data = collection.findOne(
         { _id: new ObjectId(req.body.member_id) },
-        function(err, doc) {
+        function (err, doc) {
           if (err) throw err;
 
           if (req.body.name) newValues.$set.name = req.body.name;
@@ -467,8 +473,8 @@ router.post(
                 .status(400)
                 .send(
                   'Ошибка! Даты срока сотрудничества введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
+                  req.body.member_id +
+                  '">Назад</a>'
                 );
               return;
             }
@@ -498,8 +504,8 @@ router.post(
                     .status(400)
                     .send(
                       'Ошибка! Даты срока отпуска введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                        req.body.member_id +
-                        '">Назад</a>'
+                      req.body.member_id +
+                      '">Назад</a>'
                     );
                 }
               }
@@ -515,8 +521,8 @@ router.post(
                   .status(400)
                   .send(
                     'Ошибка! Даты срока статуса введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                      req.body.member_id +
-                      '">Назад</a>'
+                    req.body.member_id +
+                    '">Назад</a>'
                   );
                 return;
               }
@@ -528,17 +534,17 @@ router.post(
             Member.updateOne(
               { _id: new ObjectId(req.body.member_id) },
               newValues,
-              function(err, response) {
+              function (err, response) {
                 if (err) throw err;
                 console.log("1 document updated " + response);
                 res.send(
                   'Данные успешно изменены <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
+                  req.body.member_id +
+                  '">Назад</a>'
                 );
                 Member.findOne(
                   { _id: new ObjectId(req.body.member_id) },
-                  function(err, m_res) {
+                  function (err, m_res) {
                     if (err) {
                       console.log("error: " + err);
                     }
@@ -556,7 +562,8 @@ router.post(
           }
         }
       );
-    });
+    },
+      { useNewUrlParser: true });
   }
 );
 
@@ -567,9 +574,9 @@ router.post(
   "/editPrivate",
   passport.authenticate("jwt", { session: false }),
   permissionCheck("members"),
-  function(req, res) {
+  function (req, res) {
     //console.log(req.body);
-    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+    MongoClient.connect(url, function (err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -579,15 +586,15 @@ router.post(
       const history = db.collection("history");
       var data = collection.findOne(
         { _id: new ObjectId(req.body.member_id) },
-        function(err, doc) {
+        function (err, doc) {
           if (err) {
             throw err;
             res
               .status(400)
               .send(
                 'Ошибка с соединением с БД <a href="../../admin/member/' +
-                  req.body.member_id +
-                  '">Назад</a>'
+                req.body.member_id +
+                '">Назад</a>'
               );
           }
 
@@ -610,8 +617,8 @@ router.post(
                 .status(400)
                 .send(
                   'Ошибка! Неправильно введено число детей <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
+                  req.body.member_id +
+                  '">Назад</a>'
                 );
             }
           }
@@ -620,13 +627,13 @@ router.post(
             Member.updateOne(
               { _id: new ObjectId(req.body.member_id) },
               newValues,
-              function(err, response) {
+              function (err, response) {
                 if (err) throw err;
                 console.log("1 document updated " + response);
                 res.send(
                   'Данные успешно изменены <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
+                  req.body.member_id +
+                  '">Назад</a>'
                 );
 
                 Member.findOne(
@@ -650,7 +657,8 @@ router.post(
           }
         }
       );
-    });
+    },
+      { useNewUrlParser: true });
   }
 );
 
@@ -661,8 +669,8 @@ router.post(
   "/editEdu",
   passport.authenticate("jwt", { session: false }),
   permissionCheck("members"),
-  function(req, res) {
-    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+  function (req, res) {
+    MongoClient.connect(url, function (err, client) {
       assert.equal(null, err);
       var newValues = { $set: {} };
       var prevDoc = null;
@@ -671,15 +679,15 @@ router.post(
       const history = db.collection("history");
       var data = collection.findOne(
         { _id: new ObjectId(req.body.member_id) },
-        function(err, doc) {
+        function (err, doc) {
           if (err) {
             throw err;
             res
               .status(400)
               .send(
                 'Ошибка с соединением с БД <a href="../../admin/member/' +
-                  req.body.member_id +
-                  '">Назад</a>'
+                req.body.member_id +
+                '">Назад</a>'
               );
           }
           if (req.body.s_ed) newValues.$set.s_ed = req.body.s_ed;
@@ -692,17 +700,17 @@ router.post(
             Member.updateOne(
               { _id: new ObjectId(req.body.member_id) },
               newValues,
-              function(err, response) {
+              function (err, response) {
                 if (err) throw err;
                 console.log("1 document updated " + response);
                 res.send(
                   'Данные успешно изменены <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
+                  req.body.member_id +
+                  '">Назад</a>'
                 );
                 Member.findOne(
                   { _id: new ObjectId(req.body.member_id) },
-                  function(err, m_res) {
+                  function (err, m_res) {
                     var event = makeEvent(
                       "member_edit",
                       "Образование",
@@ -717,7 +725,7 @@ router.post(
           }
         }
       );
-    });
+    }, { useNewUrlParser: true });
   }
 );
 
@@ -728,8 +736,8 @@ router.post(
   "/editStaff",
   passport.authenticate("jwt", { session: false }),
   permissionCheck("members"),
-  function(req, res) {
-    MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+  function (req, res) {
+    MongoClient.connect(url, function (err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -739,15 +747,15 @@ router.post(
       const history = db.collection("history");
       var data = collection.findOne(
         { _id: new ObjectId(req.body.member_id) },
-        function(err, doc) {
+        function (err, doc) {
           if (err) {
             throw err;
             res
               .status(400)
               .send(
                 'Ошибка с соединением с БД <a href="../../admin/member/' +
-                  req.body.member_id +
-                  '">Назад</a>'
+                req.body.member_id +
+                '">Назад</a>'
               );
             return;
           }
@@ -761,17 +769,17 @@ router.post(
             Member.updateOne(
               { _id: new ObjectId(req.body.member_id) },
               newValues,
-              function(err, response) {
+              function (err, response) {
                 if (err) throw err;
                 console.log("1 document updated " + response);
                 res.send(
                   'Данные успешно изменены <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
+                  req.body.member_id +
+                  '">Назад</a>'
                 );
                 Member.findOne(
                   { _id: new ObjectId(req.body.member_id) },
-                  function(err, m_res) {
+                  function (err, m_res) {
                     var event = makeEvent(
                       "member_edit",
                       "Личные",
@@ -786,15 +794,15 @@ router.post(
           }
         }
       );
-    });
+    }, { useNewUrlParser: true });
   }
 );
 
 // @route   GET api/update
 // @desc    Just update, no arguments, does not return anything
 // @access  Public
-router.get("/update", updateStatus, function(req, res) {
-  MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+router.get("/update", updateStatus, function (req, res) {
+  MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
 
     var filter = null;
@@ -804,18 +812,18 @@ router.get("/update", updateStatus, function(req, res) {
     const db = client.db(dbName);
     const departments = db.collection("departments");
     const members = db.collection("members");
-    var data = departments.find({}).toArray(function(err, result) {
+    var data = departments.find({}).toArray(function (err, result) {
       if (err) throw err;
       var prom = 0;
       for (let i = 0; i < result.length; i++) {
         members
           .find({ dep_name: result[i].dep_name })
-          .toArray(function(err, ress) {
+          .toArray(function (err, ress) {
             var newValues = { $set: { member_count: ress.length } };
             departments.updateOne(
               { _id: new ObjectId(result[i]._id) },
               newValues,
-              function(err, response) {
+              function (err, response) {
                 if (err) throw err;
                 prom++;
                 if (prom === result.length) {
@@ -827,7 +835,7 @@ router.get("/update", updateStatus, function(req, res) {
           });
       }
     });
-  });
+  }, { useNewUrlParser: true });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -835,12 +843,12 @@ router.get("/update", updateStatus, function(req, res) {
 // @desc    Returns all the news
 // @access  Public
 router.get("/news", (req, res) => {
-  MongoClient.connect(url, { useNewUrlParser: true }, function(err, client) {
+  MongoClient.connect(url, function (err, client) {
     assert.equal(null, err);
 
     const db = client.db(dbName);
     const collection = db.collection("news");
-    collection.find({}).toArray(function(err, result) {
+    collection.find({}).toArray(function (err, result) {
       if (err) throw err;
 
       res.status(200).json({
@@ -849,7 +857,7 @@ router.get("/news", (req, res) => {
       });
       client.close();
     });
-  });
+  }, { useNewUrlParser: true });
 });
 
 // @route   GET api/map
@@ -860,7 +868,7 @@ router.get(
   updateStatus,
   passport.authenticate("jwt", { session: false }),
   permissionCheck("map"),
-  function(req, res) {
+  function (req, res) {
     var key = Math.random()
       .toString(36)
       .substr(2, 10);
@@ -870,7 +878,7 @@ router.get(
   }
 );
 
-router.get("/map", function(req, res) {
+router.get("/map", function (req, res) {
   if (req.query.key) {
     if (mapKeys.includes(req.query.key)) {
       res.status(200).render("../api/etc/map.ejs");
