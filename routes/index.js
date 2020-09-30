@@ -10,29 +10,30 @@ const url = keys.MONGO_URI;
 const dbName = 'allemdb';
 
 /* GET home page. Below are only public pages -------------------------------------------------------------------------*/
-router.get('/', function(req, res) {
+router.get('/', function (req, res) {
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
       console.log(req.params.lang);
       const db = client.db(dbName);
       const collection = db.collection('lang');
-      collection.findOne({ lang: 'ru' }, function(err, doc) {
+      collection.findOne({ lang: 'ru' }, function (err, doc) {
         if (err) throw err;
 
         res.render('indexMulti', { lang: doc });
         client.close();
       });
-    }
+    },
+    { useNewUrlParser: true }
   );
 });
 
 //Multilanguage pages
-router.get('/:lang', function(req, res, next) {
+router.get('/:lang', function (req, res, next) {
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
       console.log(req.params.lang);
       const db = client.db(dbName);
@@ -40,57 +41,58 @@ router.get('/:lang', function(req, res, next) {
       if (!['ru', 'en', 'kz'].includes(req.params.lang)) {
         next();
       } else {
-        collection.findOne({ lang: req.params.lang }, function(err, doc) {
+        collection.findOne({ lang: req.params.lang }, function (err, doc) {
           if (err) throw err;
 
           res.render('indexMulti', { lang: doc });
           client.close();
         });
       }
-    }
+    },
+    { useNewUrlParser: true }
   );
 });
 
-router.get('/google271501a1e8bc4a7f.html', function(req, res) {
+router.get('/google271501a1e8bc4a7f.html', function (req, res) {
   res.render('google271501a1e8bc4a7f');
 });
 
-router.get('/addMember', function(req, res) {
+router.get('/addMember', function (req, res) {
   res.render('survey');
 });
 
-router.get('/sitemap', function(req, res) {
+router.get('/sitemap', function (req, res) {
   res.render('sitemap');
 });
 
-router.get('/login', function(req, res) {
+router.get('/login', function (req, res) {
   res.render('sb-admin/login.ejs', { message: '' });
 });
 
-router.get('/logout', function(req, res) {
+router.get('/logout', function (req, res) {
   req.session.destroy();
   res.redirect('/login');
 });
 
 //Login checking
-router.post('/login', function(req, res) {
+router.post('/login', function (req, res) {
   if (!req.body.id || !req.body.password) {
     res.render('sb-admin/login', { message: 'Пожалуйста, заполните все поля' });
     console.log(req.body.id);
   } else {
     MongoClient.connect(
       url,
-      function(err, client) {
+      function (err, client) {
         assert.equal(null, err);
 
         console.log(req.body);
         const db = client.db(dbName);
         const collection = db.collection('users');
-        collection.findOne({ id: req.body.id }, function(err, doc) {
+        collection.findOne({ id: req.body.id }, function (err, doc) {
           if (err) throw err;
           console.log(doc);
           if (doc) {
-            bcrypt.compare(req.body.password, doc.password, function(
+            bcrypt.compare(req.body.password, doc.password, function (
               err,
               response
             ) {
@@ -114,7 +116,8 @@ router.post('/login', function(req, res) {
             });
           }
         });
-      }
+      },
+      { useNewUrlParser: true }
     );
   }
 });

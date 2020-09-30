@@ -26,7 +26,7 @@ const dbName = 'allemdb';
 function permissionCheck(perm) {
   return (
     permissionCheck[perm] ||
-    (permissionCheck[perm] = function(req, res, next) {
+    (permissionCheck[perm] = function (req, res, next) {
       if (req.session.user.permission.indexOf(perm) >= 0) next();
       else res.render('sb-admin/denied', { user: req.session.user });
     })
@@ -38,12 +38,12 @@ function permissionCheck(perm) {
 function updateStatus(req, res, next) {
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
 
       const db = client.db(dbName);
       const collection = db.collection('members');
-      var data = collection.find({}).toArray(function(err, members) {
+      var data = collection.find({}).toArray(function (err, members) {
         if (err) throw err;
 
         var now = new Date();
@@ -86,7 +86,7 @@ function updateStatus(req, res, next) {
             collection.updateOne(
               { _id: new ObjectId(members[i]._id) },
               newValues,
-              function(err, response) {
+              function (err, response) {
                 if (err) throw err;
                 console.log('1 document updated');
               }
@@ -96,7 +96,7 @@ function updateStatus(req, res, next) {
         client.close();
       });
     },
-    {useNewUrlParser: true}
+    { useNewUrlParser: true }
   );
   next();
 }
@@ -183,10 +183,10 @@ function makeEvent(type, edittype, object, subject) {
 router.use(checkSignIn);
 
 //Main page of admin panel
-router.get('/', permissionCheck('general'), function(req, res) {
+router.get('/', permissionCheck('general'), function (req, res) {
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
 
       const db = client.db(dbName);
@@ -194,7 +194,7 @@ router.get('/', permissionCheck('general'), function(req, res) {
       collection
         .find({})
         .sort({ timestamp: -1 })
-        .toArray(function(err, result) {
+        .toArray(function (err, result) {
           if (err) throw err;
 
           res.render('sb-admin/index', {
@@ -204,15 +204,15 @@ router.get('/', permissionCheck('general'), function(req, res) {
           client.close();
         });
     },
-    {useNewUrlParser: true}
+    { useNewUrlParser: true }
   );
 });
 
 //All notifications page
-router.get('/notifications', permissionCheck('general'), function(req, res) {
+router.get('/notifications', permissionCheck('general'), function (req, res) {
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
 
       const db = client.db(dbName);
@@ -220,7 +220,7 @@ router.get('/notifications', permissionCheck('general'), function(req, res) {
       var data = collection
         .find({})
         .sort({ timestamp: -1 })
-        .toArray(function(err, result) {
+        .toArray(function (err, result) {
           if (err) throw err;
 
           res.render('sb-admin/notifications', {
@@ -230,20 +230,20 @@ router.get('/notifications', permissionCheck('general'), function(req, res) {
           client.close();
         });
     },
-    {useNewUrlParser: true}
+    { useNewUrlParser: true }
   );
 });
 
 //Page for adding new user
-router.get('/addAdminUser', permissionCheck('add_user'), function(req, res) {
+router.get('/addAdminUser', permissionCheck('add_user'), function (req, res) {
   res.render('sb-admin/signup');
 });
 
 //New user form is sent here
-router.post('/signup', permissionCheck('add_user'), function(req, res) {
+router.post('/signup', permissionCheck('add_user'), function (req, res) {
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
 
       console.log(req.body);
@@ -251,7 +251,7 @@ router.post('/signup', permissionCheck('add_user'), function(req, res) {
       const collection = db.collection('users');
       collection.findOne(
         { $or: [{ id: req.params.id }, { email: req.body.email }] },
-        function(err, doc) {
+        function (err, doc) {
           if (err) throw err;
 
           if (doc) {
@@ -263,7 +263,7 @@ router.post('/signup', permissionCheck('add_user'), function(req, res) {
               res.send('Passwords does not match');
 
             //Password encryption
-            bcrypt.hash(req.body.password, saltRounds, function(err, hash) {
+            bcrypt.hash(req.body.password, saltRounds, function (err, hash) {
               var newUser = {};
               newUser.name = req.body.name;
               newUser.lastname = req.body.lastname;
@@ -285,17 +285,17 @@ router.post('/signup', permissionCheck('add_user'), function(req, res) {
         }
       );
     },
-    {useNewUrlParser: true}
+    { useNewUrlParser: true }
   );
 });
 
 //All departments
-router.get('/departments', permissionCheck('departments'), function(req, res) {
-  Department.find({}, function(err, result) {
+router.get('/departments', permissionCheck('departments'), function (req, res) {
+  Department.find({}, function (err, result) {
     if (err) throw err;
     var promises = 0;
     for (let i = 0; i < result.length; i++) {
-      Member.findOne({ _id: new ObjectId(result[i].head_id) }, function(
+      Member.findOne({ _id: new ObjectId(result[i].head_id) }, function (
         err,
         doc
       ) {
@@ -313,15 +313,15 @@ router.get('/departments', permissionCheck('departments'), function(req, res) {
 });
 
 //Handbook page
-router.get('/handbook', permissionCheck('handbook'), function(req, res) {
+router.get('/handbook', permissionCheck('handbook'), function (req, res) {
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
 
       const db = client.db(dbName);
       const collection = db.collection('handbook');
-      var data = collection.find({}).toArray(function(err, result) {
+      var data = collection.find({}).toArray(function (err, result) {
         if (err) throw err;
         //console.log(result);
         res.render('sb-admin/help', {
@@ -331,17 +331,17 @@ router.get('/handbook', permissionCheck('handbook'), function(req, res) {
         client.close();
       });
     },
-    {useNewUrlParser: true}
+    { useNewUrlParser: true }
   );
 });
 
 //Full-page map
-router.get('/maptest', function(req, res) {
+router.get('/maptest', function (req, res) {
   res.render('sb-admin/map.ejs');
 });
 
 //Iframe map view
-router.get('/map', permissionCheck('map'), function(req, res) {
+router.get('/map', permissionCheck('map'), function (req, res) {
   res.render('sb-admin/map_view', { user: req.session.user });
 });
 
@@ -369,8 +369,8 @@ router.get(
   '/member/:member_id',
   permissionCheck('members'),
   updateStatus,
-  function(req, res) {
-    Member.findOne({ _id: new ObjectId(req.params.member_id) }, function(
+  function (req, res) {
+    Member.findOne({ _id: new ObjectId(req.params.member_id) }, function (
       err,
       doc
     ) {
@@ -383,7 +383,7 @@ router.get(
 );
 
 //Main info change
-router.post('/editMember', permissionCheck('members'), function(
+router.post('/editMember', permissionCheck('members'), function (
   req,
   res,
   next
@@ -391,7 +391,7 @@ router.post('/editMember', permissionCheck('members'), function(
   console.log(req.body);
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -401,7 +401,7 @@ router.post('/editMember', permissionCheck('members'), function(
       const history = db.collection('history');
       var data = collection.findOne(
         { _id: new ObjectId(req.body.member_id) },
-        function(err, doc) {
+        function (err, doc) {
           if (err) throw err;
 
           if (req.body.name) newValues.$set.name = req.body.name;
@@ -426,8 +426,8 @@ router.post('/editMember', permissionCheck('members'), function(
               newValues = {};
               res.send(
                 'Ошибка! Даты срока сотрудничества введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                  req.body.member_id +
-                  '">Назад</a>'
+                req.body.member_id +
+                '">Назад</a>'
               );
             }
           }
@@ -448,8 +448,8 @@ router.post('/editMember', permissionCheck('members'), function(
                 newValues = {};
                 res.send(
                   'Ошибка! Даты срока статуса введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
+                  req.body.member_id +
+                  '">Назад</a>'
                 );
               }
             }
@@ -470,8 +470,8 @@ router.post('/editMember', permissionCheck('members'), function(
               newValues = {};
               res.send(
                 'Ошибка! Даты срока отпуска введены неправильно. Отмена всех изменении <a href="../../admin/member/' +
-                  req.body.member_id +
-                  '">Назад</a>'
+                req.body.member_id +
+                '">Назад</a>'
               );
             }
           }
@@ -479,17 +479,17 @@ router.post('/editMember', permissionCheck('members'), function(
             Member.updateOne(
               { _id: new ObjectId(req.body.member_id) },
               newValues,
-              function(err, response) {
+              function (err, response) {
                 if (err) throw err;
                 console.log('1 document updated ' + response);
                 res.send(
                   'Данные успешно изменены <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
+                  req.body.member_id +
+                  '">Назад</a>'
                 );
                 Member.findOne(
                   { _id: new ObjectId(req.body.member_id) },
-                  function(err, m_res) {
+                  function (err, m_res) {
                     if (err) {
                       console.log('error: ' + err);
                     }
@@ -508,16 +508,16 @@ router.post('/editMember', permissionCheck('members'), function(
         }
       );
     },
-    {useNewUrlParser: true}
+    { useNewUrlParser: true }
   );
 });
 
 //Private data changes
-router.post('/editMemberPrivate', function(req, res) {
+router.post('/editMemberPrivate', function (req, res) {
   //console.log(req.body);
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -527,13 +527,13 @@ router.post('/editMemberPrivate', function(req, res) {
       const history = db.collection('history');
       var data = collection.findOne(
         { _id: new ObjectId(req.body.member_id) },
-        function(err, doc) {
+        function (err, doc) {
           if (err) {
             throw err;
             res.send(
               'Ошибка с соединением с БД <a href="../../admin/member/' +
-                req.body.member_id +
-                '">Назад</a>'
+              req.body.member_id +
+              '">Назад</a>'
             );
           }
 
@@ -555,8 +555,8 @@ router.post('/editMemberPrivate', function(req, res) {
               newValues = {};
               res.send(
                 'Ошибка! Неправильно введен число детей <a href="../../admin/member/' +
-                  req.body.member_id +
-                  '">Назад</a>'
+                req.body.member_id +
+                '">Назад</a>'
               );
             }
           }
@@ -564,13 +564,13 @@ router.post('/editMemberPrivate', function(req, res) {
             Member.updateOne(
               { _id: new ObjectId(req.body.member_id) },
               newValues,
-              function(err, response) {
+              function (err, response) {
                 if (err) throw err;
                 console.log('1 document updated ' + response);
                 res.send(
                   'Данные успешно изменены <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
+                  req.body.member_id +
+                  '">Назад</a>'
                 );
 
                 Member.findOne(
@@ -595,16 +595,16 @@ router.post('/editMemberPrivate', function(req, res) {
         }
       );
     },
-    {useNewUrlParser: true}
+    { useNewUrlParser: true }
   );
 });
 
 //Education fields change
-router.post('/editMemberEdu', function(req, res) {
+router.post('/editMemberEdu', function (req, res) {
   //console.log(req.body);
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -614,13 +614,13 @@ router.post('/editMemberEdu', function(req, res) {
       const history = db.collection('history');
       var data = collection.findOne(
         { _id: new ObjectId(req.body.member_id) },
-        function(err, doc) {
+        function (err, doc) {
           if (err) {
             throw err;
             res.send(
               'Ошибка с соединением с БД <a href="../../admin/member/' +
-                req.body.member_id +
-                '">Назад</a>'
+              req.body.member_id +
+              '">Назад</a>'
             );
           }
           if (req.body.s_ed) newValues.$set.s_ed = req.body.s_ed;
@@ -633,17 +633,17 @@ router.post('/editMemberEdu', function(req, res) {
             Member.updateOne(
               { _id: new ObjectId(req.body.member_id) },
               newValues,
-              function(err, response) {
+              function (err, response) {
                 if (err) throw err;
                 console.log('1 document updated ' + response);
                 res.send(
                   'Данные успешно изменены <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
+                  req.body.member_id +
+                  '">Назад</a>'
                 );
                 Member.findOne(
                   { _id: new ObjectId(req.body.member_id) },
-                  function(err, m_res) {
+                  function (err, m_res) {
                     var event = makeEvent(
                       'member_edit',
                       'Образование',
@@ -659,15 +659,15 @@ router.post('/editMemberEdu', function(req, res) {
         }
       );
     },
-    {useNewUrlParser: true}
+    { useNewUrlParser: true }
   );
 });
 
 //Shtat (active) changes
-router.post('/editMemberShtat', function(req, res) {
+router.post('/editMemberShtat', function (req, res) {
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -677,13 +677,13 @@ router.post('/editMemberShtat', function(req, res) {
       const history = db.collection('history');
       var data = collection.findOne(
         { _id: new ObjectId(req.body.member_id) },
-        function(err, doc) {
+        function (err, doc) {
           if (err) {
             throw err;
             res.send(
               'Ошибка с соединением с БД <a href="../../admin/member/' +
-                req.body.member_id +
-                '">Назад</a>'
+              req.body.member_id +
+              '">Назад</a>'
             );
           }
           if (doc.is_active === 'Да') {
@@ -696,17 +696,17 @@ router.post('/editMemberShtat', function(req, res) {
             Member.updateOne(
               { _id: new ObjectId(req.body.member_id) },
               newValues,
-              function(err, response) {
+              function (err, response) {
                 if (err) throw err;
                 console.log('1 document updated ' + response);
                 res.send(
                   'Данные успешно изменены <a href="../../admin/member/' +
-                    req.body.member_id +
-                    '">Назад</a>'
+                  req.body.member_id +
+                  '">Назад</a>'
                 );
                 Member.findOne(
                   { _id: new ObjectId(req.body.member_id) },
-                  function(err, m_res) {
+                  function (err, m_res) {
                     var event = makeEvent(
                       'member_edit',
                       'Личные',
@@ -722,15 +722,15 @@ router.post('/editMemberShtat', function(req, res) {
         }
       );
     },
-    {useNewUrlParser: true}
+    { useNewUrlParser: true }
   );
 });
 
 //Manual update page if some changes does not take effect
-router.get('/updated', updateStatus, function(req, res) {
+router.get('/updated', updateStatus, function (req, res) {
   MongoClient.connect(
     url,
-    function(err, client) {
+    function (err, client) {
       assert.equal(null, err);
 
       var filter = null;
@@ -740,18 +740,18 @@ router.get('/updated', updateStatus, function(req, res) {
       const db = client.db(dbName);
       const departments = db.collection('departments');
       const members = db.collection('members');
-      var data = departments.find({}).toArray(function(err, result) {
+      var data = departments.find({}).toArray(function (err, result) {
         if (err) throw err;
         var prom = 0;
         for (let i = 0; i < result.length; i++) {
           members
             .find({ dep_name: result[i].dep_name })
-            .toArray(function(err, ress) {
+            .toArray(function (err, ress) {
               var newValues = { $set: { member_count: ress.length } };
               departments.updateOne(
                 { _id: new ObjectId(result[i]._id) },
                 newValues,
-                function(err, response) {
+                function (err, response) {
                   if (err) throw err;
                   prom++;
                   if (prom === result.length) {
@@ -764,19 +764,19 @@ router.get('/updated', updateStatus, function(req, res) {
         }
       });
     },
-    {useNewUrlParser: true} 
-    );
+    { useNewUrlParser: true }
+  );
 });
 
-router.get('/updateHandbook', permissionCheck('general'), function(req, res) {
+router.get('/updateHandbook', permissionCheck('general'), function (req, res) {
   axios
     .get('http://10.0.40.112/book/api/departments')
-    .then(function(response) {
+    .then(function (response) {
       response = response.data;
       console.log(response);
       MongoClient.connect(
         url,
-        function(err, client) {
+        function (err, client) {
           assert.equal(null, err);
 
           const db = client.db(dbName);
@@ -784,7 +784,7 @@ router.get('/updateHandbook', permissionCheck('general'), function(req, res) {
           var promises = 0;
           for (let i = 0; i < response.length; i++) {
             //console.log("Res: " + response[i])
-            collection.replaceOne({ Id: response[i].Id }, response[i], function(
+            collection.replaceOne({ Id: response[i].Id }, response[i], function (
               err,
               doc
             ) {
@@ -799,10 +799,10 @@ router.get('/updateHandbook', permissionCheck('general'), function(req, res) {
             });
           }
         },
-        {useNewUrlParser: true}
+        { useNewUrlParser: true }
       );
     })
-    .catch(function(error) {
+    .catch(function (error) {
       console.log(error);
     });
 });
