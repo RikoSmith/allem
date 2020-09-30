@@ -1,7 +1,7 @@
 const express = require("express");
 var router = express.Router();
 var dates = require("../lib/dates");
-var MongoClient = require("mongodb").MongoClient({ useUnifiedTopology: true });
+var MongoClient = require("mongodb").MongoClient;
 var assert = require("assert");
 var ObjectId = require("mongodb").ObjectID;
 var bcrypt = require("bcrypt");
