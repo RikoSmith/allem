@@ -27,7 +27,7 @@ class PageLanding extends Component {
   }
 
   onChange(e) {
-    this.setState({ [e.target.name]: e.target.value }, () => {});
+    this.setState({ [e.target.name]: e.target.value }, () => { });
   }
 
   onSubmit(e) {
@@ -627,26 +627,6 @@ class PageLanding extends Component {
                       <i className="fa fa-paperclip" />
                     </div>
                   </div>
-                </div>
-              </div>
-            </div>
-          </div>
-          {/*<!-- section end -->*/}
-
-          {/*<!-- section start News -->
-        <!-- ================ -->*/}
-          <div
-            className="section clearfix object-non-visible"
-            data-animation-effect="fadeIn"
-          >
-            {/*News Component Goes Here*/}
-            <div className="container">
-              <div className="row">
-                <div className="col-md-12">
-                  <h1 id="about" className="title text-center">
-                    Новости
-                  </h1>
-                  <NewsLanding />
                 </div>
               </div>
             </div>
