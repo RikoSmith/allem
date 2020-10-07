@@ -109,7 +109,7 @@ function updateStatus(req, res, next) {
   console.log("asdsad")
   var mclient = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   mclient.connect(function (err, client) {
-    assert.equal(null, err);
+    assert.strictEqual(null, err);
 
     const db = client.db(dbName);
     const collection = db.collection("members");
@@ -183,7 +183,7 @@ router.get("/lang", (req, res) => {
   var mclient = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   mclient.connect(
     function (err, client) {
-      assert.equal(null, err);
+      assert.strictEqual(null, err);
       const db = client.db(dbName);
       const collection = db.collection("lang");
       const news = db.collection("news");
@@ -335,7 +335,7 @@ router.get(
     var mclient = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
     mclient.connect(
       function (err, client) {
-        assert.equal(null, err);
+        assert.strictEqual(null, err);
 
         const db = client.db(dbName);
         const collection = db.collection("history");
@@ -409,7 +409,7 @@ router.get(
   (req, res) => {
     var mclient = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
     mclient.connect( function (err, client) {
-      assert.equal(null, err);
+      assert.strictEqual(null, err);
 
       const db = client.db(dbName);
       const collection = db.collection("handbook");
@@ -437,7 +437,7 @@ router.post(
     console.log(req.body);
     var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
     client.connect( function (err, client) {
-      assert.equal(null, err);
+      assert.strictEqual(null, err);
 
       var newValues = { $set: {} };
       var prevDoc = null;
@@ -580,7 +580,7 @@ router.post(
     //console.log(req.body);
     var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
     client.connect( function (err, client) {
-      assert.equal(null, err);
+      assert.strictEqual(null, err);
 
       var newValues = { $set: {} };
       var prevDoc = null;
@@ -674,7 +674,7 @@ router.post(
   function (req, res) {
     var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
     client.connect( function (err, client) {
-      assert.equal(null, err);
+      assert.strictEqual(null, err);
       var newValues = { $set: {} };
       var prevDoc = null;
       const db = client.db(dbName);
@@ -742,7 +742,7 @@ router.post(
   function (req, res) {
     var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
     client.connect( function (err, client) {
-      assert.equal(null, err);
+      assert.strictEqual(null, err);
 
       var newValues = { $set: {} };
       var prevDoc = null;
@@ -808,7 +808,7 @@ router.post(
 router.get("/update", updateStatus, function (req, res) {
   var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(function (err, client) {
-    assert.equal(null, err);
+    assert.strictEqual(null, err);
 
     var filter = null;
     if (req.query.filter) {
@@ -850,7 +850,7 @@ router.get("/update", updateStatus, function (req, res) {
 router.get("/news", (req, res) => {
   
   client.connect(function (err, client) {
-    assert.equal(null, err);
+    assert.strictEqual(null, err);
 
     const db = client.db(dbName);
     const collection = db.collection("news");
