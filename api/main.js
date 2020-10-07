@@ -26,7 +26,7 @@ const User = require("../models/User");
 const url = keys.MONGO_URI;
 const jwt_key = keys.JWT_KEY;
 const dbName = "allemdb";
-const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
+
 
 //This is a middleware function that checks permission to see the pages. Each user has its own array of permission flags.
 //This function checks presense of these flags and render page according to them
@@ -106,7 +106,9 @@ function makeEvent(type, edittype, object, subject) {
 }
 
 function updateStatus(req, res, next) {
-  client.connect(function (err, client) {
+  console.log("asdsad")
+  var mclient = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
+  mclient.connect(function (err, client) {
     assert.equal(null, err);
 
     const db = client.db(dbName);
@@ -163,8 +165,7 @@ function updateStatus(req, res, next) {
       }
       client.close();
     });
-  },
-    { useNewUrlParser: true });
+  });
   next();
 }
 
@@ -179,7 +180,8 @@ router.get("/lang", (req, res) => {
   } else {
     l = "ru";
   }
-  client.connect(
+  var mclient = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
+  mclient.connect(
     function (err, client) {
       assert.equal(null, err);
       const db = client.db(dbName);
@@ -211,8 +213,7 @@ router.get("/lang", (req, res) => {
           client.close();
         });
       });
-    },
-    { useNewUrlParser: true });
+    });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -331,7 +332,8 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("general"),
   (req, res) => {
-    client.connect(
+    var mclient = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
+    mclient.connect(
       function (err, client) {
         assert.equal(null, err);
 
@@ -349,8 +351,7 @@ router.get(
             });
             client.close();
           });
-      },
-      { useNewUrlParser: true });
+      });
   }
 );
 
@@ -406,7 +407,8 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("handbook"),
   (req, res) => {
-    client.connect( function (err, client) {
+    var mclient = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
+    mclient.connect( function (err, client) {
       assert.equal(null, err);
 
       const db = client.db(dbName);
@@ -419,8 +421,7 @@ router.get(
         });
         client.close();
       });
-    },
-      { useNewUrlParser: true });
+    });
   }
 );
 
@@ -434,6 +435,7 @@ router.post(
   permissionCheck("members"),
   function (req, res, next) {
     console.log(req.body);
+    var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
     client.connect( function (err, client) {
       assert.equal(null, err);
 
@@ -563,8 +565,7 @@ router.post(
           }
         }
       );
-    },
-      { useNewUrlParser: true });
+    });
   }
 );
 
@@ -577,6 +578,7 @@ router.post(
   permissionCheck("members"),
   function (req, res) {
     //console.log(req.body);
+    var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
     client.connect( function (err, client) {
       assert.equal(null, err);
 
@@ -658,8 +660,7 @@ router.post(
           }
         }
       );
-    },
-      { useNewUrlParser: true });
+    });
   }
 );
 
@@ -671,6 +672,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("members"),
   function (req, res) {
+    var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
     client.connect( function (err, client) {
       assert.equal(null, err);
       var newValues = { $set: {} };
@@ -726,7 +728,7 @@ router.post(
           }
         }
       );
-    }, { useNewUrlParser: true });
+    });
   }
 );
 
@@ -738,6 +740,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("members"),
   function (req, res) {
+    var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
     client.connect( function (err, client) {
       assert.equal(null, err);
 
@@ -795,7 +798,7 @@ router.post(
           }
         }
       );
-    }, { useNewUrlParser: true });
+    });
   }
 );
 
@@ -803,6 +806,7 @@ router.post(
 // @desc    Just update, no arguments, does not return anything
 // @access  Public
 router.get("/update", updateStatus, function (req, res) {
+  var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(function (err, client) {
     assert.equal(null, err);
 
@@ -836,7 +840,7 @@ router.get("/update", updateStatus, function (req, res) {
           });
       }
     });
-  }, { useNewUrlParser: true });
+  });
 });
 
 ////////////////////////////////////////////////////////////////////////////////
@@ -844,6 +848,7 @@ router.get("/update", updateStatus, function (req, res) {
 // @desc    Returns all the news
 // @access  Public
 router.get("/news", (req, res) => {
+  
   client.connect(function (err, client) {
     assert.equal(null, err);
 
@@ -858,7 +863,7 @@ router.get("/news", (req, res) => {
       });
       client.close();
     });
-  }, { useNewUrlParser: true });
+  });
 });
 
 // @route   GET api/map

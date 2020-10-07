@@ -719,7 +719,8 @@ router.post('/editMemberShtat', function (req, res) {
 });
 
 //Manual update page if some changes does not take effect
-router.get('/updated', updateStatus, function (req, res) {
+router.get('/update', updateStatus, function (req, res) {
+  console.log("Skaaa")
   client.connect(
     function (err, client) {
       assert.equal(null, err);
