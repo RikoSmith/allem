@@ -26,6 +26,7 @@ const User = require("../models/User");
 const url = keys.MONGO_URI;
 const jwt_key = keys.JWT_KEY;
 const dbName = "allemdb";
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
 
 //This is a middleware function that checks permission to see the pages. Each user has its own array of permission flags.
 //This function checks presense of these flags and render page according to them
@@ -105,7 +106,7 @@ function makeEvent(type, edittype, object, subject) {
 }
 
 function updateStatus(req, res, next) {
-  MongoClient.connect(url, function (err, client) {
+  client.connect(function (err, client) {
     assert.equal(null, err);
 
     const db = client.db(dbName);
@@ -178,7 +179,7 @@ router.get("/lang", (req, res) => {
   } else {
     l = "ru";
   }
-  MongoClient.connect(url,
+  client.connect(
     function (err, client) {
       assert.equal(null, err);
       const db = client.db(dbName);
@@ -330,7 +331,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("general"),
   (req, res) => {
-    MongoClient.connect(url,
+    client.connect(
       function (err, client) {
         assert.equal(null, err);
 
@@ -405,7 +406,7 @@ router.get(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("handbook"),
   (req, res) => {
-    MongoClient.connect(url, function (err, client) {
+    client.connect( function (err, client) {
       assert.equal(null, err);
 
       const db = client.db(dbName);
@@ -433,7 +434,7 @@ router.post(
   permissionCheck("members"),
   function (req, res, next) {
     console.log(req.body);
-    MongoClient.connect(url, function (err, client) {
+    client.connect( function (err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -576,7 +577,7 @@ router.post(
   permissionCheck("members"),
   function (req, res) {
     //console.log(req.body);
-    MongoClient.connect(url, function (err, client) {
+    client.connect( function (err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -670,7 +671,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("members"),
   function (req, res) {
-    MongoClient.connect(url, function (err, client) {
+    client.connect( function (err, client) {
       assert.equal(null, err);
       var newValues = { $set: {} };
       var prevDoc = null;
@@ -737,7 +738,7 @@ router.post(
   passport.authenticate("jwt", { session: false }),
   permissionCheck("members"),
   function (req, res) {
-    MongoClient.connect(url, function (err, client) {
+    client.connect( function (err, client) {
       assert.equal(null, err);
 
       var newValues = { $set: {} };
@@ -802,7 +803,7 @@ router.post(
 // @desc    Just update, no arguments, does not return anything
 // @access  Public
 router.get("/update", updateStatus, function (req, res) {
-  MongoClient.connect(url, function (err, client) {
+  client.connect(function (err, client) {
     assert.equal(null, err);
 
     var filter = null;
@@ -843,7 +844,7 @@ router.get("/update", updateStatus, function (req, res) {
 // @desc    Returns all the news
 // @access  Public
 router.get("/news", (req, res) => {
-  MongoClient.connect(url, function (err, client) {
+  client.connect(function (err, client) {
     assert.equal(null, err);
 
     const db = client.db(dbName);

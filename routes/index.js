@@ -8,11 +8,11 @@ var keys = require('../config/keys');
 //MongoDB Credentials. Extremly confidential information! Don't share this url with anyone!
 const url = keys.MONGO_URI;
 const dbName = 'allemdb';
+const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
 
 /* GET home page. Below are only public pages -------------------------------------------------------------------------*/
 router.get('/', function (req, res) {
-  MongoClient.connect(
-    url,
+  client.connect(
     function (err, client) {
       assert.equal(null, err);
       console.log(req.params.lang);
@@ -31,8 +31,7 @@ router.get('/', function (req, res) {
 
 //Multilanguage pages
 router.get('/:lang', function (req, res, next) {
-  MongoClient.connect(
-    url,
+  client.connect(
     function (err, client) {
       assert.equal(null, err);
       console.log(req.params.lang);
@@ -80,8 +79,7 @@ router.post('/login', function (req, res) {
     res.render('sb-admin/login', { message: 'Пожалуйста, заполните все поля' });
     console.log(req.body.id);
   } else {
-    MongoClient.connect(
-      url,
+    client.connect(
       function (err, client) {
         assert.equal(null, err);
 
