@@ -8,13 +8,13 @@ var keys = require('../config/keys');
 //MongoDB Credentials. Extremly confidential information! Don't share this url with anyone!
 const url = keys.MONGO_URI;
 const dbName = 'allemdb';
-const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
 
 /* GET home page. Below are only public pages -------------------------------------------------------------------------*/
 router.get('/', function (req, res) {
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
-      assert.equal(null, err);
+      assert.strictEqual(null, err);
       console.log(req.params.lang);
       const db = client.db(dbName);
       const collection = db.collection('lang');
@@ -24,16 +24,16 @@ router.get('/', function (req, res) {
         res.render('indexMulti', { lang: doc });
         client.close();
       });
-    },
-    { useNewUrlParser: true }
+    }
   );
 });
 
 //Multilanguage pages
 router.get('/:lang', function (req, res, next) {
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
-      assert.equal(null, err);
+      assert.strictEqual(null, err);
       console.log(req.params.lang);
       const db = client.db(dbName);
       const collection = db.collection('lang');
@@ -47,8 +47,7 @@ router.get('/:lang', function (req, res, next) {
           client.close();
         });
       }
-    },
-    { useNewUrlParser: true }
+    }
   );
 });
 
@@ -79,9 +78,10 @@ router.post('/login', function (req, res) {
     res.render('sb-admin/login', { message: 'Пожалуйста, заполните все поля' });
     console.log(req.body.id);
   } else {
+    client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
     client.connect(
       function (err, client) {
-        assert.equal(null, err);
+        assert.strictEqual(null, err);
 
         console.log(req.body);
         const db = client.db(dbName);
@@ -114,8 +114,7 @@ router.post('/login', function (req, res) {
             });
           }
         });
-      },
-      { useNewUrlParser: true }
+      }
     );
   }
 });

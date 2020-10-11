@@ -848,7 +848,7 @@ router.get("/update", updateStatus, function (req, res) {
 // @desc    Returns all the news
 // @access  Public
 router.get("/news", (req, res) => {
-  
+  var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(function (err, client) {
     assert.strictEqual(null, err);
 

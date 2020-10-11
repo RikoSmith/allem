@@ -17,7 +17,6 @@ const Department = require('../models/Department');
 //MongoDB Credentials. Extremly confidential information! Don't share this url with anyone!
 const url = keys.MONGO_URI;
 const dbName = 'allemdb';
-const client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
 
 //-------------------------------------MIDDLEWARE FUNCTIONS ----------------------------------------------------------------------------------------
 /////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////////
@@ -37,6 +36,7 @@ function permissionCheck(perm) {
 //This middleware function makes changes in the database after the member has changes that affect other  fields of document.
 //It should have been done using MongoDB aggregation function, but now it's done by this middleware
 function updateStatus(req, res, next) {
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
       assert.equal(null, err);
@@ -95,8 +95,7 @@ function updateStatus(req, res, next) {
         }
         client.close();
       });
-    },
-    { useNewUrlParser: true }
+    }
   );
   next();
 }
@@ -184,6 +183,7 @@ router.use(checkSignIn);
 
 //Main page of admin panel
 router.get('/', permissionCheck('general'), function (req, res) {
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
       assert.equal(null, err);
@@ -202,13 +202,13 @@ router.get('/', permissionCheck('general'), function (req, res) {
           });
           client.close();
         });
-    },
-    { useNewUrlParser: true }
+    }
   );
 });
 
 //All notifications page
 router.get('/notifications', permissionCheck('general'), function (req, res) {
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
       assert.equal(null, err);
@@ -227,8 +227,7 @@ router.get('/notifications', permissionCheck('general'), function (req, res) {
           });
           client.close();
         });
-    },
-    { useNewUrlParser: true }
+    }
   );
 });
 
@@ -239,6 +238,7 @@ router.get('/addAdminUser', permissionCheck('add_user'), function (req, res) {
 
 //New user form is sent here
 router.post('/signup', permissionCheck('add_user'), function (req, res) {
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
       assert.equal(null, err);
@@ -281,8 +281,7 @@ router.post('/signup', permissionCheck('add_user'), function (req, res) {
           }
         }
       );
-    },
-    { useNewUrlParser: true }
+    }
   );
 });
 
@@ -311,6 +310,7 @@ router.get('/departments', permissionCheck('departments'), function (req, res) {
 
 //Handbook page
 router.get('/handbook', permissionCheck('handbook'), function (req, res) {
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
       assert.equal(null, err);
@@ -326,8 +326,7 @@ router.get('/handbook', permissionCheck('handbook'), function (req, res) {
         });
         client.close();
       });
-    },
-    { useNewUrlParser: true }
+    }
   );
 });
 
@@ -384,7 +383,7 @@ router.post('/editMember', permissionCheck('members'), function (
   res,
   next
 ) {
-  console.log(req.body);
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
       assert.equal(null, err);
@@ -502,14 +501,14 @@ router.post('/editMember', permissionCheck('members'), function (
           }
         }
       );
-    },
-    { useNewUrlParser: true }
+    }
   );
 });
 
 //Private data changes
 router.post('/editMemberPrivate', function (req, res) {
   //console.log(req.body);
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
       assert.equal(null, err);
@@ -588,14 +587,14 @@ router.post('/editMemberPrivate', function (req, res) {
           }
         }
       );
-    },
-    { useNewUrlParser: true }
+    }
   );
 });
 
 //Education fields change
 router.post('/editMemberEdu', function (req, res) {
   //console.log(req.body);
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
       assert.equal(null, err);
@@ -651,13 +650,13 @@ router.post('/editMemberEdu', function (req, res) {
           }
         }
       );
-    },
-    { useNewUrlParser: true }
+    }
   );
 });
 
 //Shtat (active) changes
 router.post('/editMemberShtat', function (req, res) {
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
       assert.equal(null, err);
@@ -713,14 +712,13 @@ router.post('/editMemberShtat', function (req, res) {
           }
         }
       );
-    },
-    { useNewUrlParser: true }
+    }
   );
 });
 
 //Manual update page if some changes does not take effect
 router.get('/update', updateStatus, function (req, res) {
-  console.log("Skaaa")
+  client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(
     function (err, client) {
       assert.equal(null, err);
@@ -755,8 +753,7 @@ router.get('/update', updateStatus, function (req, res) {
             });
         }
       });
-    },
-    { useNewUrlParser: true }
+    }
   );
 });
 
@@ -765,7 +762,7 @@ router.get('/updateHandbook', permissionCheck('general'), function (req, res) {
     .get('http://10.0.40.112/book/api/departments')
     .then(function (response) {
       response = response.data;
-      console.log(response);
+      client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
       client.connect(
         function (err, client) {
           assert.equal(null, err);
@@ -789,8 +786,7 @@ router.get('/updateHandbook', permissionCheck('general'), function (req, res) {
               }
             });
           }
-        },
-        { useNewUrlParser: true }
+        }
       );
     })
     .catch(function (error) {
