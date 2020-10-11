@@ -805,7 +805,7 @@ router.post(
 // @route   GET api/update
 // @desc    Just update, no arguments, does not return anything
 // @access  Public
-router.get("/update", updateStatus, function (req, res) {
+router.get("/updated", updateStatus, function (req, res) {
   var client = new MongoClient(url, { useNewUrlParser: true, useUnifiedTopology: true}, );
   client.connect(function (err, client) {
     assert.strictEqual(null, err);
